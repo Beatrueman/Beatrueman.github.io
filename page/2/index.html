@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="Everything is a file.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Yiiong&#39;s Blog">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="Everything is a file.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg">
+<meta property="article:author" content="Yiiong">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg"><link rel="shortcut icon" href="https://gitee.com/beatrueman/images/raw/master/img/202411081927715.svg"><link rel="canonical" href="http://example.com/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'https://fancyapps.com/fancybox/',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Yiiong\'s Blog',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/1731076282611.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">Yiiong's Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1783172311&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构学习记录">数据结构学习记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:29:27.314Z" title="发表于 2024-11-08 15:29:27">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9B%B8%E5%85%B3/">计算机相关</a></span></div><div class="content">数据结构绪论数据：所有能输入到计算机中并可以被计算机处理的信号。 数据元素：用于完整地描述一个对象，是数据的基本单位。 数据项：组成数据元素的、有独立含义的、不可分割的最小单位。 数据对象：性质相同的数据元素的集合，是数据的一个子集。 数据结构：相互之间存在一个或多种特定关系的数据元素的集合。 逻辑结构：从具体问题抽象出来的数学模型。 存储结构：逻辑结构在计算机中的存储表示。分顺序存储结构和链式存储结构。 抽象数据类型：由用户定义的，表示应用问题的数学模型，以及定义在这个模型上的一组操作的总称。 时间复杂度O(1) &lt; O(logn) &lt; O(n) &lt; O(nlogn) &lt; O(n*n) &lt; O(n*n*n) O(2的n次方) &lt; O(n!) &lt; O(n的n次方) 冒泡排序 最好时间复杂度：O(n) -&gt; 一轮冒泡就排好 最坏时间复杂度：O(n*n) 线性表顺序表的基本操作顺序表的存储结构 #include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#define MAXSIZE...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/GoLang%E8%AE%B0%E5%BD%95/" title="GoLang学习记录">GoLang学习记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:28:55.707Z" title="发表于 2024-11-08 15:28:55">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%B0%E5%BD%95/">代码记录</a></span></div><div class="content">GoLang记录goroute、select、channel练习请写出一个场景：二营长的意大利炮  为了高效的打鬼子，二营长搬出了他珍藏的一门意大利炮，并命令一堆手下来操作意大利炮   发射一下意大利炮需要经过三个步骤：装填→瞄准→发射 每个阶段打印出这个阶段的名称即可 每一个手下都是一个 goroutine 每个手下只负责一个步骤   需要使用 channel 来同步各个手下的操作 作为指挥的二营长，他希望一个命令就可以停止打炮 按下 q 就停止打炮了，kill 进程不算 可以使用 &quot;github.com/eiannone/keyboard&quot; 来监听键盘按键事件    package mainimport (	&quot;fmt&quot;	&quot;github.com/eiannone/keyboard&quot;	&quot;time&quot;)func main() &#123;	var (		// 创建用于同步的通道		aim    = make(chan struct&#123;&#125;)		load   = make(chan...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/C%E8%AF%AD%E8%A8%80%E8%AE%B0%E5%BD%95/" title="C语言学习记录">C语言学习记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:27:26.419Z" title="发表于 2024-11-08 15:27:26">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%B0%E5%BD%95/">代码记录</a></span></div><div class="content">Q1编程利用循环打印如下字符图形：12345678987654321 234567898765432  3456789876543   45678987654    567898765     6789876      78987       898        9  #include &lt;stdio.h&gt;int main()&#123;	int i, j;	for(i=1;i&lt;=9;i++)&#123; // 控制行数（1-9行）        for(j=1;j&lt;i;j++) &#123; // 打印每行开头的空格，空格与当前行数有关            printf(&quot; &quot;);        &#125;        for(j=i;j&lt;=9;j++)&#123; // 打印递增数字            printf(&quot;%d&quot;,j);        &#125;        for(j=8;j&gt;=i;j--) &#123; // 打印从9递减至当前行数           ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/%E5%85%A8%E5%9B%BD%E8%89%BE%E6%BB%8B%E7%97%85%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96%E5%88%86%E6%9E%90-README/" title="全国艾滋病数据可视化分析">全国艾滋病数据可视化分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:26:06.327Z" title="发表于 2024-11-08 15:26:06">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">全国艾滋病数据可视化分析整体效果    技术栈Python：使用pandas做数据处理，使用[pyecharts*](简介 - pyecharts - A Python Echarts Plotting Library built with love.)做数据可视化生成，使用flask*制作接口（用于根据年份更新对应的数据） 数据来源于公共卫生科学数据中心 (phsciencedata.cn) HTML + CSS  + JS：用于前端页面的渲染。  使用jQuery库实现AJAX发送请求到服务器用来更新各年份对应的数据以及生成对应省份的3D图。 使用Bootstrap库实现图片的轮播以及3D模态框的展示。  参考10分钟在网站上增加一个AI助手，利用[阿里云百炼](阿里云百炼 (aliyun.com))，将通义千问接入项目，提供艾滋病相关知识的科普。 接口介绍POST /update_year 传入前端选择框中的year，根据year执行对应的生成统计图表的Python文件。 GET...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/SRE-Web%E5%AE%89%E5%85%A8%E5%AF%92%E5%81%87%E8%80%83%E6%A0%B8(%E7%A4%BE%E5%B7%A5%E6%96%B9%E5%90%91)/" title="SRE-Web安全寒假考核(社工方向)">SRE-Web安全寒假考核(社工方向)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:25:05.770Z" title="发表于 2024-11-08 15:25:05">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">题目 QQ3585956882 idea:后面两个==的特征知道是base64解码   姓名陈铁柱 缩写是ctz   上网搜下Da2kSupr3m3找到了他的CSDN博客，通过简介，一段base64解码进入了他的博客     目录下有一个robots.txt   发现目录下有一个zip文件，下载发现要密码在...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/Gitlab%20CICD%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" title="Gitlab CICD学习记录">Gitlab CICD学习记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:22:36.529Z" title="发表于 2024-11-08 15:22:36">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">用Flask在K8s集群编写后端项目编写app.py编写一个最简单的后端项目，命名为app.py，返回hello world! from flask import Flaskapp = Flask(__name__)@app.route(&#x27;/&#x27;)def hello():    return &quot;hello world!&quot;if __name__ == &#x27;__main__&#x27;:    app.run(host=&#x27;0.0.0.0&#x27;, port=8080)  用pipreqs导出依赖文件pip3 install pipreqs  pipreqs . --encoding=utf8 --force   构建Docker镜像编写dockerfile FROM python:3.9WORKDIR /appCOPY requirements.txt .RUN pip install --no-cache-dir -r requirements.txtCOPY . .CMD...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/k8s%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/" title="K8s实践记录">K8s实践记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:20:13.380Z" title="发表于 2024-11-08 15:20:13">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">Level 01.在节点上创建一个持久化目录mkdir -p /data/nginx/logs #创建多级目录chmod 777 /data/nginx/logs #为系统上的每个人提供读、写和执行权限   2.创建一个nginx pod，并在其中配置一个存储卷来将持久化目录挂载到Pod的/var/log/nginx目录中。apiVersion: v1kind: Podmetadata:  name: nginxspec:  volumes:  - name: nginx-logs    hostPath:      path: /data/nginx/logs  containers:  - name: nginx    image: nginx    volumeMounts:    - name: nginx-logs      mountPath:...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/EasyBanner-README/" title="EasyBanner-README">EasyBanner-README</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:19:02.958Z" title="发表于 2024-11-08 15:19:02">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">功能介绍通过@机器人来触发飞书机器人对特定机器远程封禁恶意IP，依赖于GitHub - evilsp&#x2F;xdp_banner: 一个简单的 XDP 小程序，用于 BAN IP 1.当机器人未连接服务器时，提示如下消息。  2.当未发现访问次数超过250次的IP，提示如下消息。  3.当发现访问次数超过250次的恶意IP，罗列出恶意IP以及对应的访问次数，并显示封禁BAN按钮。  点击按钮，可以对远程机器进行封禁恶意IP，然后卡片更新，提示封禁完成。  逻辑介绍接口目标机器开放两个接口  GET &#x2F;execute：用于查询日志里当前小时内访问量排名前十的IP以及对应的次数。 POST &#x2F;ban：用于接收需要封禁的IP，然后执行xdp封禁命令。  机器人设置两个接口  POST &#x2F;webhook：用来处理接收消息事件。 POST...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/2022%E7%BA%A2%E5%B2%A9%E6%9D%AFWriteUp/" title="2022红岩杯WriteUp">2022红岩杯WriteUp</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:17:13.405Z" title="发表于 2024-11-08 15:17:13">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">PWN一口一个flag题目：nc一下下  idea：根据提示，nc是linux的命令，所以本题需要在linux环境求解  step：打开Linux的终端，nc所给的端口输入：nc 172.20.14.18 31751得到答案：redrock&#123;Ech0eCHo-IWaNtF10g_&#125;   猫猫flag题目：nc二下下  idea:本题与上题类似  step:nc端口后无回显，继续输入指令ls后出现flag然后cat flag得到答案:redrock&#123;SEhLlCAT_IWaNtf1a9_&#125;   Web你是哪里的题目：https://96a84eec-4f7b-45a6-a5bb-224f1064604e.ctf.redrock.team/  idea:进入第一层网页，显示（you must be from https://redrock.team）没什么破绽，按下F12,F5刷新一下，点进网页显示（A word in the http message header is wrong,do you...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/11/08/%E7%BA%A2%E5%B2%A9%E6%89%93%E5%8D%B0%E5%A7%AC%E5%A4%8D%E6%B4%BB%E8%AE%B0%E5%BD%95/" title="红岩打印姬复活记录">红岩打印姬复活记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-11-08T07:14:41.091Z" title="发表于 2024-11-08 15:14:41">2024-11-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Blogs/">Blogs</a></span></div><div class="content">下面记录一下在复活网校打印机机器人-红岩打印姬时遇到的问题和解决方案 做出的更新1.使用了Helemet-CI进行镜像打包 2.更改了Dockerfile的内容，使镜像可以快速且正确的被打包 3.由于飞书接收消息接口的json接收体发生了改变，对reply.py中的file_name、file_key和image_key三个变量的获取造成了影响，使用json.loads()函数解决 1.读取环境变量问题机器人通过configmap读取app_id，app_secret等环境变量，没有configmap的话机器人会报以下错误 Traceback (most recent call last):  File &quot;/nonebot/bot.py&quot;, line 22, in &lt;module&gt;    driver.register_adapter(FeishuAdapter)  File...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description">Everything is a file.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1783172311&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock!</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux/" title="Linux">Linux</a><time datetime="2024-11-08T07:37:06.082Z" title="发表于 2024-11-08 15:37:06">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="Linux相关问题与解决">Linux相关问题与解决</a><time datetime="2024-11-08T07:36:20.193Z" title="发表于 2024-11-08 15:36:20">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" title="服务器运维">服务器运维</a><time datetime="2024-11-08T07:35:55.363Z" title="发表于 2024-11-08 15:35:55">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/" title="部署示范">部署示范</a><time datetime="2024-11-08T07:35:10.688Z" title="发表于 2024-11-08 15:35:10">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" title="运维常用工具">运维常用工具</a><time datetime="2024-11-08T07:34:03.140Z" title="发表于 2024-11-08 15:34:03">2024-11-08</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Blogs/"><span class="card-category-list-name">Blogs</span><span class="card-category-list-count">11</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Kubernetes/"><span class="card-category-list-name">Kubernetes</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%B0%E5%BD%95/"><span class="card-category-list-name">代码记录</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"><span class="card-category-list-name">服务器</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9B%B8%E5%85%B3/"><span class="card-category-list-name">计算机相关</span><span class="card-category-list-count">3</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Python/" style="font-size: 1.1em; color: #999">Python</a> <a href="/tags/Kubernetes/" style="font-size: 1.26em; color: #999fa8">Kubernetes</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/Linux/" style="font-size: 1.42em; color: #99a6b7">Linux</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" style="font-size: 1.34em; color: #99a3b0">服务器运维</a> <a href="/tags/Helm/" style="font-size: 1.1em; color: #999">Helm</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.18em; color: #999ca1">数据结构</a> <a href="/tags/Github-Actions/" style="font-size: 1.1em; color: #999">Github Actions</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.1em; color: #999">计算机</a> <a href="/tags/GoLang/" style="font-size: 1.1em; color: #999">GoLang</a> <a href="/tags/Achievements/" style="font-size: 1.5em; color: #99a9bf">Achievements</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">安全</a> <a href="/tags/CI-CD/" style="font-size: 1.26em; color: #999fa8">CI/CD</a> <a href="/tags/Trouble-Shooting/" style="font-size: 1.18em; color: #999ca1">Trouble Shooting</a> <a href="/tags/C/" style="font-size: 1.34em; color: #99a3b0">C</a> <a href="/tags/Golang/" style="font-size: 1.1em; color: #999">Golang</a> <a href="/tags/Gitlab/" style="font-size: 1.1em; color: #999">Gitlab</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+    <ul class="card-archive-list">
+  
+      <li class="card-archive-list-item">
+        <a class="card-archive-list-link" href="/archives/2024/11/">
+          <span class="card-archive-list-date">十一月 2024</span>
+          <span class="card-archive-list-count">24</span>
+        </a>
+      </li>
+    </ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">24</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">104.1k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-11-08T15:00:30.941Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Yiiong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  if (true) {
+    typedJSFn.init(["Everything is a file.","一切皆文件。"])
+  } else {
+    document.getElementById("subtitle").textContent = "Everything is a file."
+  }
+}
+typedJSFn.run(subtitleType)</script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

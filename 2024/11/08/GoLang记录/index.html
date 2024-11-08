@@ -1,0 +1,175 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GoLang学习记录 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="GoLang记录goroute、select、channel练习请写出一个场景：二营长的意大利炮  为了高效的打鬼子，二营长搬出了他珍藏的一门意大利炮，并命令一堆手下来操作意大利炮   发射一下意大利炮需要经过三个步骤：装填→瞄准→发射 每个阶段打印出这个阶段的名称即可 每一个手下都是一个 goroutine 每个手下只负责一个步骤   需要使用 channel 来同步各个手下的操作 作为指挥的二">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GoLang学习记录">
+<meta property="og:url" content="http://example.com/2024/11/08/GoLang%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="GoLang记录goroute、select、channel练习请写出一个场景：二营长的意大利炮  为了高效的打鬼子，二营长搬出了他珍藏的一门意大利炮，并命令一堆手下来操作意大利炮   发射一下意大利炮需要经过三个步骤：装填→瞄准→发射 每个阶段打印出这个阶段的名称即可 每一个手下都是一个 goroutine 每个手下只负责一个步骤   需要使用 channel 来同步各个手下的操作 作为指挥的二">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg">
+<meta property="article:published_time" content="2024-11-08T07:28:55.707Z">
+<meta property="article:modified_time" content="2024-11-08T07:29:20.769Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="GoLang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg"><link rel="shortcut icon" href="https://gitee.com/beatrueman/images/raw/master/img/202411081927715.svg"><link rel="canonical" href="http://example.com/2024/11/08/GoLang%E8%AE%B0%E5%BD%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'https://fancyapps.com/fancybox/',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GoLang学习记录',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">GoLang学习记录</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">GoLang学习记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-08T07:28:55.707Z" title="发表于 2024-11-08 15:28:55">2024-11-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T07:29:20.769Z" title="更新于 2024-11-08 15:29:20">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%B0%E5%BD%95/">代码记录</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="GoLang记录"><a href="#GoLang记录" class="headerlink" title="GoLang记录"></a>GoLang记录</h1><h2 id="goroute、select、channel练习"><a href="#goroute、select、channel练习" class="headerlink" title="goroute、select、channel练习"></a>goroute、select、channel练习</h2><p>请写出一个场景：<code>二营长的意大利炮</code></p>
+<blockquote>
+<p>为了高效的打鬼子，二营长搬出了他珍藏的一门意大利炮，并命令一堆手下来操作意大利炮</p>
+</blockquote>
+<ul>
+<li>发射一下意大利炮需要经过三个步骤：<code>装填</code>→<code>瞄准</code>→<code>发射</code></li>
+<li>每个阶段打印出这个阶段的名称即可</li>
+<li>每一个手下都是一个 goroutine<ul>
+<li>每个手下只负责一个步骤</li>
+</ul>
+</li>
+<li>需要使用 channel 来同步各个手下的操作</li>
+<li>作为指挥的二营长，他希望一个命令就可以停止打炮<ul>
+<li>按下 <code>q</code> 就停止打炮了，kill 进程不算</li>
+<li>可以使用 <code>&quot;github.com/eiannone/keyboard&quot;</code> 来监听键盘按键事件</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;github.com/eiannone/keyboard&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	var (</span><br><span class="line">		// 创建用于同步的通道</span><br><span class="line">		aim    = make(chan struct&#123;&#125;)</span><br><span class="line">		load   = make(chan struct&#123;&#125;)</span><br><span class="line">		launch = make(chan struct&#123;&#125;)</span><br><span class="line">		stop   = make(chan struct&#123;&#125;)</span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	go handleLoad(load, aim, stop)</span><br><span class="line">	go handleAim(aim, launch, stop)</span><br><span class="line">	go handleLaunch(launch, stop)</span><br><span class="line"></span><br><span class="line">	go listenQuit(stop)</span><br><span class="line"></span><br><span class="line">	// 空结构体通常用于在 goroutine 之间传递信号,适用于只需要信号不需要数据的场景</span><br><span class="line">	load &lt;- struct&#123;&#125;&#123;&#125;</span><br><span class="line"></span><br><span class="line">	//  监听多个信道</span><br><span class="line">	select &#123;</span><br><span class="line">	case &lt;-launch:</span><br><span class="line">		fmt.Println(&quot;任务完成！&quot;)</span><br><span class="line">	case &lt;-stop:</span><br><span class="line">		fmt.Println(&quot;停止打炮！&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func handleAim(load chan struct&#123;&#125;, aim chan struct&#123;&#125;, stop chan struct&#123;&#125;) &#123;</span><br><span class="line">	select &#123;</span><br><span class="line">	case &lt;-load:</span><br><span class="line">		fmt.Println(&quot;正在瞄准！&quot;)</span><br><span class="line">		time.Sleep(5 * time.Second)</span><br><span class="line">		aim &lt;- struct&#123;&#125;&#123;&#125;</span><br><span class="line">	case &lt;-stop:</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func handleLoad(aim chan struct&#123;&#125;, launch chan struct&#123;&#125;, stop chan struct&#123;&#125;) &#123;</span><br><span class="line">	select &#123;</span><br><span class="line">	case &lt;-aim:</span><br><span class="line">		fmt.Println(&quot;正在装填！&quot;)</span><br><span class="line">		time.Sleep(10 * time.Second)</span><br><span class="line">		launch &lt;- struct&#123;&#125;&#123;&#125;</span><br><span class="line"></span><br><span class="line">	case &lt;-stop:</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func handleLaunch(launch chan struct&#123;&#125;, stop chan struct&#123;&#125;) &#123;</span><br><span class="line">	select &#123;</span><br><span class="line">	case &lt;-launch:</span><br><span class="line">		fmt.Println(&quot;发射！&quot;)</span><br><span class="line">	case &lt;-stop:</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func listenQuit(stop chan struct&#123;&#125;) &#123;</span><br><span class="line">	defer keyboard.Close()</span><br><span class="line">	if err := keyboard.Open(); err != nil &#123;</span><br><span class="line">		fmt.Println(&quot;Failed to open keyboard!&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	for &#123;</span><br><span class="line">		char, _, err := keyboard.GetSingleKey()</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			fmt.Println(&quot;Failed to read keyboard input!&quot;)</span><br><span class="line">			continue</span><br><span class="line">		&#125;</span><br><span class="line">		if char == &#x27;q&#x27; || char == &#x27;Q&#x27; &#123;</span><br><span class="line">			close(stop)</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="结构体练习"><a href="#结构体练习" class="headerlink" title="结构体练习"></a>结构体练习</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">type Movie struct &#123;</span><br><span class="line">	Name     string</span><br><span class="line">	Director string</span><br><span class="line">	Time     string</span><br><span class="line">	Score    float64</span><br><span class="line">	UserRate []float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *Movie) AddUserRate(rate float64) &#123;</span><br><span class="line">	m.UserRate = append(m.UserRate, rate)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	a := Movie&#123;Name: &quot;西线无战事&quot;,</span><br><span class="line">		Director: &quot;爱德华·贝尔格&quot;,</span><br><span class="line">		Time:     &quot;148 minutes&quot;,</span><br><span class="line">		Score:    8.8,</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(&quot;请输入你的命令：\n1.获得名字\n2.获得导演名\n3.获得片长\n4.获得评分\n5.用户评分\n6.退出程序\n&quot;)</span><br><span class="line">	var option int</span><br><span class="line">	for &#123;</span><br><span class="line">		fmt.Scanf(&quot;%d &quot;, &amp;option)</span><br><span class="line">		switch option &#123;</span><br><span class="line">		case 1:</span><br><span class="line">			fmt.Println(a.Name)</span><br><span class="line">		case 2:</span><br><span class="line">			fmt.Println(a.Director)</span><br><span class="line">		case 3:</span><br><span class="line">			fmt.Println(a.Time)</span><br><span class="line">		case 4:</span><br><span class="line">			if len(a.UserRate) == 0 &#123;</span><br><span class="line">				fmt.Println(&quot;暂无评分！&quot;)</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				for i, rate := range a.UserRate &#123;</span><br><span class="line">					fmt.Printf(&quot;用户 %d 评分: %.1f\n&quot;, i+1, rate)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		case 5:</span><br><span class="line">			var rate float64</span><br><span class="line">			fmt.Println(&quot;请输入评分（0-10.0）：&quot;)</span><br><span class="line">			fmt.Scanln(&amp;rate)</span><br><span class="line">			if rate &lt; 0 || rate &gt; 10 &#123;</span><br><span class="line">				fmt.Println(&quot;无效评分！请重新输入。&quot;)</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				a.AddUserRate(rate)</span><br><span class="line">				fmt.Println(&quot;评分已添加！&quot;)</span><br><span class="line">			&#125;</span><br><span class="line">		case 6:</span><br><span class="line">			return</span><br><span class="line">		default:</span><br><span class="line">			fmt.Println(&quot;无效的选项，请重新输入。&quot;)</span><br><span class="line">		&#125;</span><br><span class="line">		fmt.Printf(&quot;\n请输入你的命令：\n1.获得名字\n2.获得导演名\n3.获得片长\n4.获得评分\n5.用户评分\n6.退出程序\n&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="database-mysql连接数据库"><a href="#database-mysql连接数据库" class="headerlink" title="database&#x2F;mysql连接数据库"></a>database&#x2F;mysql连接数据库</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import (</span><br><span class="line">	&quot;database/sql&quot;                     //标准库</span><br><span class="line">	_ &quot;github.com/go-sql-driver/mysql&quot; //我们使用的mysql，需要导入相应驱动包，否则会报错</span><br><span class="line">	&quot;log&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var db *sql.DB</span><br><span class="line"></span><br><span class="line">func InitDB() &#123;</span><br><span class="line">	var err error</span><br><span class="line">	// 设置一下dns charset:编码方式 parseTime:是否解析time类型 loc:时区</span><br><span class="line">	dsn := &quot;root:123456@tcp(192.168.10.104:3306)/demo?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;</span><br><span class="line">	// 打开mysql驱动</span><br><span class="line">	db, err = sql.Open(&quot;mysql&quot;, dsn)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		log.Fatalln(err)</span><br><span class="line">	&#125;</span><br><span class="line">	// 尝试与数据库建立连接（校验dsn是否正确）</span><br><span class="line">	err = db.Ping()</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		log.Fatalln(err)</span><br><span class="line">	&#125;</span><br><span class="line">	log.Println(&quot;DB connect success&quot;)</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="目录规范"><a href="#目录规范" class="headerlink" title="目录规范"></a>目录规范</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">------------------------- go目录 ----------------------------</span><br><span class="line">/cmd：项目的可执行文件名称相符，通常有一个简短的main函数。从/internal和/pkg目录导入代码。其他没有了</span><br><span class="line">/internal： 私有应用程序和库代码</span><br><span class="line">/pkg：外部应用可以导入的库代码</span><br><span class="line">/vendor：应用程序依赖项</span><br><span class="line">-----------------服务应用程序目录 ---------------</span><br><span class="line">/api：协议文件</span><br><span class="line">/web:  静态web组件</span><br><span class="line">-----------------通用应用目录 ---------------</span><br><span class="line">/configs：项目的默认配置</span><br><span class="line">/init：system init （systemd，upstart，sysv) 配置</span><br><span class="line">/scripts：执行各种构建、安装、分析等操作的脚本</span><br><span class="line">/build：打包和持续集成</span><br><span class="line">/deployments：部署配置</span><br><span class="line">/test：测试</span><br><span class="line">-----------------其他目录 ---------------</span><br><span class="line">/docs：文档</span><br><span class="line">/tools：项目支持的工具</span><br><span class="line">/examples：应用程序和公共库实例</span><br><span class="line">/third_party：外部工具</span><br><span class="line">/githooks: - </span><br><span class="line">/assets: 图片和其他存储的文件</span><br><span class="line">/website：-</span><br><span class="line">不应该有的目录</span><br><span class="line">/src：请不要将项目级别的src目录和工作空间的src目录混淆。</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/11/08/GoLang%E8%AE%B0%E5%BD%95/">http://example.com/2024/11/08/GoLang%E8%AE%B0%E5%BD%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GoLang/">GoLang</a></div><div class="post-share"><div class="social-share" data-image="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/11/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构学习记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">数据结构学习记录</div></div><div class="info-2"><div class="info-item-1">数据结构绪论数据：所有能输入到计算机中并可以被计算机处理的信号。 数据元素：用于完整地描述一个对象，是数据的基本单位。 数据项：组成数据元素的、有独立含义的、不可分割的最小单位。 数据对象：性质相同的数据元素的集合，是数据的一个子集。 数据结构：相互之间存在一个或多种特定关系的数据元素的集合。 逻辑结构：从具体问题抽象出来的数学模型。 存储结构：逻辑结构在计算机中的存储表示。分顺序存储结构和链式存储结构。 抽象数据类型：由用户定义的，表示应用问题的数学模型，以及定义在这个模型上的一组操作的总称。 时间复杂度O(1) &lt; O(logn) &lt; O(n) &lt; O(nlogn) &lt; O(n*n) &lt; O(n*n*n) O(2的n次方) &lt; O(n!) &lt; O(n的n次方) 冒泡排序 最好时间复杂度：O(n) -&gt; 一轮冒泡就排好 最坏时间复杂度：O(n*n) 线性表顺序表的基本操作顺序表的存储结构 #include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#define MAXSIZE...</div></div></div></a><a class="pagination-related" href="/2024/11/08/C%E8%AF%AD%E8%A8%80%E8%AE%B0%E5%BD%95/" title="C语言学习记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">C语言学习记录</div></div><div class="info-2"><div class="info-item-1">Q1编程利用循环打印如下字符图形：12345678987654321 234567898765432  3456789876543   45678987654    567898765     6789876      78987       898        9  #include &lt;stdio.h&gt;int main()&#123;	int i, j;	for(i=1;i&lt;=9;i++)&#123; // 控制行数（1-9行）        for(j=1;j&lt;i;j++) &#123; // 打印每行开头的空格，空格与当前行数有关            printf(&quot; &quot;);        &#125;        for(j=i;j&lt;=9;j++)&#123; // 打印递增数字            printf(&quot;%d&quot;,j);        &#125;        for(j=8;j&gt;=i;j--) &#123; // 打印从9递减至当前行数           ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description">Everything is a file.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1783172311&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#GoLang%E8%AE%B0%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">GoLang记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#goroute%E3%80%81select%E3%80%81channel%E7%BB%83%E4%B9%A0"><span class="toc-number">1.1.</span> <span class="toc-text">goroute、select、channel练习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E7%BB%83%E4%B9%A0"><span class="toc-number">1.2.</span> <span class="toc-text">结构体练习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#database-mysql%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.3.</span> <span class="toc-text">database&#x2F;mysql连接数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E8%A7%84%E8%8C%83"><span class="toc-number">1.4.</span> <span class="toc-text">目录规范</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux/" title="Linux">Linux</a><time datetime="2024-11-08T07:37:06.082Z" title="发表于 2024-11-08 15:37:06">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="Linux相关问题与解决">Linux相关问题与解决</a><time datetime="2024-11-08T07:36:20.193Z" title="发表于 2024-11-08 15:36:20">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" title="服务器运维">服务器运维</a><time datetime="2024-11-08T07:35:55.363Z" title="发表于 2024-11-08 15:35:55">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/" title="部署示范">部署示范</a><time datetime="2024-11-08T07:35:10.688Z" title="发表于 2024-11-08 15:35:10">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" title="运维常用工具">运维常用工具</a><time datetime="2024-11-08T07:34:03.140Z" title="发表于 2024-11-08 15:34:03">2024-11-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Yiiong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

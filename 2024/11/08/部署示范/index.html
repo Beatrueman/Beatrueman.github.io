@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>部署示范 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="Harbor的部署 Harbor官方文档   Harbor Github仓库   Harbor 入门指南-腾讯云开发者社区-腾讯云 (tencent.com)  配置 服务器：腾讯云 Linux版本：Linux VM-4-12-centos 3.10.0-1160.90.1.el7.x86_64 Docker：Docker version 24.0.5, build ced0996 Docker-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署示范">
+<meta property="og:url" content="http://example.com/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/index.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="Harbor的部署 Harbor官方文档   Harbor Github仓库   Harbor 入门指南-腾讯云开发者社区-腾讯云 (tencent.com)  配置 服务器：腾讯云 Linux版本：Linux VM-4-12-centos 3.10.0-1160.90.1.el7.x86_64 Docker：Docker version 24.0.5, build ced0996 Docker-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg">
+<meta property="article:published_time" content="2024-11-08T07:35:10.688Z">
+<meta property="article:modified_time" content="2024-11-08T07:35:39.080Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="服务器运维">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg"><link rel="shortcut icon" href="https://gitee.com/beatrueman/images/raw/master/img/202411081927715.svg"><link rel="canonical" href="http://example.com/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'https://fancyapps.com/fancybox/',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '部署示范',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">部署示范</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">部署示范</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-08T07:35:10.688Z" title="发表于 2024-11-08 15:35:10">2024-11-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T07:35:39.080Z" title="更新于 2024-11-08 15:35:39">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Harbor的部署"><a href="#Harbor的部署" class="headerlink" title="Harbor的部署"></a>Harbor的部署</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://goharbor.io/">Harbor官方文档</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/goharbor/harbor">Harbor Github仓库</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1865259">Harbor 入门指南-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+</blockquote>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul>
+<li>服务器：腾讯云</li>
+<li>Linux版本：<code>Linux VM-4-12-centos 3.10.0-1160.90.1.el7.x86_64</code></li>
+<li>Docker：<code>Docker version 24.0.5, build ced0996</code></li>
+<li>Docker-Comose：<code>docker-compose version 1.24.1, build 4667896b</code></li>
+</ul>
+<h2 id="下载Harbor离线安装包"><a href="#下载Harbor离线安装包" class="headerlink" title="下载Harbor离线安装包"></a>下载Harbor离线安装包</h2><p><a href="https://cloud.tencent.com/developer/tools/blog-entry?target=https://github.com/goharbor/harbor/releases&source=article&objectId=2371563">Harbor Github Releases</a></p>
+<p>解压后的目录如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">harbor</span><br><span class="line">├── common.sh         # 通用命令，使用install.sh驱动</span><br><span class="line">├── harbor.v2.7.3.tar.gz  </span><br><span class="line">├── harbor.yml.tmpl   # 配置模板</span><br><span class="line">├── install.sh        # 安装脚本</span><br><span class="line">├── LICENSE</span><br><span class="line">└── prepare    </span><br></pre></td></tr></table></figure>
+
+<h2 id="OpenSSL自签证书"><a href="#OpenSSL自签证书" class="headerlink" title="OpenSSL自签证书"></a>OpenSSL自签证书</h2><p>为了保证Harbor的安全性，我们需要为Harbor配置一个SSL证书以保证安全，防止黑客篡改</p>
+<blockquote>
+<p>使用可信证书颁发机构（CA）签发的证书，要么1年需要换一次，要么3个月需要续签名一次。可是我们的Harbor启动后，除非有安全漏洞，否则启动后，可能几年都不会做一次变更。这个时候，怎么办呢？</p>
+</blockquote>
+<p>我们使用OpenSSL自签名证书，不过浏览器不信任这种证书，用户在首次访问时会收到安全警告</p>
+<h3 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h3><p>存放生成的证书</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir /root/cert</span><br><span class="line">cd /root/cert/</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成CA证书"><a href="#生成CA证书" class="headerlink" title="生成CA证书"></a>生成CA证书</h3><p><strong>生成CA密钥</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl genrsa -out ca.key 4096</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>genrsa</code>：表示要生成一个 RSA 密钥对。</li>
+<li><code>-out ca.key</code>：指定生成的私钥将保存在名为 <code>ca.key</code> 的文件中。</li>
+<li><code>4096</code>：表示生成的 RSA 私钥使用 4096 位的密钥长度。</li>
+</ul>
+<p><strong>生成CA证书</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl req -x509 -new -nodes -sha512 -days 3650 \</span><br><span class="line"> -subj &quot;/C=CN/ST=Chongqing/L=Chongqing/O=Redrock/OU=Personal/CN=harbor.yiiong.top&quot; \</span><br><span class="line"> -key ca.key \</span><br><span class="line"> -out ca.crt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-x509</code>：表示生成自签名的 X.509 格式证书。</p>
+</li>
+<li><p><code>-new</code>：表示生成一个新的证书请求。</p>
+</li>
+<li><p><code>-nodes</code>：表示生成的私钥不加密。</p>
+</li>
+<li><p><code>-sha512</code>：表示使用 SHA-512 算法进行签名。</p>
+</li>
+<li><p><code>-days 3650</code>：表示证书的有效期为 3650 天（大约 10 年）。</p>
+</li>
+<li><p><code>-subj &quot;/C=CN/ST=Chongqing/L=Chongqing/O=Redrock/OU=Personal/CN=harbor.yiiong.top&quot;</code>：设置证书的 Subject 字段信息，包括国家（C&#x3D;CN）、省份（ST&#x3D;Chongqing）、城市（L&#x3D;Chongqing）、组织（O&#x3D;Redrock）、组织单位（OU&#x3D;Personal）和通用名称（CN&#x3D;harbor.yiiong.top）。 </p>
+</li>
+<li><p><code>-key ca.key</code>：指定使用之前生成的 <code>ca.key</code> 文件作为证书的私钥。</p>
+</li>
+<li><p><code>-out ca.crt</code>：指定生成的证书将保存在名为 <code>ca.crt</code> 的文件中。</p>
+<p>**.crt (Certificate)**：<code>.crt</code> 文件是数字证书文件的扩展名，用于存储证书的内容。证书通常用于建立安全连接，并验证服务器（或客户端）的身份和信任</p>
+</li>
+</ul>
+<h3 id="生成Server证书"><a href="#生成Server证书" class="headerlink" title="生成Server证书"></a>生成Server证书</h3><p><strong>生成 Server 证书私钥</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 生成密钥</span><br><span class="line">openssl genrsa -out server.key 4096</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成Server证书签名请求（CSR）"><a href="#生成Server证书签名请求（CSR）" class="headerlink" title="生成Server证书签名请求（CSR）"></a><strong>生成Server证书签名请求（CSR）</strong></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl req -sha512 -new \</span><br><span class="line"> -subj &quot;/C=CN/ST=Chongqing/L=Chongqing/O=Redrock/OU=Personal/CN=harbor.yiiong.top&quot; \</span><br><span class="line"> -key server.key \</span><br><span class="line"> -out server.csr</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>-out server.csr</code>：指定生成的证书签名请求将保存在名为 <code>server.csr</code> 的文件中。</p>
+<p>**.csr (Certificate Signing Request)**：<code>.csr</code> 文件用于向证书颁发机构（CA）提交请求，申请签发数字证书。</p>
+</li>
+</ul>
+<h3 id="生成-x509-v3-证书扩展文件"><a href="#生成-x509-v3-证书扩展文件" class="headerlink" title="生成 x509 v3 证书扩展文件"></a>生成 x509 v3 证书扩展文件</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cat &gt; v3.ext &lt;&lt;-EOF</span><br><span class="line">authorityKeyIdentifier=keyid,issuer</span><br><span class="line">basicConstraints=CA:FALSE</span><br><span class="line">keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment</span><br><span class="line">extendedKeyUsage = serverAuth</span><br><span class="line">subjectAltName = @alt_names</span><br><span class="line"></span><br><span class="line">[alt_names]</span><br><span class="line">DNS.1=harbor.yiiong.top</span><br><span class="line">DNS.2=hostname</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p><code>v3.ext</code> 可以被用于在签署证书时指定证书的一些属性和要求，比如证书的用途、适用主题名称等。通常用于构建自签名证书或配置 CA 签发证书时的扩展属性。</p>
+<h3 id="使用-CA-证书签发-Server-证书"><a href="#使用-CA-证书签发-Server-证书" class="headerlink" title="使用 CA 证书签发 Server 证书"></a><strong>使用 CA 证书签发 Server 证书</strong></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl x509 -req -sha512 -days 3650 \</span><br><span class="line">    -extfile v3.ext \</span><br><span class="line">    -CA ca.crt -CAkey ca.key -CAcreateserial \</span><br><span class="line">    -in server.csr \</span><br><span class="line">    -out server.crt</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-extfile v3.ext</code>：指定了存储证书扩展信息的文件 <code>v3.ext</code>。</li>
+<li><code>-CA ca.crt</code>：指定了 CA 证书文件 <code>ca.crt</code>，用于签署服务器证书。</li>
+<li><code>-CAkey ca.key</code>：指定用于签署证书的 CA 私钥文件 <code>ca.key</code>。</li>
+<li><code>-CAcreateserial</code>：表示自动生成一个序列号文件，用于签署的证书。</li>
+<li><code>-in server.csr</code>：表示输入待签署的服务器证书签名请求文件 <code>server.csr</code>。</li>
+<li><code>-out server.crt</code>：表示输出签署的服务器证书文件为 <code>server.crt</code>。</li>
+</ul>
+<p>一共有如下这些</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-4-12-centos harbor]# cd /root/cert</span><br><span class="line">[root@VM-4-12-centos cert]# ll</span><br><span class="line">总用量 28</span><br><span class="line">-rw-r--r-- 1 root root 2045 12月 30 23:32 ca.crt</span><br><span class="line">-rw-r--r-- 1 root root 3247 12月 30 23:32 ca.key</span><br><span class="line">-rw-r--r-- 1 root root   17 12月 30 23:39 ca.srl</span><br><span class="line">-rw-r--r-- 1 root root 2094 12月 30 23:39 server.crt</span><br><span class="line">-rw-r--r-- 1 root root 1712 12月 30 23:38 server.csr</span><br><span class="line">-rw-r--r-- 1 root root 3243 12月 30 23:32 server.key</span><br><span class="line">-rw-r--r-- 1 root root  248 12月 30 23:35 v3.ext</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202403212259115.png" alt="image-20240321225956058"></p>
+<h2 id="为-Harbor-和-Docker-配置证书"><a href="#为-Harbor-和-Docker-配置证书" class="headerlink" title="为 Harbor 和 Docker 配置证书"></a><strong>为 Harbor 和 Docker 配置证书</strong></h2><p><strong>将 server 证书和密钥复制到 Harbor 主机上的 &#x2F;data&#x2F;cert 目录中</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir -p /data/cert</span><br><span class="line">cp server.crt /data/cert/</span><br><span class="line">cp server.key /data/cert/</span><br></pre></td></tr></table></figure>
+
+<p><strong>转换 server.crt 为 server.cert</strong></p>
+<p>.crt 和 .cert 本质上没有区别，并且通常可以互换使用。为什么还要把.crt转为.cert呢？因为Docker 客户端默认将文件名 <code>.cert</code> 视为客户端证书.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -in server.crt -out server.cert</span><br></pre></td></tr></table></figure>
+
+<p><strong>将 server 证书，密钥和 CA 证书复制到 Harbor 主机上的 Docker 证书目录中</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir -p /etc/docker/certs.d/harbor.yiiong.top:8443</span><br><span class="line">cp server.key /etc/docker/certs.d/harbor.yiiong.top:8443</span><br><span class="line">cp server.cert /etc/docker/certs.d/harbor.yiiong.top:8443</span><br><span class="line">cp ca.crt /etc/docker/certs.d/harbor.yiiong.top:8443</span><br></pre></td></tr></table></figure>
+
+<p>查看 Docker 证书目录文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-4-12-centos harbor.yiiong.top:8443]# ll</span><br><span class="line">总用量 12</span><br><span class="line">-rw-r--r-- 1 root root 2045 12月 30 23:42 ca.crt</span><br><span class="line">-rw-r--r-- 1 root root 2094 12月 30 23:41 server.cert</span><br><span class="line">-rw-r--r-- 1 root root 3243 12月 30 23:41 server.key</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>重启Docker</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h2 id="初始化Harbor"><a href="#初始化Harbor" class="headerlink" title="初始化Harbor"></a>初始化Harbor</h2><p>将模板复制一份</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cp harbor.yml.tmpl harbor.yml</span><br></pre></td></tr></table></figure>
+
+<p>在<code>harbor.yml</code>中修改如下的参数</p>
+<ul>
+<li>hostname：Harbor的访问地址，最好写ip</li>
+<li>https&#x2F;port：对外暴露8443端口，记得放行8443端口</li>
+<li>https&#x2F;certificate: 使用宿主机的SSL证书文件。也就是.crt的位置</li>
+<li>https&#x2F;certificate: 使用宿主机的SSL证书文件，是.key的位置</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202312302358195.png" alt="image-20231230235823077"></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><p>https访问，并且加上8443端口号</p>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>在<code>/etc/docker/daemon.json</code>中加入Harbor仓库地址以允许 Docker 客户端连接到该不安全的注册表而不进行证书验证。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">        &quot;insecure-registries&quot;:[&quot;https://harbor.yiiong.top:8443&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="更改配置的操作"><a href="#更改配置的操作" class="headerlink" title="更改配置的操作"></a>更改配置的操作</h2><p><strong>使用 prepare 脚本生成 HTTPS 配置</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./prepare</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除原有 Harbor 容器</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose down -v</span><br></pre></td></tr></table></figure>
+
+<p><strong>重新启动 Harbor</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题与解决"><a href="#问题与解决" class="headerlink" title="问题与解决"></a>问题与解决</h3><p>1.出现</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@master2:~# docker login https://harbor.yiiong.top:8443</span><br><span class="line">Username: admin</span><br><span class="line">Password: </span><br><span class="line">Error response from daemon: Get &quot;https://harbor.yiiong.top:8443/v2/&quot;: Get &quot;https://172.20.14.31:8443/service/token?account=admin&amp;client_id=docker&amp;offline_token=true&amp;service=harbor-registry&quot;: tls: failed to verify certificate: x509: cannot validate certificate for 172.20.14.31 because it doesn&#x27;t contain any IP SANs</span><br></pre></td></tr></table></figure>
+
+<p>原因：<code> /etc/docker/daemon.json</code>中没有更新 Harbor 注册表的证书配置，我们只需要把Harbor地址添加到 Docker 的不安全注册表列表中，允许 Docker 客户端连接到该不安全的注册表而不进行证书验证。</p>
+<p>1.出现<code>Error response from daemon: failed to create task for container: failed to initialize logging driver: dial tcp [::1]:1514: connect: connection refused</code></p>
+<p>取消rsyslog.conf文件第19，20行注释，并将514改为1514</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/rsyslog.conf</span><br><span class="line"></span><br><span class="line"># 取消注释并修改</span><br><span class="line">$ModLoad imtcp</span><br><span class="line">$InputTCPServerRun 1514</span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202312301419517.png" alt="harbor"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 重启rsyslog</span><br><span class="line">systemctl restart rsyslog.service</span><br></pre></td></tr></table></figure>
+
+<p>2.出现<code>Error response from daemon: driver failed programming external connectivity on endpoint nginx (191f6b9a13a1d60e6f9656c7f8030be35bcd96395c524f8fc4af5c83e2b45f26): Error starting userland proxy: listen tcp4 0.0.0.0:8080: bind: address already in use</code></p>
+<p>修改<code>harbor.yml</code>中的http&#x2F;port为没有占用的端口即可，然后记得放行端口</p>
+<h1 id="Kubernetes的部署"><a href="#Kubernetes的部署" class="headerlink" title="Kubernetes的部署"></a>Kubernetes的部署</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.bearxiong2003.xyz/index.php/2023/06/07/kubernetes%E9%83%A8%E7%BD%B2/">Kubernetes部署 – Yiiong’s blog (bearxiong2003.xyz)</a></p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/">http://example.com/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/">服务器运维</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post-share"><div class="social-share" data-image="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/11/08/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" title="服务器运维"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">服务器运维</div></div><div class="info-2"><div class="info-item-1">服务器介绍 服务器概念、组成和架构详解 - 知乎 (zhihu.com)  服务器的英文名称为“...</div></div></div></a><a class="pagination-related" href="/2024/11/08/%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" title="运维常用工具"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">运维常用工具</div></div><div class="info-2"><div class="info-item-1">Harbor Harbor (goharbor.io)  尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。 整体架构 如上图所示是 Harbor 2.0 的架构图，从上到下可分为代理层、功能层和数据层。  代理层：代理层实质上是一个 Nginx 反向代理，负责接收不同类型的客户端请求，包括浏览器、用户脚本、Docker 等，并根据请求类型和 URI 转发给不同的后端服务进行处理。 功能层： Portal：是一个基于 Argular 的前端应用，提供 Harbor 用户访问的界面。 Core：是 Harbor 中的核心组件，封装了 Harbor 绝大部分的业务逻辑。 JobService：异步任务组件，负责 Harbor 中很多比较耗时的功能，比如 Artifact 复制、扫描、垃圾回收等。 Docker Distribution：Harbor 通过 Distribution 实现...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/11/08/Linux%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="Linux相关问题与解决"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-08</div><div class="info-item-2">Linux相关问题与解决</div></div><div class="info-2"><div class="info-item-1">Q1：yum仓库报错，提示无法从 &#x2F;var&#x2F;lib&#x2F;rpm 打开软件包数据库问题描述 [root@VM-4-12-centos ~]# yum update错误：db5 错误(11) 来自 dbenv-&gt;open：资源暂时不可用错误：无法使用 db5 - 资源暂时不可用 (11) 打开 Packages 索引错误：无法从 /var/lib/rpm 打开软件包数据库CRITICAL:yum.main:Error: rpmdb open failed  原因 误操作导致rpm数据库损坏 解决 刪除/var/lib/rpm/_db.*，然后rebuilddb [root@VM-4-12-centos ~]# cd /var/lib/rpm[root@VM-4-12-centos rpm]# rm -rf _db.*[root@VM-4-12-centos rpm]# rpm --rebuilddb  Q2：frp 穿透不上问题描述 [root@VM-4-12-centos frp-opi-wp]# ./frps -c...</div></div></div></a><a class="pagination-related" href="/2024/11/08/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" title="服务器运维"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-08</div><div class="info-item-2">服务器运维</div></div><div class="info-2"><div class="info-item-1">服务器介绍 服务器概念、组成和架构详解 - 知乎 (zhihu.com)  服务器的英文名称为“...</div></div></div></a><a class="pagination-related" href="/2024/11/08/%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" title="运维常用工具"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-08</div><div class="info-item-2">运维常用工具</div></div><div class="info-2"><div class="info-item-1">Harbor Harbor (goharbor.io)  尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。 整体架构 如上图所示是 Harbor 2.0 的架构图，从上到下可分为代理层、功能层和数据层。  代理层：代理层实质上是一个 Nginx 反向代理，负责接收不同类型的客户端请求，包括浏览器、用户脚本、Docker 等，并根据请求类型和 URI 转发给不同的后端服务进行处理。 功能层： Portal：是一个基于 Argular 的前端应用，提供 Harbor 用户访问的界面。 Core：是 Harbor 中的核心组件，封装了 Harbor 绝大部分的业务逻辑。 JobService：异步任务组件，负责 Harbor 中很多比较耗时的功能，比如 Artifact 复制、扫描、垃圾回收等。 Docker Distribution：Harbor 通过 Distribution 实现...</div></div></div></a><a class="pagination-related" href="/2024/11/08/Linux/" title="Linux"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-08</div><div class="info-item-2">Linux</div></div><div class="info-2"><div class="info-item-1"> 鸟哥的Linux私房菜基础篇-第三版 人民邮电出版社  关系Unix与Linux的关系Linux 是一个类似 Unix 的操作系统，Unix 要早于 Linux，Linux 的初衷就是要替代 UNIX，并在功能和用户体验上进行优化，所以 Linux 模仿了 UNIX（但并没有抄袭 UNIX 的源码），使得 Linux 在外观和交互上与 UNIX 非常类似。 Linux、GNU、发行版的关系打个比方操作系统就是一辆汽车。Linux是做汽车发动机的，也只生产发动机。有一家叫GNU的汽车零配件厂商，提供生产一整辆汽车的所有主要配件，只是它提供的发动机很差。各种发行版就是不同的汽车组装厂，它们自己不生主要的汽车配件，都是用GNU提供的配件——但发动机除外，发动机用的是Linux提供的。当然也有用其它发动机的，例如FreeBSD内核（kFreeBSD）。 GNU要求这些汽车组装厂，如果你除了内核以外其它配件基本都是用我生产的配件，你的名字中就应该带上我的标识。因此一些听话的厂商，例如Debian组装出来的用Linux发动机的汽车，就叫Debian...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411081917078.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description">Everything is a file.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1783172311&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Harbor%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="toc-number">1.</span> <span class="toc-text">Harbor的部署</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BDHarbor%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%E5%8C%85"><span class="toc-number">1.2.</span> <span class="toc-text">下载Harbor离线安装包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenSSL%E8%87%AA%E7%AD%BE%E8%AF%81%E4%B9%A6"><span class="toc-number">1.3.</span> <span class="toc-text">OpenSSL自签证书</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95"><span class="toc-number">1.3.1.</span> <span class="toc-text">创建目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90CA%E8%AF%81%E4%B9%A6"><span class="toc-number">1.3.2.</span> <span class="toc-text">生成CA证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90Server%E8%AF%81%E4%B9%A6"><span class="toc-number">1.3.3.</span> <span class="toc-text">生成Server证书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90Server%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%88CSR%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">生成Server证书签名请求（CSR）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90-x509-v3-%E8%AF%81%E4%B9%A6%E6%89%A9%E5%B1%95%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.5.</span> <span class="toc-text">生成 x509 v3 证书扩展文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-CA-%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%8F%91-Server-%E8%AF%81%E4%B9%A6"><span class="toc-number">1.3.6.</span> <span class="toc-text">使用 CA 证书签发 Server 证书</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA-Harbor-%E5%92%8C-Docker-%E9%85%8D%E7%BD%AE%E8%AF%81%E4%B9%A6"><span class="toc-number">1.4.</span> <span class="toc-text">为 Harbor 和 Docker 配置证书</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96Harbor"><span class="toc-number">1.5.</span> <span class="toc-text">初始化Harbor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.6.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE"><span class="toc-number">1.7.</span> <span class="toc-text">访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%99%BB%E5%BD%95"><span class="toc-number">1.8.</span> <span class="toc-text">登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9%E9%85%8D%E7%BD%AE%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">1.9.</span> <span class="toc-text">更改配置的操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3"><span class="toc-number">1.9.1.</span> <span class="toc-text">问题与解决</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Kubernetes%E7%9A%84%E9%83%A8%E7%BD%B2"><span class="toc-number">2.</span> <span class="toc-text">Kubernetes的部署</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux/" title="Linux">Linux</a><time datetime="2024-11-08T07:37:06.082Z" title="发表于 2024-11-08 15:37:06">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="Linux相关问题与解决">Linux相关问题与解决</a><time datetime="2024-11-08T07:36:20.193Z" title="发表于 2024-11-08 15:36:20">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" title="服务器运维">服务器运维</a><time datetime="2024-11-08T07:35:55.363Z" title="发表于 2024-11-08 15:35:55">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E9%83%A8%E7%BD%B2%E7%A4%BA%E8%8C%83/" title="部署示范">部署示范</a><time datetime="2024-11-08T07:35:10.688Z" title="发表于 2024-11-08 15:35:10">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" title="运维常用工具">运维常用工具</a><time datetime="2024-11-08T07:34:03.140Z" title="发表于 2024-11-08 15:34:03">2024-11-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Yiiong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
