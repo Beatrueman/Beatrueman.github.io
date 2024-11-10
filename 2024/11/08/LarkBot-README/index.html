@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LarkBot-README | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="referrer" content="no-referrer"><meta name="description" content="Beatrueman&#x2F;FeishuBot: 一个飞书机器人 更新与修复 2023年9月1日更新 更新了对话机器人返回帮助界面功能，用户发送“帮助”，返回机器人使用说明  2023年8月30日更新 更新了对话机器人返回微博热搜榜功能，用户发送“热搜”，返回即时热搜榜  2023年8月28日更新 1.将原先的TestApi.py整合进ChatApi.py中，省去了繁琐的目录与代码文件 2.更新了请求地">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LarkBot-README">
+<meta property="og:url" content="https://blog.yiiong.top/2024/11/08/LarkBot-README/index.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="Beatrueman&#x2F;FeishuBot: 一个飞书机器人 更新与修复 2023年9月1日更新 更新了对话机器人返回帮助界面功能，用户发送“帮助”，返回机器人使用说明  2023年8月30日更新 更新了对话机器人返回微博热搜榜功能，用户发送“热搜”，返回即时热搜榜  2023年8月28日更新 1.将原先的TestApi.py整合进ChatApi.py中，省去了繁琐的目录与代码文件 2.更新了请求地">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.yiiong.top/img/1731081267137.jpg">
+<meta property="article:published_time" content="2024-11-08T15:27:15.531Z">
+<meta property="article:modified_time" content="2024-11-08T16:17:45.023Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="Achievements">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.yiiong.top/img/1731081267137.jpg"><link rel="shortcut icon" href="https://gitee.com/beatrueman/images/raw/master/img/202411081927715.svg"><link rel="canonical" href="https://blog.yiiong.top/2024/11/08/LarkBot-README/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'https://fancyapps.com/fancybox/',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LarkBot-README',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/1731063917682.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/1731081267137.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">LarkBot-README</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">LarkBot-README</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-08T15:27:15.531Z" title="发表于 2024-11-08 23:27:15">2024-11-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T16:17:45.023Z" title="更新于 2024-11-09 00:17:45">2024-11-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Blogs/">Blogs</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://github.com/Beatrueman/FeishuBot">Beatrueman/FeishuBot: 一个飞书机器人</a></p>
+<h2 id="更新与修复">更新与修复</h2>
+<h3 id="2023年9月1日更新">2023年9月1日更新</h3>
+<p>更新了对话机器人返回帮助界面功能，用户发送“帮助”，返回机器人使用说明</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202309011614056.png" alt="image-20230901161429940"></p>
+<h3 id="2023年8月30日更新">2023年8月30日更新</h3>
+<p>更新了对话机器人返回微博热搜榜功能，用户发送“热搜”，返回即时热搜榜</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202309011552244.png" alt="image-20230901155214031"></p>
+<h3 id="2023年8月28日更新">2023年8月28日更新</h3>
+<p>1.将原先的<code>TestApi.py</code>整合进<code>ChatApi.py</code>中，省去了繁琐的目录与代码文件</p>
+<p>2.更新了请求地址配置方法，只需要一个文件<code>ChatApi.py</code>即可</p>
+<h2 id="飞书机器人介绍"><strong>飞书机器人介绍</strong></h2>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://open.feishu.cn/document/client-docs/bot-v3/bot-overview">机器人概述 - 开发指南 - 开发文档 - 飞书开放平台 (feishu.cn)</a></p>
+</blockquote>
+<p>飞书机器人分为两种，一种是<strong>自定义机器人</strong>，一种是<strong>应用机器人</strong>。</p>
+<h3 id="自定义机器人">自定义机器人</h3>
+<p>只能在群聊中使用，只能完成比较固定的消息推送。</p>
+<p><strong><em>webhook</em>获取方法：</strong></p>
+<p>1.进入目标群组，在群组右上角点击更多按钮，并点击 <strong>设置</strong>。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://sf3-cn.feishucdn.com/obj/open-platform-opendoc/3717a10d5e293fc80d296267478f4bb3_LREe0920Bf.png?height=1524&amp;lazyload=true&amp;maxWidth=600&amp;width=2020" alt="img"></p>
+<p>2.在右侧 <strong>设置</strong> 界面，点击 <strong>群机器人</strong>。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311837969.png" alt="img"></p>
+<p>3.在 <strong>群机器人</strong> 界面点击 <strong>添加机器人</strong>。</p>
+<p>4.在 <strong>添加机器人</strong> 对话框，找到 <strong>自定义机器人</strong>，并 <strong>添加</strong>。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311838153.png" alt="img"></p>
+<p>5.设置自定义机器人的名称与描述，并点击 <strong>添加</strong>。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311838285.png" alt="img"></p>
+<p>6.获取自定义机器人的 <em>webhook</em> 地址，并点击 <strong>完成</strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311840164.png" alt="img"></p>
+<h3 id="应用机器人">应用机器人</h3>
+<p>功能很多，开发性高，灵活性强。需要有企业账户，支持对话互动等多种功能。</p>
+<h4 id="app-id与app-secret获取方法"><em>app_id</em>与<em>app_secret</em>获取方法</h4>
+<p>1.用企业账户，在开发者后台中，<strong>创建企业自建应用</strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311843815.png" alt="image-20230731184331697"></p>
+<p>2.找到app_id与qpp_secret</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311845488.png" alt="image-20230731184507412"></p>
+<p>3.添加应用能力，选择机器人</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311845159.png" alt="image-20230731184549009"></p>
+<p>4.添加以下权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">im:message,im:message.group_at_msg,im:message.group_at_msg:readonly,im:message.group_msg,im:message.p2p_msg,im:message.p2p_msg:readonly,im:message:readonly,im:chat:readonly,im:chat,im:message:send_as_bot</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311846289.png" alt="image-20230731184637236"></p>
+<p>开启<em><strong>事件订阅</strong></em>：</p>
+<p>若要使机器人有互动对话功能，需要填写请求配置地址，并添加<strong>接收消息v2.0</strong>和<strong>消息已读v2.0</strong>事件</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308021656698.png" alt="image-20230802165643614"></p>
+<h4 id="请求地址配置方法"><strong>请求地址配置</strong>方法</h4>
+<p><strong>1.使用反向代理工具ngrok完成内网穿透</strong></p>
+<p>使用docker启动ngrok</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -it -e NGROK_AUTHTOKEN=&lt;token&gt; ngrok/ngrok http 8080</span><br></pre></td></tr></table></figure>
+<p><em><strong>NGROK_AUTHTOKEN</strong></em>获取方法：</p>
+<p>1.1 进入ngrok官网<a href="https://link.zhihu.com/?target=https%3A//ngrok.com/">https://ngrok.com/</a>，注册ngrok账号并下载ngrok</p>
+<p>1.2 获取Authtoken</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308031231178.png" alt="image-20230803123131090"></p>
+<p>获取公网地址后，按下Ctrl + P，然后再按下Ctrl + Q，使容器后台运行。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308031236943.png" alt="image-20230803123606894"></p>
+<p>1.3 在<code>FeishuBot/public/chat/conf.py</code>中填写相关信息</p>
+<p>先运行<code>ChatApi.py</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python3 ChatApi.py</span><br></pre></td></tr></table></figure>
+<p>到飞书后台填写请求配置地址，格式为<a target="_blank" rel="noopener" href="https://123456.ngrok-free.app/query/message">https://123456.ngrok-free.app/query/message</a></p>
+<p>期间保证ngrok在后台一直运行</p>
+<p><strong>2.使用Kubernetes暴露公网</strong></p>
+<p>2.1 在<code>FeishuBot/public/build-api</code>填好<code>conf.py</code>中的信息，然后自己制作docker镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker build -t docker的用户名/镜像名:&lt;tag&gt; .</span><br><span class="line">docker push 做好的镜像</span><br></pre></td></tr></table></figure>
+<p>2.2在<code>FeishuBot/public/build-api</code>下，修改<code>deploy.yaml</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: api</span><br><span class="line">spec:</span><br><span class="line">  replicas: 1</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: api</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: api</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: api</span><br><span class="line">        image:  # 在build-api目录下制作的镜像</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 8080</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: api</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: api</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - name: http  </span><br><span class="line">    protocol: TCP</span><br><span class="line">    port: 80  # 对外暴露的端口</span><br><span class="line">    targetPort: 8080 # Flask应用容器监听的端口</span><br><span class="line">    nodePort: 39378</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后获取检验用的请求配置地址</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deploy.yaml</span><br><span class="line">kubectl get svc # 获取端口为39378,记得在服务器开放</span><br></pre></td></tr></table></figure>
+<p>地址示例：http://1.2.3.4:3XXXXX/query/message</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308031852674.png" alt="image-20230803185245586"></p>
+<h2 id="功能"><strong>功能</strong></h2>
+<ul>
+<li>青年大学习提醒</li>
+<li>天气通知</li>
+<li>互动对话功能</li>
+<li>ChatGPT—引用网上项目</li>
+</ul>
+<h3 id="青年大学习提醒">青年大学习提醒</h3>
+<p>实现每周一早上九点，通知用户完成青年大学习</p>
+<p>点击超链接跳转微信</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311808856.png" alt="image-20230731180846759"></p>
+<p>使用方法</p>
+<p><strong>自定义机器人</strong>：在<code>FeishuBot/personal/conf.py</code>中填写你的webhook</p>
+<p><strong>应用机器人</strong>：在<code>FeishuBot/public/send/conf.py</code>中填写你的app_id和app_secret</p>
+<p>开启服务：自定义机器人启动脚本<code>FeishuBot/personal/qndxx-remind/run1.sh</code></p>
+<p>​                    应用机器人启动脚本<code>FeishuBot/public/send/qndxx-remind/run1.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x run1.sh</span><br><span class="line">./run1.sh</span><br></pre></td></tr></table></figure>
+<h3 id="天气通知">天气通知</h3>
+<p>实现每天早上七点，向用户推送天气信息</p>
+<p>普通天气</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311902236.png" alt="image-20230731190241182"></p>
+<p>出现灾害天气时，推送气象台预警信息，并附带特殊天气图标</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202307311903116.png" alt="image-20230731190331070"></p>
+<p>使用方法</p>
+<p><strong>自定义机器人</strong>：在<code>FeishuBot/personal/conf.py</code>中填写你的webhook和指定城市</p>
+<p><strong>应用机器人</strong>：在<code>FeishuBot/public/send/conf.py</code>中填写你的app_id和app_secret，指定城市</p>
+<p>开启服务：自定义机器人启动脚本<code>FeishuBot/personal/weather-remind/run2.sh</code></p>
+<p>​                    应用机器人启动脚本<code>FeishuBot/public/send/weather-remind/run2.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x run1.sh</span><br><span class="line">./run2.sh</span><br></pre></td></tr></table></figure>
+<h3 id="互动对话功能">互动对话功能</h3>
+<p><strong>仅限应用机器人</strong></p>
+<p><strong>互动对话逻辑</strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308032313540.jpeg" alt="img"></p>
+<p>实现向应用机器人发送特定信息，返回特定内容</p>
+<p>1.用户发送”<strong>青年大学习</strong>“，机器人回复青年大学习通知内容</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308012231904.png" alt="image-20230801223157822"></p>
+<p>2.用户发送&quot;<strong>查询天气：指定城市名</strong>&quot;后，机器人回复需要监测天气城市的天气信息。</p>
+<p>城市名注意不要带市和区。 如: 北京、南岸</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308021105899.png" alt="image-20230802110517854"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308021204780.png" alt="image-20230802120451729"></p>
+<p>3.用户发送“<strong>热搜</strong>”，机器人返回即时热搜榜</p>
+<h3 id="ChatGPT"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202309011552244.png" alt="">ChatGPT</h3>
+<p>参考网上的项目，建议使用新的应用机器人</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://aircode.cool/q4y1msdim4">飞书 ChatGPT 机器人 - 用 JavaScript 五分钟开发一个飞书 ChatGPT 机器人 (aircode.cool)</a></p>
+</blockquote>
+<h2 id="BUG">BUG</h2>
+<p><s>1.用K8s配置请求地址时，用于检验时地址都是可用的，但是更改镜像后，无法使用互动对话功能</s></p>
+<p>2.互动对话功能在服务器上使用ngrok有点问题，在windows下完全可以使用</p>
+<p><s>3.因为配置请求地址时需要在固定地址的情况下改变镜像，所以GitLab中的CI只跑通用于检验的镜像并部署在K8s，详情请看.gitlab-ci.yaml</s></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202308041856285.png" alt="image-20230804185615165"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.yiiong.top">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.yiiong.top/2024/11/08/LarkBot-README/">https://blog.yiiong.top/2024/11/08/LarkBot-README/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.yiiong.top" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Achievements/">Achievements</a><a class="post-meta__tags" href="/tags/Python/">Python</a></div><div class="post-share"><div class="social-share" data-image="/img/1731081267137.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/11/09/YiCloud-README/" title="YiCloud-README"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/1731081267137.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">YiCloud-README</div></div><div class="info-2"><div class="info-item-1">Beatrueman/YiCloud: A netdisk for everyone. It’s able to save everything. 一个简易的个人网盘系统 技术栈： 前端：HTML + CSS + JavaScript 后端：Python Flask 数据库：MySQL 持续开发… 页面展示   功能介绍 注册与登录 可完成基本的注册与登录功能。 当密码不正确时会出现提示：”用户名或密码错误，请重试！“  注册时会提示密码规范，不符合规范的密码无法进行注册。   登出 点击红色按钮：退出登录即可登出当前用户。 文件上传 用户登录后，点击蓝色按钮：上传文件即可选择本地文件进行上传。 上传成功与否都会出现弹窗反馈。 文件下载 用户成功上传的文件都会生成一个超链接，只需点击超链接即可下载对应文件。 文件删除 用户可点击每个文件后的红色删除按钮，即可删除对应文件。 文件分页 每个页面固定展示7个文件，用户可点击右下角的分页按钮选择对应文件所在页面。 如何安装？ 本机部署 chmod +x install.sh./install.sh #...</div></div></div></a><a class="pagination-related" href="/2024/11/08/%E7%AE%97%E6%B3%95%E8%AE%B0%E5%BD%95/" title="算法记录"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/1731081267137.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">算法记录</div></div><div class="info-2"><div class="info-item-1">基于线性表的图书信息管理 选用顺序表或链表实现线性表的的基本操作。 图书信息表的创建和输出 InitList()用来初始化链表，CreateList_R(LinkList *L)利用后插法来创建链表链表。 // 初始化链表LinkList InitList()&#123;    LinkList L = (LinkList)malloc(sizeof(LNode));    if(L == NULL) &#123;        printf(&quot;链表初始化失败！\n&quot;);        exit(0);    &#125;    L-&gt;next = NULL; // 头指针设置为空    printf(&quot;链表初始化成功！\n&quot;);    return L;&#125;// 后插法创建链表int CreateList_R(LinkList *L)&#123;    *L = InitList();    LinkList r = *L; // 尾指针r指向头结点    Book book;    while(1)    &#123; ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/1731063917682.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description">Everything is a file.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1783172311&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">1.</span> <span class="toc-text">更新与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2023%E5%B9%B49%E6%9C%881%E6%97%A5%E6%9B%B4%E6%96%B0"><span class="toc-number">1.1.</span> <span class="toc-text">2023年9月1日更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2023%E5%B9%B48%E6%9C%8830%E6%97%A5%E6%9B%B4%E6%96%B0"><span class="toc-number">1.2.</span> <span class="toc-text">2023年8月30日更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2023%E5%B9%B48%E6%9C%8828%E6%97%A5%E6%9B%B4%E6%96%B0"><span class="toc-number">1.3.</span> <span class="toc-text">2023年8月28日更新</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A3%9E%E4%B9%A6%E6%9C%BA%E5%99%A8%E4%BA%BA%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">飞书机器人介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="toc-number">2.1.</span> <span class="toc-text">自定义机器人</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="toc-number">2.2.</span> <span class="toc-text">应用机器人</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#app-id%E4%B8%8Eapp-secret%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.2.1.</span> <span class="toc-text">app_id与app_secret获取方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E5%9C%B0%E5%9D%80%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="toc-number">2.2.2.</span> <span class="toc-text">请求地址配置方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">3.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%92%E5%B9%B4%E5%A4%A7%E5%AD%A6%E4%B9%A0%E6%8F%90%E9%86%92"><span class="toc-number">3.1.</span> <span class="toc-text">青年大学习提醒</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A9%E6%B0%94%E9%80%9A%E7%9F%A5"><span class="toc-number">3.2.</span> <span class="toc-text">天气通知</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E5%8A%A8%E5%AF%B9%E8%AF%9D%E5%8A%9F%E8%83%BD"><span class="toc-number">3.3.</span> <span class="toc-text">互动对话功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ChatGPT"><span class="toc-number">3.4.</span> <span class="toc-text">ChatGPT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BUG"><span class="toc-number">4.</span> <span class="toc-text">BUG</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/09/YiCloud-README/" title="YiCloud-README">YiCloud-README</a><time datetime="2024-11-08T16:19:47.080Z" title="发表于 2024-11-09 00:19:47">2024-11-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/LarkBot-README/" title="LarkBot-README">LarkBot-README</a><time datetime="2024-11-08T15:27:15.531Z" title="发表于 2024-11-08 23:27:15">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E7%AE%97%E6%B3%95%E8%AE%B0%E5%BD%95/" title="算法记录">算法记录</a><time datetime="2024-11-08T15:08:35.657Z" title="发表于 2024-11-08 23:08:35">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux/" title="Linux">Linux</a><time datetime="2024-11-08T07:37:06.082Z" title="发表于 2024-11-08 15:37:06">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="Linux相关问题与解决">Linux相关问题与解决</a><time datetime="2024-11-08T07:36:20.193Z" title="发表于 2024-11-08 15:36:20">2024-11-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Yiiong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

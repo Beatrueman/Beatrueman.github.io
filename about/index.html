@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>关于 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="referrer" content="no-referrer"><meta name="description" content="👋欢迎来到我的博客！ ✨关于我 我是Yiiong 我的id是由我的名字的拼音组合而成的。 我来自重庆邮电大学，目前在校级组织 红岩网校工作站运维安全部 负责网校基础设施服务的运维工作，保障网校相关服务的稳定运行。 👉点击查看红岩网校工作站的官方网站 🔧技术栈  我是Linux的忠实粉丝💖 我懂一点Python和GoLang，在网校中我学习了服务器的管理经验以及虚拟化、云计算的相关知识，通过">
+<meta property="og:type" content="website">
+<meta property="og:title" content="关于">
+<meta property="og:url" content="https://blog.yiiong.top/about/index.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="👋欢迎来到我的博客！ ✨关于我 我是Yiiong 我的id是由我的名字的拼音组合而成的。 我来自重庆邮电大学，目前在校级组织 红岩网校工作站运维安全部 负责网校基础设施服务的运维工作，保障网校相关服务的稳定运行。 👉点击查看红岩网校工作站的官方网站 🔧技术栈  我是Linux的忠实粉丝💖 我懂一点Python和GoLang，在网校中我学习了服务器的管理经验以及虚拟化、云计算的相关知识，通过">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.yiiong.top/img/1731081267137.jpg">
+<meta property="article:published_time" content="2024-11-09T14:21:22.000Z">
+<meta property="article:modified_time" content="2024-11-10T03:44:32.054Z">
+<meta property="article:author" content="Yiiong">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.yiiong.top/img/1731081267137.jpg"><link rel="shortcut icon" href="https://gitee.com/beatrueman/images/raw/master/img/202411081927715.svg"><link rel="canonical" href="https://blog.yiiong.top/about/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'https://fancyapps.com/fancybox/',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '关于',
+  isPost: false,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/1731063917682.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page type-about" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url(/img/1731081267137.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">关于</h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><h1>👋欢迎来到我的博客！</h1>
+<h2 id="✨关于我">✨关于我</h2>
+<p>我是<strong>Yiiong</strong></p>
+<p>我的<em>id</em>是由我的名字的拼音组合而成的。</p>
+<p>我来自<a target="_blank" rel="noopener" href="https://www.cqupt.edu.cn/">重庆邮电大学</a>，目前在校级组织</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://gitee.com/beatrueman/images/raw/master/img/202411092341657.png" width="25" height="23" align="left"><em><strong>红岩网校工作站运维安全部</strong></em></p>
+<p>负责网校基础设施服务的运维工作，保障网校相关服务的稳定运行。</p>
+<p>👉<a target="_blank" rel="noopener" href="https://redrock.cqupt.edu.cn/">点击查看红岩网校工作站的官方网站</a></p>
+<h2 id="🔧技术栈">🔧技术栈</h2>
+<ul>
+<li>我是<em><strong>Linux</strong></em>的忠实粉丝💖</li>
+<li>我懂一点<code>Python</code>和<code>GoLang</code>，在网校中我学习了服务器的管理经验以及虚拟化、云计算的相关知识，通过<code>Docker</code>和<code>Kubernetes</code>部署过简单的服务。</li>
+<li>目前正在学习<code>Kubernetes</code>的集群管理（不过现在只是yaml工程师，还不懂K8s的底层工作原理💦）。</li>
+<li>我还学习了<code>CI/CD</code>，实践过<code>GitLab CI/CD</code>、<code>Github Actions</code>、<code>Jenkins</code></li>
+</ul>
+<h2 id="📧联系我">📧联系我</h2>
+<p>你可以通过我的邮箱联系我：yiiong@redrock.team</p>
+<p>我的<a target="_blank" rel="noopener" href="https://github.com/Beatrueman">Github</a>上有一些好玩实用的东西，你可以👀瞧瞧欸！如果对你有帮助，麻烦帮我点点<strong>star</strong>⭐</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Beatrueman/EasyBanner">Beatrueman/EasyBanner: 通过飞书机器人对特定机器远程封禁恶意IP</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Beatrueman/analysis">Beatrueman/analysis: A data visualization project related to HIV.</a></li>
+</ul>
+<h2 id="🌱关于本站">🌱关于本站</h2>
+<blockquote>
+<p>原先的博客使用的是<em><strong>WordPress</strong></em>，并且托管在我家中的🍊<strong>OrangePi Zero3</strong>上，但是由于机器不稳定，加上没有公网也没有IPv6，不能方便的访问到它，而且写文章也不是很方便，于是就放弃了这个方案。</p>
+</blockquote>
+<p>现在我使用<em><strong>Hexo</strong></em>来作为我博客的框架，并且使用<a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly"><em><strong>Butterfly</strong></em></a>作为博客的主题。</p>
+<p>这里主要会记录我的<strong>学习笔记</strong>，目的是<strong>分享知识</strong>以及方便我多端查看我写的笔记。</p>
+<p>后面我应该会记录一下我的生活以及一些有趣的事情！</p>
+<h2 id="📆TODO-List">📆TODO List</h2>
+<h3 id="2024-11-9">2024/11/9</h3>
+<ul>
+<li>[ ] 学学GoLang，增强一下代码能力</li>
+<li>[ ] 把鸟哥的Linux私房菜基础篇学完</li>
+<li>[ ] 学点鸟哥的Linux私房菜服务器架设篇</li>
+<li>[ ] 不想只做yaml工程师了，学学K8s的深层原理</li>
+<li>[ ] 多拿点奖，争取再拿一个开源先锋奖</li>
+<li>[ ] 争取再拿奖学金</li>
+<li>[ ] 坚持跑步，争取这学期2公里配速进5分钟（现在最佳是5’40-5’50）</li>
+</ul>
+<p>暂时想到这么多…</p>
+<h2 id="🏆荣誉">🏆荣誉</h2>
+<ul>
+<li>
+<p><strong><a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/competition/entrance/532215/submission/1282">2024天池云原生编程挑战赛-赛道3：用通义灵码,人人都是开源贡献者</a>-开源先锋奖&amp;&amp;开源园丁奖</strong></p>
+<p><a target="_blank" rel="noopener" href="https://cs.cqupt.edu.cn/info/1034/30893.htm">学校报道</a><br>
+<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qZ1XyntRH18zzhmgXx-FXw">阿里云云原生官方公众号转载</a><br>
+<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzU0MzkyMTgzNg==&amp;mid=2247484806&amp;idx=1&amp;sn=0b2422fbb4f710e180e5d6f9db273965&amp;chksm=fa6f5769d623561fd5ba70760e7a3186f750a7634a32b4b1aa58ca12204bc2bfec948795956d&amp;mpshare=1&amp;scene=23&amp;srcid=0814KitI8IiuMpc77n7rgY4S&amp;sharer_shareinfo=397b8618f5caf4531af42b2ff259ae5e&amp;sharer_shareinfo_first=74c6aa54a487c47d8d2bd69bd1c66ed7#rd">Higress官方公众号转载</a></p>
+</li>
+</ul>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/1731063917682.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description">Everything is a file.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1783172311&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock!</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/09/YiCloud-README/" title="YiCloud-README">YiCloud-README</a><time datetime="2024-11-08T16:19:47.080Z" title="发表于 2024-11-09 00:19:47">2024-11-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/LarkBot-README/" title="LarkBot-README">LarkBot-README</a><time datetime="2024-11-08T15:27:15.531Z" title="发表于 2024-11-08 23:27:15">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/%E7%AE%97%E6%B3%95%E8%AE%B0%E5%BD%95/" title="算法记录">算法记录</a><time datetime="2024-11-08T15:08:35.657Z" title="发表于 2024-11-08 23:08:35">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux/" title="Linux">Linux</a><time datetime="2024-11-08T07:37:06.082Z" title="发表于 2024-11-08 15:37:06">2024-11-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/08/Linux%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3/" title="Linux相关问题与解决">Linux相关问题与解决</a><time datetime="2024-11-08T07:36:20.193Z" title="发表于 2024-11-08 15:36:20">2024-11-08</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Blogs/"><span class="card-category-list-name">Blogs</span><span class="card-category-list-count">13</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Kubernetes/"><span class="card-category-list-name">Kubernetes</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BB%A3%E7%A0%81%E8%AE%B0%E5%BD%95/"><span class="card-category-list-name">代码记录</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"><span class="card-category-list-name">服务器</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/"><span class="card-category-list-name">算法</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9B%B8%E5%85%B3/"><span class="card-category-list-name">计算机相关</span><span class="card-category-list-count">2</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Github-Actions/" style="font-size: 1.1em; color: #999">Github Actions</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.1em; color: #999">计算机</a> <a href="/tags/CI-CD/" style="font-size: 1.26em; color: #999fa8">CI/CD</a> <a href="/tags/Python/" style="font-size: 1.26em; color: #999fa8">Python</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.26em; color: #999fa8">数据结构</a> <a href="/tags/Kubernetes/" style="font-size: 1.26em; color: #999fa8">Kubernetes</a> <a href="/tags/Gitlab/" style="font-size: 1.1em; color: #999">Gitlab</a> <a href="/tags/Trouble-Shooting/" style="font-size: 1.18em; color: #999ca1">Trouble Shooting</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/" style="font-size: 1.34em; color: #99a3b0">服务器运维</a> <a href="/tags/Jenkins/" style="font-size: 1.1em; color: #999">Jenkins</a> <a href="/tags/C/" style="font-size: 1.42em; color: #99a6b7">C</a> <a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">安全</a> <a href="/tags/GoLang/" style="font-size: 1.18em; color: #999ca1">GoLang</a> <a href="/tags/Achievements/" style="font-size: 1.5em; color: #99a9bf">Achievements</a> <a href="/tags/Linux/" style="font-size: 1.42em; color: #99a6b7">Linux</a> <a href="/tags/Helm/" style="font-size: 1.1em; color: #999">Helm</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+    <ul class="card-archive-list">
+  
+      <li class="card-archive-list-item">
+        <a class="card-archive-list-link" href="/archives/2024/11/">
+          <span class="card-archive-list-date">十一月 2024</span>
+          <span class="card-archive-list-count">27</span>
+        </a>
+      </li>
+    </ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">27</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">109.3k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-11-10T03:47:11.978Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2024 By Yiiong</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
