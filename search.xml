@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>关于GZCTF反向代理配置不当导致平台在高并发下崩溃</title>
+      <link href="/2024/12/16/%E5%85%B3%E4%BA%8EGZCTF%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E5%B9%B3%E5%8F%B0%E5%9C%A8%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8B%E5%B4%A9%E6%BA%83/"/>
+      <url>/2024/12/16/%E5%85%B3%E4%BA%8EGZCTF%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E5%B9%B3%E5%8F%B0%E5%9C%A8%E9%AB%98%E5%B9%B6%E5%8F%91%E4%B8%8B%E5%B4%A9%E6%BA%83/</url>
+      
+        <content type="html"><![CDATA[<h2 id="环境">环境</h2><p>GZCTF单实例部署在<code>172.20.14.20</code>、<code>172.20.14.110</code>、<code>172.20.14.111</code>三台机器的K8s集群上，使用<code>LoadBalancer</code>对外暴露服务，<code>LoadBalancer IP</code>由<code>MetalLB</code>分得：<code>172.20.14.118</code></p><h2 id="问题描述">问题描述</h2><p>2024年11月16日，2024 Redrock CTF开赛，这次比赛使用了新的比赛平台<a href="https://gzctf.gzti.me/">GZ::CTF - GZ::CTF Docs</a>。</p><p>由于反向代理配置不当，导致平台在刚开赛时就因为高并发而立即崩溃，报错显示错误代码429，并且平台响应很慢，无法正常刷新。</p><p><img src="https://gitee.com/beatrueman/images/raw/master/img/202411251230736.png" alt="b03f1323eec5f200d8684c9c35502050"></p><p><img src="https://gitee.com/beatrueman/images/raw/master/img/202411251232196.png" alt="226c63b8f33a22c1fb0d4c047c761447"></p><h2 id="排查过程">排查过程</h2><p>在遇到429问题后，首先是检查了配置文件中和访问限制有关的参数配置，都适当的调大，发现并没有什么改善，没有解决问题。</p><p><img src="https://gitee.com/beatrueman/images/raw/master/img/202411251234407.png" alt="126925f6c7daad921c985e34c8d332fb"></p><p>GZCTF是单实例部署的，为了让流量分流，我将Pod扩容，但是单实例部署与多实例部署存在差别，并且据官方介绍单实例已经能满足大部分的一般比赛（满足2000人200题），并且是官方最为推荐的部署方式。多实例部署需要配置对象存储，否则会导致数据不一致的问题。</p><p><img src="https://gitee.com/beatrueman/images/raw/master/img/202411251237319.jpg" alt="img_v3_02gm_a97b367b-e1bb-4513-b921-79042d10b1cg"></p><p>最后在咨询开发者以及在检查日志的过程中发现了问题：</p><p>配置文件中的<code>ForwardedOptions</code>的<code>TrustedNetworks</code>和<code>TrustedProxies</code>字段使用的是默认值，反向代理并没有生效，logs里客户端的ip全是一致的，大量的相同ip可能超过了平台的访问阈值，最后平台很容易就崩溃了。</p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[24-11-16 08:14:30.307 DBG] RequestLoggingMiddleware: [200]     7.10ms HTTP GET    /api/account/profile @ ::ffff:172.20.14.20 </span><br><span class="line">[24-11-16 08:14:30.704 DBG] RequestLoggingMiddleware: [404]     0.22ms HTTP GET    /hub/user @ ::ffff:172.20.14.20 </span><br><span class="line">[24-11-16 08:14:30.986 DBG] RequestLoggingMiddleware: [404]     1.32ms HTTP GET    /hub/user @ ::ffff:172.20.14.20</span><br></pre></td></tr></table></figure><p><img src="https://gitee.com/beatrueman/images/raw/master/img/202411251244870.png" alt="image-20241125124424828"></p><h2 id="解决">解决</h2><p>注意将<code>ForwardedOptions</code>的</p><ul><li><code>TrustedNetworks</code>值为172.20.14.20/24</li><li><code>TrustedProxies</code>值为172.20.14.118，即GZCTF的<code>LoadBalancer IP</code></li></ul><p>整个<code>proxy chain</code></p><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">172.20.14.2（网关机）-&gt; 172.20.14.118（LoadBalancer） -&gt; 172.20.14.20 （master1）</span><br><span class="line">                                                    -&gt; 172.20.14.110（master2）</span><br><span class="line">                                                    -&gt; 172.20.14.111 （master3）</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Kubernetes </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Trouble Shooting </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>YiCloud-README</title>
       <link href="/2024/11/09/YiCloud-README/"/>
       <url>/2024/11/09/YiCloud-README/</url>
