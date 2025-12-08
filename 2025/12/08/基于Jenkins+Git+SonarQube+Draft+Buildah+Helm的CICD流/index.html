@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="构建部署工具及镜像作用介绍工具Jenkins：通过Pipeline实现CI&#x2F;CD流 Sonar：进行代码检查 draft：根据项目自动生成Dockerfile与Helm Chart Buildah：打包、推送镜像 Helm：部署Chart到Kubernetes集群 镜像beatrueman&#x2F;builder:1.0：整合了draft与buildah，负责镜像构建与镜像推送 beatruem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI&#x2F;CD流">
+<meta property="og:url" content="http://example.com/2025/12/08/%E5%9F%BA%E4%BA%8EJenkins+Git+SonarQube+Draft+Buildah+Helm%E7%9A%84CICD%E6%B5%81/index.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="构建部署工具及镜像作用介绍工具Jenkins：通过Pipeline实现CI&#x2F;CD流 Sonar：进行代码检查 draft：根据项目自动生成Dockerfile与Helm Chart Buildah：打包、推送镜像 Helm：部署Chart到Kubernetes集群 镜像beatrueman&#x2F;builder:1.0：整合了draft与buildah，负责镜像构建与镜像推送 beatruem">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/ava.jpg">
+<meta property="article:published_time" content="2025-12-08T14:00:22.509Z">
+<meta property="article:modified_time" content="2025-12-08T14:12:21.865Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="Achievements">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/ava.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流",
+  "url": "http://example.com/2025/12/08/%E5%9F%BA%E4%BA%8EJenkins+Git+SonarQube+Draft+Buildah+Helm%E7%9A%84CICD%E6%B5%81/",
+  "image": "http://example.com/img/ava.jpg",
+  "datePublished": "2025-12-08T14:00:22.509Z",
+  "dateModified": "2025-12-08T14:12:21.865Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yiiong",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.svg"><link rel="canonical" href="http://example.com/2025/12/08/%E5%9F%BA%E4%BA%8EJenkins+Git+SonarQube+Draft+Buildah+Helm%E7%9A%84CICD%E6%B5%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"true`"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Yiiong","link":"链接: ","source":"来源: Yiiong's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'FancyBox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/universe.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: transparent;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/tag.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-08T14:00:22.509Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-08T14:12:21.865Z" title="更新于 2025-12-08 22:12:21">2025-12-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Achievements/">Achievements</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="构建部署工具及镜像作用介绍"><a href="#构建部署工具及镜像作用介绍" class="headerlink" title="构建部署工具及镜像作用介绍"></a>构建部署工具及镜像作用介绍</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><p><a target="_blank" rel="noopener" href="https://www.jenkins.io/zh/">Jenkins</a>：通过Pipeline实现CI&#x2F;CD流</p>
+<p><a target="_blank" rel="noopener" href="https://www.sonarsource.com/products/sonarqube/">Sonar</a>：进行代码检查</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Azure/draft">draft</a>：根据项目自动生成Dockerfile与Helm Chart</p>
+<p><a target="_blank" rel="noopener" href="https://buildah.io/">Buildah</a>：打包、推送镜像</p>
+<p><a target="_blank" rel="noopener" href="https://helm.sh/">Helm</a>：部署Chart到Kubernetes集群</p>
+<h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><p><code>beatrueman/builder:1.0</code>：整合了<code>draft</code>与<code>buildah</code>，负责镜像构建与镜像推送</p>
+<p><code>beatrueman/deployer:1.0</code>：整合了<code>Helm</code>，用于部署Chart到Kubernetes</p>
+<p><code>sonarsource/sonar-scanner-cli:latest</code>：用于执行代码检查</p>
+<p><code>jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2</code>：它是 Jenkins Pipeline 中的一种代理机制，允许在 Jenkins 中动态创建代理节点以执行特定的构建任务。</p>
+<h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h2><p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002012.png" alt="image-20240607222125043"></p>
+<ol>
+<li>开发人员推送代码到Git仓库，自动触发Jenkins CI&#x2F;CD流</li>
+<li>SonarQube进行代码检查</li>
+<li>查找Dockerfile，如果没有则通过Draft自动生成Dockerfile和Helm Chart</li>
+<li>使用buildah进行镜像打包与镜像推送到Harbor仓库</li>
+<li>使用Helm将Chart部署在Kubernetes集群上，并把打包好的chart包推送至Harbor</li>
+</ol>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>参数化构建</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>表示值</th>
+<th>可选项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HARBOR_REGISTRY</td>
+<td>Harbor仓库名</td>
+<td></td>
+</tr>
+<tr>
+<td>PROJECT_NAME</td>
+<td>项目名称</td>
+<td>必须小写</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>项目入口文件（仅用于Python）</td>
+<td>app.py或main.py</td>
+</tr>
+<tr>
+<td>PORT</td>
+<td>项目暴露入口</td>
+<td></td>
+</tr>
+<tr>
+<td>IMAGE_NAME</td>
+<td>镜像名称</td>
+<td></td>
+</tr>
+<tr>
+<td>TAG</td>
+<td>镜像标签</td>
+<td></td>
+</tr>
+<tr>
+<td>SONAR_PROJECT_NAME</td>
+<td>sonar代码检查项目名称</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="插件下载"><a href="#插件下载" class="headerlink" title="插件下载"></a>插件下载</h3><p>在<strong>插件管理</strong>中搜索并下载以下插件</p>
+<p>Kubernetes：<a target="_blank" rel="noopener" href="https://plugins.jenkins.io/kubernetes">Kubernetes版本4238.v41b_3ef14a_5d8</a></p>
+<p>SonarQube Scanner for Jenkins：<a target="_blank" rel="noopener" href="https://plugins.jenkins.io/sonar">SonarQube Scanner for Jenkins版本</a></p>
+<h3 id="添加凭据"><a href="#添加凭据" class="headerlink" title="添加凭据"></a>添加凭据</h3><p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002014.png" alt="image-20240607235051117"></p>
+<ol>
+<li>SonarQube凭据保存的内容为在SonarQube中生成的全局令牌</li>
+<li>Harbor-Secret凭据保存Harbor的用户名和密码</li>
+<li>kubeconfig保存最后一步生成的kubeconfig</li>
+</ol>
+<h3 id="Kubernetes集群连接"><a href="#Kubernetes集群连接" class="headerlink" title="Kubernetes集群连接"></a>Kubernetes集群连接</h3><p>以使用Kubernerts部署的Jenkins为例（部署方法请自行查询）</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002015.png" alt="image-20240607233606595"></p>
+<p>1.在<strong>系统管理</strong> &gt;&gt; <strong>Clouds</strong>中新增一个cloud</p>
+<p>2.主要填入以下配置</p>
+<ul>
+<li>名称</li>
+<li>Kubernetes地址：<code>https://&lt;your_ip&gt;:6443</code></li>
+<li>Kubernetes命名空间（需要与jenkins部署在同一个命名空间）</li>
+<li>Jenkins地址：Jenkins在K8s部署，填入<code>http://ClusterIP:Port</code> <code>(http://10.96.3.38:8080）</code>。若不在K8s部署，需要将<code>/root/.kube/config</code>base64编码后保存为凭据，然后再填入jenkins的暴露地址。</li>
+<li>Jenkins通道：填入<code>10.96.1.180:50000</code>，注意一定不要加http</li>
+</ul>
+<p>将cloud名称填入<code>cloud &quot;&quot;</code></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002016.png" alt="image-20240608001827248"></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002017.png" alt="20240607-234551"></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002018.png" alt="image-20240607234620509"></p>
+<p>可以点击<strong>连接测试</strong>检查是否可以连接集群</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002019.png" alt="image-20240607234655491"></p>
+<h3 id="SonarQube准备"><a href="#SonarQube准备" class="headerlink" title="SonarQube准备"></a>SonarQube准备</h3><p>1.手工新建一个项目</p>
+<p>2.新建一个<strong>全局令牌</strong></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002020.png" alt="image-20240607232105268"></p>
+<p>3.将该令牌生成的token添加进Jenkins的全局凭据中</p>
+<p>4.在<strong>系统配置</strong>中，填入Sonar的服务地址与凭据</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002021.png" alt="20240607-235555"></p>
+<h3 id="使用受限的kubeconfig"><a href="#使用受限的kubeconfig" class="headerlink" title="使用受限的kubeconfig"></a>使用受限的kubeconfig</h3><p>使用该工具<a target="_blank" rel="noopener" href="https://gitlab.mikumikumi.xyz/base/kubeconfig-generator.git">kubeconfig-generator</a>，生成一个受限制的kubeconfig</p>
+<ol>
+<li>新建一个命名空间，用于最终项目的部署</li>
+<li>在<code> kubeconfig-generator.py</code>中，指定<code>NAMESPACE</code> 、<code>CLUSTER_SERVER</code>、<code>SA_NAME</code></li>
+</ol>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002022.png" alt="image-20240607235927663"></p>
+<p>3.将生成的<code>kubeconfig</code>下载，以<code>secret file</code>形式添加进Jnekins凭据</p>
+<p>4.因为此时的config是受限的，需要生成一个<code>rolebinding</code>，用于jenkins命名空间下的default用户控制test命名空间下的一些操作</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: rbac.authorization.k8s.io/v1</span><br><span class="line">kind: RoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: jenkins-rolebinding</span><br><span class="line">  namespace: test # 控制test命名空间</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: default</span><br><span class="line">  namespace: jenkins # 这里假设Jenkins服务账户位于jenkins命名空间</span><br><span class="line">roleRef:</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: edit # 或者你可以定义一个自定义的Role，只包含所需的最小权限</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br></pre></td></tr></table></figure>
+
+<h2 id="完整Jenkinsfile"><a href="#完整Jenkinsfile" class="headerlink" title="完整Jenkinsfile"></a>完整Jenkinsfile</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent &#123;</span><br><span class="line">        kubernetes &#123;</span><br><span class="line">            cloud &quot;Redrock-Cloud&quot;</span><br><span class="line">            yaml &quot;&quot;&quot;</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    component: jenkins-agent</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">    - name: sonar-scanner</span><br><span class="line">      image: sonarsource/sonar-scanner-cli:latest</span><br><span class="line">      command:</span><br><span class="line">        - cat</span><br><span class="line">      tty: true</span><br><span class="line">    - name: builder</span><br><span class="line">      image: beatrueman/builder:1.0</span><br><span class="line">      securityContext:</span><br><span class="line">        privileged: true</span><br><span class="line">      command:</span><br><span class="line">        - cat</span><br><span class="line">      tty: true</span><br><span class="line">    - name: deployer</span><br><span class="line">      image: beatrueman/deployer:1.0</span><br><span class="line">      command:</span><br><span class="line">        - cat</span><br><span class="line">      tty: true</span><br><span class="line">    - name: jnlp</span><br><span class="line">      image: jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2</span><br><span class="line">      resources:</span><br><span class="line">        limits:</span><br><span class="line">          memory: &quot;1Gi&quot;</span><br><span class="line">          cpu: &quot;200m&quot;</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // environment &#123;</span><br><span class="line">    //     HARBOR_REGISTRY = &#x27;&#x27;</span><br><span class="line">    //     PROJECT_NAME = &#x27;myapp&#x27; // 项目名称，必须小写</span><br><span class="line">    //     ENTRYPOINT = &#x27;main.py&#x27; // 项目入口文件，app.py或main.py</span><br><span class="line">    //     PORT = &#x27;6666&#x27; // 项目暴露的端口</span><br><span class="line">    //     IMAGE_NAME = &#x27;yicloud&#x27; // 镜像名称</span><br><span class="line">    //     TAG = &#x27;v1&#x27; // 镜像标签</span><br><span class="line">    //     SONAR_PROJECT_NAME = &#x27;Python&#x27; // sonar项目名称</span><br><span class="line">    // &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(&#x27;git clone&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;1.正在克隆代码......&quot;</span><br><span class="line">                git url: &quot;&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(&#x27;SonarQube code checking&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                container(&#x27;sonar-scanner&#x27;) &#123;</span><br><span class="line">                    echo &#x27;2.正在进行代码检查......&#x27;</span><br><span class="line">                    echo &#x27;代码检查结果请在面板查看！&#x27;</span><br><span class="line">                    withSonarQubeEnv(&#x27;SonarQube&#x27;) &#123;</span><br><span class="line">                        sh &#x27;&#x27;&#x27;sonar-scanner \</span><br><span class="line">                            -Dsonar.projectKey=$&#123;SONAR_PROJECT_NAME&#125; \</span><br><span class="line">                            -Dsonar.projectName=$&#123;SONAR_PROJECT_NAME&#125; \</span><br><span class="line">                            -Dsonar.sources=&quot;/home/jenkins/agent/workspace/$&#123;JOB_NAME&#125;&quot; \</span><br><span class="line">                            -Dsonar.projectVersion=1.0 \</span><br><span class="line">                            -Dsonar.sourceEncoding=UTF-8</span><br><span class="line">                        &#x27;&#x27;&#x27;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(&#x27;Image build&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                script &#123;</span><br><span class="line">                    echo &#x27;3.正在制作镜像......&#x27;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        def result = sh(script: &quot;ls -al | grep Dockerfile&quot;, returnStatus: true)</span><br><span class="line">                        if (result == 0) &#123;</span><br><span class="line">                            echo &quot;找到 Dockerfile，开始构建镜像&quot;</span><br><span class="line">                            container(&#x27;builder&#x27;) &#123;</span><br><span class="line">                                sh &#x27;&#x27;&#x27;</span><br><span class="line">                                    draft create -a myapp --variable PORT=$&#123;PORT&#125; \</span><br><span class="line">                                        --variable APPNAME=$&#123;PROJECT_NAME&#125; \</span><br><span class="line">                                        --variable SERVICEPORT=8088 \</span><br><span class="line">                                        --variable NAMESPACE=test \</span><br><span class="line">                                        --variable IMAGENAME=$&#123;HARBOR_REGISTRY&#125;/library/$&#123;IMAGE_NAME&#125; \</span><br><span class="line">                                        --variable IMAGETAG=$&#123;TAG&#125; \</span><br><span class="line">                                        --variable ENTRYPOINT=$&#123;ENTRYPOINT&#125; \</span><br><span class="line">                                        --variable VERSION=3 \</span><br><span class="line">                                        --deploy-type helm \</span><br><span class="line">                                        --deployment-only</span><br><span class="line">                                    rm &quot;/home/jenkins/agent/workspace/$&#123;JOB_NAME&#125;/charts/templates/namespace.yaml&quot;</span><br><span class="line">                                    buildah bud -t $&#123;HARBOR_REGISTRY&#125;/library/$&#123;IMAGE_NAME&#125;:$&#123;TAG&#125; .</span><br><span class="line">                                &#x27;&#x27;&#x27;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            echo &quot;未找到 Dockerfile，将生成 Dockerfile&quot;</span><br><span class="line">                            container(&#x27;builder&#x27;) &#123;</span><br><span class="line">                                def jobNameLower = &quot;$&#123;JOB_NAME&#125;&quot;.toLowerCase()</span><br><span class="line">                                sh &#x27;&#x27;&#x27;</span><br><span class="line">                                    draft create -a myapp --variable PORT=$&#123;PORT&#125; \</span><br><span class="line">                                        --variable APPNAME=$&#123;PROJECT_NAME&#125; \</span><br><span class="line">                                        --variable SERVICEPORT=8088 \</span><br><span class="line">                                        --variable NAMESPACE=test \</span><br><span class="line">                                        --variable IMAGENAME=$&#123;HARBOR_REGISTRY&#125;/library/$&#123;IMAGE_NAME&#125; \</span><br><span class="line">                                        --variable IMAGETAG=$&#123;TAG&#125; \</span><br><span class="line">                                        --variable ENTRYPOINT=$&#123;ENTRYPOINT&#125; \</span><br><span class="line">                                        --variable VERSION=3 \</span><br><span class="line">                                        --deploy-type helm</span><br><span class="line">                                    rm &quot;/home/jenkins/agent/workspace/$&#123;JOB_NAME&#125;/charts/templates/namespace.yaml&quot;</span><br><span class="line">                                    buildah bud -t $&#123;HARBOR_REGISTRY&#125;/library/$&#123;IMAGE_NAME&#125;:$&#123;TAG&#125; .</span><br><span class="line">                                &#x27;&#x27;&#x27;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; catch (err) &#123;</span><br><span class="line">                        echo &quot;查找 Dockerfile 发生错误: $&#123;err&#125;&quot;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(&#x27;Image push&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;3. Pushing image&quot;</span><br><span class="line">                container(&#x27;builder&#x27;) &#123;</span><br><span class="line">                    script &#123;</span><br><span class="line">                        withCredentials([usernamePassword(credentialsId: &#x27;Redrock-Harbor-Secret&#x27;, passwordVariable: &#x27;passwd&#x27;, usernameVariable: &#x27;username&#x27;)]) &#123;</span><br><span class="line">                            sh &quot;buildah login -u $&#123;username&#125; -p $&#123;passwd&#125; $&#123;env.HARBOR_REGISTRY&#125;&quot;</span><br><span class="line">                            sh &quot;buildah images&quot;</span><br><span class="line">                            sh &quot;buildah push $&#123;HARBOR_REGISTRY&#125;/library/$&#123;IMAGE_NAME&#125;:$&#123;TAG&#125;&quot;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        stage(&#x27;Deploy to Kubernetes&#x27;) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;5.即将把服务部署在Kubernetes集群上......&quot;</span><br><span class="line">                container(&#x27;deployer&#x27;) &#123;</span><br><span class="line">                    script &#123;</span><br><span class="line">                        // 使用受限制的kubeconfig</span><br><span class="line">                        def kubeConfigCreds = credentials(&#x27;kubeconfig&#x27;)</span><br><span class="line">                        // 写入临时kubeconfig文件</span><br><span class="line">                        sh &#x27;echo &quot;$&#123;kubeConfigCreds&#125;&quot; | base64 --decode &gt; /tmp/kubeconfig.yaml&#x27;</span><br><span class="line">                        sh &#x27;ls&#x27;</span><br><span class="line"></span><br><span class="line">			            // 部署并获取返回码，如果成功部署则打包chart并上传至Harbor仓库</span><br><span class="line">                        def chartYamlContent = readFile &quot;charts/Chart.yaml&quot; // 读取Chart.yaml</span><br><span class="line">                        def chartYaml = readYaml text: chartYamlContent</span><br><span class="line">                        def chartVersion = chartYaml.version // 获取Chart的version</span><br><span class="line">                        def packageName = &quot;$&#123;PROJECT_NAME&#125;-$&#123;chartVersion&#125;.tgz&quot; // 打包后的Chart名</span><br><span class="line">                        </span><br><span class="line">                        def helmDeployResult = sh(script: &quot;helm install $&#123;PROJECT_NAME&#125; -n test --kubeconfig /tmp/kubeconfig.yaml charts&quot;, returnStatus: true)</span><br><span class="line">			                if(helmDeployResult == 0) &#123;</span><br><span class="line">			                    echo &#x27;部署成功！&#x27;</span><br><span class="line">			                    echo &#x27;正在打包Chart，并上传至Harbor仓库&#x27;</span><br><span class="line">			                    </span><br><span class="line">			                    sh &quot;helm package charts&quot;</span><br><span class="line">			                    withCredentials([usernamePassword(credentialsId: &#x27;Redrock-Harbor-Secret&#x27;, passwordVariable: &#x27;passwd&#x27;, usernameVariable: &#x27;username&#x27;)]) &#123;</span><br><span class="line">			                        sh &quot;helm registry login $&#123;env.HARBOR_REGISTRY&#125; -u $&#123;username&#125; -p $&#123;passwd&#125;&quot;</span><br><span class="line">			                        sh &quot;helm push $&#123;packageName&#125; oci://$&#123;HARBOR_REGISTRY&#125;/library&quot;</span><br><span class="line">			                    &#125;</span><br><span class="line">			                    </span><br><span class="line">			                &#125; else &#123;</span><br><span class="line">			                    error &quot;Chart部署失败，Helm返回码: $&#123;helmDeployResult&#125;&quot;</span><br><span class="line">			                &#125;</span><br><span class="line">			                </span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002023.png" alt="image-20240608002622612"></p>
+<h2 id="安全警示"><a href="#安全警示" class="headerlink" title="安全警示"></a>安全警示</h2><p>根据<a target="_blank" rel="noopener" href="https://github.com/containers/buildah/issues/5332">buildah image v1.34: Error: open &#x2F;usr&#x2F;lib&#x2F;containers&#x2F;storage&#x2F;overlay-images&#x2F;images.lock: permission denied · Issue #5332 · containers&#x2F;buildah (github.com)</a></p>
+<p>builder容器不得不开启<strong>privileged</strong>，否则无法进行正常的打包与推送镜像。</p>
+<p>原因与解决可参考：<a target="_blank" rel="noopener" href="https://opensource.com/article/19/3/tips-tricks-rootless-buildah">https://opensource.com/article/19/3/tips-tricks-rootless-buildah</a></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211002024.png" alt="image-20240608004704783"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/12/08/%E5%9F%BA%E4%BA%8EJenkins+Git+SonarQube+Draft+Buildah+Helm%E7%9A%84CICD%E6%B5%81/">http://example.com/2025/12/08/%E5%9F%BA%E4%BA%8EJenkins+Git+SonarQube+Draft+Buildah+Helm%E7%9A%84CICD%E6%B5%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Achievements/">Achievements</a></div><div class="post-share"><div class="social-share" data-image="/img/ava.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/12/08/%E5%88%A9%E7%94%A8%E9%80%9A%E4%B9%89%E7%81%B5%E7%A0%81%E5%AE%9E%E7%8E%B0%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%BC%80%E6%BA%90%E8%B4%A1%E7%8C%AE/" title="利用通义灵码实现我的第一次开源贡献"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">利用通义灵码实现我的第一次开源贡献</div></div><div class="info-2"><div class="info-item-1">结缘开源最早了解开源是从学校的兴趣组织开始的。2023年10月21日，openSUSE亚洲峰会在我们学校召开，这次会议汇聚了许多来自openSUSE社区贡献者以及对开源感兴趣的爱好者们。我第一次知道有这么多志同道合的爱好者在进行开源贡献，他们以个人兴趣为驱动力共同维护护着一个社区。这次峰会激发了我对开源社区的兴趣，一颗种子也开始埋在我的心中——我也想要做一次开源贡献！  2024年6月24日，我上完课准备回宿舍，刚好在必经之路上看到“2024天池云原生编程挑战赛”的宣传海报。我一看居然是阿里云举办的，回到宿舍后就立马仔细查看了详细的比赛信息。”赛道3：用通义灵码,人人都是开源贡献者“很符合我的兴趣，我也特别想能有一个被Merged的PR。赛道3有很多个选题，结合我自己学习过云原生的一些知识，我最终选择了Higress开源项目，这是阿里云自己开发的API网关，它和Nginx、Traefik很类似，但是它增加了许多新的功能，并且更聚焦于云原生环境中的服务网格。尤其是它有丰富的插件，特别是与AI有关的插件，使得用户可以很轻易的拥有一个属于自己的AI。  参加比赛因为Higress这个开...</div></div></div></a><a class="pagination-related" href="/2025/12/08/%E7%BA%A2%E5%B2%A9%E6%89%93%E5%8D%B0%E5%A7%AC%E5%A4%8D%E6%B4%BB%E8%AE%B0%E5%BD%95/" title="红岩打印姬复活记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">红岩打印姬复活记录</div></div><div class="info-2"><div class="info-item-1">下面记录一下在复活网校打印机机器人-红岩打印姬时遇到的问题和解决方案 做出的更新1.使用了Helemet-CI进行镜像打包 2.更改了Dockerfile的内容，使镜像可以快速且正确的被打包 3.由于飞书接收消息接口的json接收体发生了改变，对reply.py中的file_name、file_key和image_key三个变量的获取造成了影响，使用json.loads()函数解决 1.读取环境变量问题机器人通过configmap读取app_id，app_secret等环境变量，没有configmap的话机器人会报以下错误 Traceback (most recent call last):  File &quot;/nonebot/bot.py&quot;, line 22, in &lt;module&gt;    driver.register_adapter(FeishuAdapter)  File &quot;/usr/local/lib/python3.10/dist-packages/nonebot/internal/driver/abstract.py&quot;...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/12/08/%E5%88%A9%E7%94%A8%E9%80%9A%E4%B9%89%E7%81%B5%E7%A0%81%E5%AE%9E%E7%8E%B0%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%BC%80%E6%BA%90%E8%B4%A1%E7%8C%AE/" title="利用通义灵码实现我的第一次开源贡献"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">利用通义灵码实现我的第一次开源贡献</div></div><div class="info-2"><div class="info-item-1">结缘开源最早了解开源是从学校的兴趣组织开始的。2023年10月21日，openSUSE亚洲峰会在我们学校召开，这次会议汇聚了许多来自openSUSE社区贡献者以及对开源感兴趣的爱好者们。我第一次知道有这么多志同道合的爱好者在进行开源贡献，他们以个人兴趣为驱动力共同维护护着一个社区。这次峰会激发了我对开源社区的兴趣，一颗种子也开始埋在我的心中——我也想要做一次开源贡献！  2024年6月24日，我上完课准备回宿舍，刚好在必经之路上看到“2024天池云原生编程挑战赛”的宣传海报。我一看居然是阿里云举办的，回到宿舍后就立马仔细查看了详细的比赛信息。”赛道3：用通义灵码,人人都是开源贡献者“很符合我的兴趣，我也特别想能有一个被Merged的PR。赛道3有很多个选题，结合我自己学习过云原生的一些知识，我最终选择了Higress开源项目，这是阿里云自己开发的API网关，它和Nginx、Traefik很类似，但是它增加了许多新的功能，并且更聚焦于云原生环境中的服务网格。尤其是它有丰富的插件，特别是与AI有关的插件，使得用户可以很轻易的拥有一个属于自己的AI。  参加比赛因为Higress这个开...</div></div></div></a><a class="pagination-related" href="/2025/12/08/%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97/" title="核心功能模块"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">核心功能模块</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的核心功能模块介绍。</div></div></div></a><a class="pagination-related" href="/2025/12/08/%E6%8F%92%E4%BB%B6%E6%89%A9%E5%B1%95%E6%8C%87%E5%BC%95/" title="插件扩展指引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">插件扩展指引</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的插件扩展开发指引。</div></div></div></a><a class="pagination-related" href="/2025/12/08/IPBlock-Operator-Plus/" title="IPBlock-Operator-Plus"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">IPBlock-Operator-Plus</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus是一个基于 Kubernetes 的 Operator，构建了一个插件化、模块化的恶意 IP 封禁管理平台。</div></div></div></a><a class="pagination-related" href="/2025/12/08/EasyCreater/" title="EasyCreater——一站式简历生成器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">EasyCreater——一站式简历生成器</div></div><div class="info-2"><div class="info-item-1">EasyCreater是一个简历生成器。</div></div></div></a><a class="pagination-related" href="/2025/12/08/EasyBanner/" title="EasyBanner"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">EasyBanner</div></div><div class="info-2"><div class="info-item-1">EasyBanner是一个自动化封禁IP机器人，实现封禁操作的白屏化。</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Beatrueman" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7%E5%8F%8A%E9%95%9C%E5%83%8F%E4%BD%9C%E7%94%A8%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">构建部署工具及镜像作用介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-number">1.1.</span> <span class="toc-text">工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%9C%E5%83%8F"><span class="toc-number">1.2.</span> <span class="toc-text">镜像</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">整体流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">4.</span> <span class="toc-text">准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">插件下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%87%AD%E6%8D%AE"><span class="toc-number">4.2.</span> <span class="toc-text">添加凭据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes%E9%9B%86%E7%BE%A4%E8%BF%9E%E6%8E%A5"><span class="toc-number">4.3.</span> <span class="toc-text">Kubernetes集群连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SonarQube%E5%87%86%E5%A4%87"><span class="toc-number">4.4.</span> <span class="toc-text">SonarQube准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%8F%97%E9%99%90%E7%9A%84kubeconfig"><span class="toc-number">4.5.</span> <span class="toc-text">使用受限的kubeconfig</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4Jenkinsfile"><span class="toc-number">5.</span> <span class="toc-text">完整Jenkinsfile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E8%AD%A6%E7%A4%BA"><span class="toc-number">6.</span> <span class="toc-text">安全警示</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/08/redis/" title="Redis主从同步实验">Redis主从同步实验</a><time datetime="2025-12-08T14:55:52.970Z" title="发表于 2025-12-08 22:55:52">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/08/%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/" title="运维常用工具">运维常用工具</a><time datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/08/%E7%AE%97%E6%B3%95%E8%AE%B0%E5%BD%95/" title="算法记录">算法记录</a><time datetime="2025-12-08T14:00:22.521Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/08/%E5%AE%9E%E4%B9%A0%E6%80%BB%E7%BB%93/" title="Baidu实习总结">Baidu实习总结</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/08/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" title="数据结构">数据结构</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Yiiong</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="/"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script src="/js/universe.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="/"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.2"></script></div></div></body></html>
