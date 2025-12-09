@@ -4,6 +4,8 @@ date: 2025-12-08 21:39:12
 type: 'about'
 ---
 <meta name="referrer" content="no-referrer"/>
+
+
 # 👋欢迎来到我的博客！
 
 ## ✨关于我
@@ -14,7 +16,7 @@ type: 'about'
 
 我来自[重庆邮电大学](https://www.cqupt.edu.cn/)，目前在校级组织
 
-<img src="https://gitee.com/beatrueman/images/raw/master/20251208214115642.png" alt="img" style="width: 50px; height: 50px; display: block;" />***红岩网校工作站运维安全部***
+<img src="https://gitee.com/beatrueman/images/raw/master/20251208214115642.png" alt="img" style="width: 50px; height: 50px; display: inline-block; vertical-align: middle;" />***红岩网校工作站运维安全部***
 
 负责网校基础设施服务的运维工作，保障网校相关服务的稳定运行。
 
@@ -29,7 +31,7 @@ type: 'about'
 
 **实习经历**
 
-- <img src="https://gitee.com/beatrueman/images/raw/master/20251209210808049.svg" alt="img" style="width: 50px; height: 50px; display: block;" />【202507-202511】百度实习SRE
+- <img src="https://gitee.com/beatrueman/images/raw/master/20251209210808049.svg" alt="img" style="width: 50px; height: 50px; display: inline-block; vertical-align: middle;" />【202507-202511】百度实习SRE
 
 ## 🔧技术栈
 
@@ -40,7 +42,7 @@ type: 'about'
 
 ## 🌱关于本站
 
-> - 【20251209—重建】因为之前的硬盘坏了，导致后端全部丢失
+> - 【20251209—重建】因为之前的硬盘坏了，导致后端全部丢失，倒霉倒霉~~
 >
 > - 【20241108—第一次建站】原先的博客使用的是***WordPress***，并且托管在我家中的🍊**OrangePi Zero3**上，但是由于机器不稳定，加上没有公网也没有IPv6，不能方便的访问到它，而且写文章也不友好，于是就放弃了这个方案。
 
@@ -52,7 +54,7 @@ type: 'about'
 
 ## 🏆荣誉
 
-- :star:Higress Contributor
+- ✨Higress Contributor
 
 - **[2024天池云原生编程挑战赛-赛道3：用通义灵码,人人都是开源贡献者](https://tianchi.aliyun.com/competition/entrance/532215/submission/1282)-开源先锋奖&&开源园丁奖**
 
