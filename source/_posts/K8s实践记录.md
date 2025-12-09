@@ -1,10 +1,14 @@
 ---
 title: K8s实践记录
-date: {{ date }}
-tags: [Kubernetes]
-categories: [Kubernetes]
+date:
+  '[object Object]': null
+tags:
+  - Kubernetes
+categories:
+  - Kubernetes
+abbrlink: 2351
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # K8s实践记录
 
 # Level 0

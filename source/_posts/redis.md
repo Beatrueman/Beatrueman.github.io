@@ -1,10 +1,15 @@
 ---
 title: Redis主从同步实验
-tags: [服务器运维, Redis]
-categories: [服务器运维]
-date: {{ date }}
+tags:
+  - 服务器运维
+  - Redis
+categories:
+  - 服务器运维
+date:
+  '[object Object]': null
+abbrlink: 18658
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # 需求
 
 * A：master，不加密（普通端口 6379）

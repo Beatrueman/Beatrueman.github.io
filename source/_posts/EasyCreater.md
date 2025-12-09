@@ -1,11 +1,15 @@
 ---
 title: EasyCreater——一站式简历生成器
-tags: [Achievements]
-categories: [Achievements]
-date: {{ date }}
+tags:
+  - Achievements
+categories:
+  - Achievements
+date:
+  '[object Object]': null
 description: EasyCreater是一个简历生成器。
+abbrlink: 23431
 ---
-
+<meta name="referrer" content="no-referrer"/>
 ## 简介
 
 **EasyCreater——让简历制作更高效、更智能！**

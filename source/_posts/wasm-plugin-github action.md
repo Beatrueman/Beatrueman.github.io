@@ -1,10 +1,14 @@
 ---
 title: wasm-plugin-github action
-date: {{ date }}
-tags: [CICD]
-categories: [Achievements]
+date:
+  '[object Object]': null
+tags:
+  - CICD
+categories:
+  - Achievements
+abbrlink: 46148
 ---
-
+<meta name="referrer" content="no-referrer"/>
 ## 功能描述
 
 功能：添加了利用 GitHub Actions 来自动完成相应的镜像构建和发布工作的Workflow。支持通过push tag和手动触发两种方式。同时也遵循使用oras打包工具。  

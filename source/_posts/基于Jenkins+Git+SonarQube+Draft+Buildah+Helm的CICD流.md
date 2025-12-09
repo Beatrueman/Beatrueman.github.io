@@ -1,10 +1,14 @@
 ---
 title: 基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流
-date: {{ date }}
-tags: [Achievements]
-categories: [Achievements]
+date:
+  '[object Object]': null
+tags:
+  - Achievements
+categories:
+  - Achievements
+abbrlink: 9102
 ---
-
+<meta name="referrer" content="no-referrer"/>
 ## 构建部署工具及镜像作用介绍
 
 ### 工具

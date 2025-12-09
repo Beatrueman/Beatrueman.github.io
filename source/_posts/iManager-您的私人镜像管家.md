@@ -1,10 +1,14 @@
 ---
 title: iManager-您的私人镜像管家
-tags: [服务器运维]
-categories: [服务器运维]
-date: {{ date }}
+tags:
+  - 服务器运维
+categories:
+  - 服务器运维
+date:
+  '[object Object]': null
+abbrlink: 27345
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # iManager-您的私人镜像管家
 
 尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。

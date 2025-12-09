@@ -1,10 +1,14 @@
 ---
 title: NLP语义匹配学习赛记录
-date: {{ date }}
-tags: [机器学习]
-categories: [机器学习]
+date:
+  '[object Object]': null
+tags:
+  - 机器学习
+categories:
+  - 机器学习
+abbrlink: 37125
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # 赛题介绍
 
 ## 背景

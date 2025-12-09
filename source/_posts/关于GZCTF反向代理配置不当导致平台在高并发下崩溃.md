@@ -1,10 +1,14 @@
 ---
 title: 关于GZCTF反向代理配置不当导致平台在高并发下崩溃
-date: {{ date }}
-tags: [Trouble Shooting]
-categories: [Trouble Shooting]
+date:
+  '[object Object]': null
+tags:
+  - Trouble Shooting
+categories:
+  - Trouble Shooting
+abbrlink: 23988
 ---
-
+<meta name="referrer" content="no-referrer"/>
 ## 环境
 
 GZCTF单实例部署在`172.20.14.20`、`172.20.14.110`、`172.20.14.111`三台机器的K8s集群上，使用`LoadBalancer`对外暴露服务，`LoadBalancer IP`由`MetalLB`分得：`172.20.14.118`

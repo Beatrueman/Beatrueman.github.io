@@ -1,10 +1,15 @@
 ---
 title: BIND9 DNS智能解析实验
-tags: [服务器运维, DNS]
-categories: [服务器运维]
-date: {{ date }}
+tags:
+  - 服务器运维
+  - DNS
+categories:
+  - 服务器运维
+date:
+  '[object Object]': null
+abbrlink: 53842
 ---
-
+<meta name="referrer" content="no-referrer"/>
 **BIND（Berkeley Internet Name Domain）**  是全球使用最广泛的 **DNS 服务器软件**，最初由加州大学伯克利分校开发，目前由 **ISC（Internet Systems Consortium）**  维护。
 
 BIND9 让一台服务器可以充当 DNS 解析器（递归）或权威服务器（发布域名解析记录）

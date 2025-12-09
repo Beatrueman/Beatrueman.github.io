@@ -1,11 +1,17 @@
 ---
 title: IPBlock-Operator-Plus
-date: {{ date }}
-tags: [Kubernetes, Operator, Achievements]
-categories: [Kubernetes]
+date:
+  '[object Object]': null
+tags:
+  - Kubernetes
+  - Operator
+  - Achievements
+categories:
+  - Kubernetes
 description: IPBlock-Operator-Plus是一个基于 Kubernetes 的 Operator，构建了一个插件化、模块化的恶意 IP 封禁管理平台。
+abbrlink: 28178
 ---
-
+<meta name="referrer" content="no-referrer"/>
 ## 项目简介
 
 **IPBlock-Operator-Plus** 是一个基于 Kubernetes 的 Operator，构建了一个插件化、模块化的恶意 IP 封禁管理平台。该项目通过自定义资源（IPBlock CR）实现对恶意 IP 的声明式管理，支持手动和自动限流与封禁功能。其架构高度可扩展，便于集成多种触发器（Trigger）和通知机制（Notify），从而实现智能化的安全防护与运维管理。

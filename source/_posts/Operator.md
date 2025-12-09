@@ -1,10 +1,15 @@
 ---
 title: Operator介绍
-date: {{ date }}
-tags: [Kubernetes, Operator]
-categories: [Kubernetes]
+date:
+  '[object Object]': null
+tags:
+  - Kubernetes
+  - Operator
+categories:
+  - Kubernetes
+abbrlink: 58647
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # Operator
 
 ## 为什么要用？

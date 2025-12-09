@@ -1,10 +1,14 @@
 ---
 title: 调度与Helm
-date: {{ date }}
-tags: [Kubernetes]
-categories: [Kubernetes]
+date:
+  '[object Object]': null
+tags:
+  - Kubernetes
+categories:
+  - Kubernetes
+abbrlink: 55660
 ---
-
+<meta name="referrer" content="no-referrer"/>
 ## 调度
 
 Kubernetes允许你去影响pod被调度到哪个节点。起初，只能通过在pod规范⾥指定节点选择器来实现，后⾯通过其他机制的逐渐加⼊来扩容这项功能。

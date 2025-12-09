@@ -1,10 +1,15 @@
 ---
 title: Gitlab CICD学习记录
-tags: [服务器运维, CICD]
-categories: [服务器运维]
-date: {{ date }}
+tags:
+  - 服务器运维
+  - CICD
+categories:
+  - 服务器运维
+date:
+  '[object Object]': null
+abbrlink: 63036
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # Gitlab CICD学习记录
 
 # 用Flask在K8s集群编写后端项目

@@ -1,10 +1,14 @@
 ---
 title: 2022红岩杯WriteUp
-date: {{ date }}
-tags: [安全]
-categories: [Achievements]
+date:
+  '[object Object]': null
+tags:
+  - 安全
+categories:
+  - Achievements
+abbrlink: 49152
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # PWN
 
 ## 一口一个flag

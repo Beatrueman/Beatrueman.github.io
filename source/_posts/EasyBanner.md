@@ -1,11 +1,15 @@
 ---
 title: EasyBanner
-tags: [Achievements]
-categories: [Achievements]
-date: {{ date }}
+tags:
+  - Achievements
+categories:
+  - Achievements
+date:
+  '[object Object]': null
 description: EasyBanner是一个自动化封禁IP机器人，实现封禁操作的白屏化。
+abbrlink: 2684
 ---
-
+<meta name="referrer" content="no-referrer"/>
 # EasyBanner
 
 ## 功能介绍
