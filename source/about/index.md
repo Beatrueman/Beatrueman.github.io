@@ -14,7 +14,7 @@ type: 'about'
 
 我来自[重庆邮电大学](https://www.cqupt.edu.cn/)，目前在校级组织
 
-<img src="https://gitee.com/beatrueman/images/raw/master/20251208214115642.png" alt="img" style="width: 50px; height: 50px;" />***红岩网校工作站运维安全部***
+<img src="https://gitee.com/beatrueman/images/raw/master/20251208214115642.png" alt="img" style="width: 50px; height: 50px; display: block;" />***红岩网校工作站运维安全部***
 
 负责网校基础设施服务的运维工作，保障网校相关服务的稳定运行。
 
@@ -29,7 +29,7 @@ type: 'about'
 
 **实习经历**
 
-- <img src="https://gitee.com/beatrueman/images/raw/master/20251209210808049.svg" alt="img" style="width: 50px; height: 50px;" />【202507-202511】百度实习SRE
+- <img src="https://gitee.com/beatrueman/images/raw/master/20251209210808049.svg" alt="img" style="width: 50px; height: 50px; display: block;" />【202507-202511】百度实习SRE
 
 ## 🔧技术栈
 
