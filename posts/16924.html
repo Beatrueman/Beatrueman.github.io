@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>利用通义灵码实现我的第一次开源贡献 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="## 结缘开源  最早了解开源是从学校的兴趣组织开始的。2023年10月21日，openSUSE亚洲峰会在我们学校召开，这次会议汇聚了许多来自openSUSE社区贡献者以及对开源感兴趣的爱好者们。我第一次知道有这么多志同道合的爱好者在进行开源贡献，他们以个人兴趣为驱动力共同维护护着一个社区。这次峰会激发了我对开源社区的兴趣，一颗种子也开始埋在我的心中——我也想要做一次开源贡献！  2024年6月">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用通义灵码实现我的第一次开源贡献">
+<meta property="og:url" content="http://blog.yiiong.top/posts/16924.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="## 结缘开源  最早了解开源是从学校的兴趣组织开始的。2023年10月21日，openSUSE亚洲峰会在我们学校召开，这次会议汇聚了许多来自openSUSE社区贡献者以及对开源感兴趣的爱好者们。我第一次知道有这么多志同道合的爱好者在进行开源贡献，他们以个人兴趣为驱动力共同维护护着一个社区。这次峰会激发了我对开源社区的兴趣，一颗种子也开始埋在我的心中——我也想要做一次开源贡献！  2024年6月">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.yiiong.top/img/ava.jpg">
+<meta property="article:published_time" content="2025-12-08T14:00:22.509Z">
+<meta property="article:modified_time" content="2025-12-09T12:58:46.399Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="Achievements">
+<meta property="article:tag" content="Blogs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.yiiong.top/img/ava.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "利用通义灵码实现我的第一次开源贡献",
+  "url": "http://blog.yiiong.top/posts/16924.html",
+  "image": "http://blog.yiiong.top/img/ava.jpg",
+  "datePublished": "2025-12-08T14:00:22.509Z",
+  "dateModified": "2025-12-09T12:58:46.399Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yiiong",
+      "url": "http://blog.yiiong.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.svg"><link rel="canonical" href="http://blog.yiiong.top/posts/16924.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 24
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"true`"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Yiiong","link":"链接: ","source":"来源: Yiiong's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'FancyBox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '利用通义灵码实现我的第一次开源贡献',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/universe.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: transparent;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/tag.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">利用通义灵码实现我的第一次开源贡献</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">利用通义灵码实现我的第一次开源贡献</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-08T14:00:22.509Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-09T12:58:46.399Z" title="更新于 2025-12-09 20:58:46">2025-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Blogs/">Blogs</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+## 结缘开源
+
+<p>最早了解开源是从学校的兴趣组织开始的。2023年10月21日，openSUSE亚洲峰会在我们学校召开，这次会议汇聚了许多来自openSUSE社区贡献者以及对开源感兴趣的爱好者们。我第一次知道有这么多志同道合的爱好者在进行开源贡献，他们以个人兴趣为驱动力共同维护护着一个社区。这次峰会激发了我对开源社区的兴趣，一颗种子也开始埋在我的心中——我也想要做一次开源贡献！</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128014.jpg" alt="img_v3_02di_f60fddbd-1c31-497d-b895-c9fa5e6a9a5g"></p>
+<p>2024年6月24日，我上完课准备回宿舍，刚好在必经之路上看到“2024天池云原生编程挑战赛”的宣传海报。我一看居然是阿里云举办的，回到宿舍后就立马仔细查看了详细的比赛信息。”赛道3：用通义灵码,人人都是开源贡献者“很符合我的兴趣，我也特别想能有一个被Merged的PR。赛道3有很多个选题，结合我自己学习过云原生的一些知识，我最终选择了Higress开源项目，这是阿里云自己开发的API网关，它和Nginx、Traefik很类似，但是它增加了许多新的功能，并且更聚焦于云原生环境中的服务网格。尤其是它有丰富的插件，特别是与AI有关的插件，使得用户可以很轻易的拥有一个属于自己的AI。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128015.jpg" alt="img_v3_02di_3b8c3789-0389-410c-98bc-427de4ceec0g"></p>
+<h2 id="参加比赛"><a href="#参加比赛" class="headerlink" title="参加比赛"></a>参加比赛</h2><p>因为Higress这个开源项目是开放式赛题，浏览了当时的<code>issues</code>，因为接触过CI&#x2F;CD，并且懂得Kubernetes和Docker的一些操作，所以我最终选择了这个issue：<a target="_blank" rel="noopener" href="https://github.com/alibaba/higress/issues/1052">支持通过 GitHub Actions 来构建和发布 Wasm 插件镜像 · Issue #1052 · alibaba&#x2F;higress</a></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128016.png" alt="image-20240808233008681"></p>
+<h2 id="通义灵码体验"><a href="#通义灵码体验" class="headerlink" title="通义灵码体验"></a>通义灵码体验</h2><p>虽然接触过CI&#x2F;CD，但是我从来没有在Github上实现过它，也不会<code>Github Action</code>的语法格式。通义灵码给了我很大的帮助。我按照<a target="_blank" rel="noopener" href="https://tongyi.aliyun.com/lingma/download?spm=a2c22.12281978.0.0.4c4478fakORPM4">通义灵码安装文档</a>将它安装到了我的VS Code中，接下来就是愉快的使用环节了。</p>
+<p>在使用通义灵码的过程中，我先复制了一份写好的<code>Github Action Workflow</code>，利用通义灵码的<strong>解释代码</strong>和直接对话功能，我很快地了解了<code>Github Action</code>的基本语法以及格式。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128017.png" alt="image-20240808234747671"></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128018.png" alt="image-20240808234857831"></p>
+<p>然后我就开始编写<code>issue</code>所需要的<code>Github Action Workflow</code>了。</p>
+<p>其中<strong>代码优化建议</strong>功能帮了我很大的忙，我只需要把有疑问的代码勾选，然后再执行<code>/generate optimization</code>，通义灵码就能很方便的为我指出错误，并且提出建议。在以往的话我还需要先把代码复制下来，然后再抛给AI，有时还得附带上下文。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128019.png" alt="image-20240808235819098"></p>
+<h2 id="提交PR"><a href="#提交PR" class="headerlink" title="提交PR"></a>提交PR</h2><p>写好<code>Github Action Workflow</code>，我提交了PR。但是这个PR不是一次性就被Merge的。这其中我和项目负责人进行了很多有趣的讨论。提交PR的那段时间刚好是我的考试周，每天复习之余，最上心的事情就是查看邮箱，看看负责人有没有给我留言，每次收到邮件我都会十分激动，因为他真的在看我的贡献，真的在为我的贡献提出建议！</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128020.jpg" alt="img_v3_02dj_4c835cf2-4167-432f-a89b-b237d7a11f3g"></p>
+<p>为了这份脚本能够成功执行，我进行了很多次的测试。而且在测试的过程中，我甚至也找出了官方文档存在的一些问题。我还提了一个自己发现的issue！<a target="_blank" rel="noopener" href="https://github.com/alibaba/higress/issues/1100">按照Wasm 插件镜像规范构建出的镜像不可用 · Issue #1100 · alibaba&#x2F;higress (github.com)</a></p>
+<p>2024年7月8日，我进行了最后一次测试。我写了十分详细的测试文档，然后提交。直到我看到负责人给我评论了”LGTM(Looks Good To Me)”，我高兴极了。很快他Merge了我的PR。就这样我得到了第一个属于自己的<code>Merged PR</code>。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211128021.png" alt="image-20240809001447530"></p>
+<h2 id="参赛心得"><a href="#参赛心得" class="headerlink" title="参赛心得"></a>参赛心得</h2><h3 id="技术提升"><a href="#技术提升" class="headerlink" title="技术提升"></a>技术提升</h3><p>通过这次比赛，我学会了<code>Github Action Workflow</code>的基本语法和编写格式，并且对CI&#x2F;CD在企业中的应用有了更进一步的了解。</p>
+<p>并且我还上手了阿里云开发的新一代API网关Higress，体验了它丰富的功能，感受到了它在云原生环境下的强大实力</p>
+<h3 id="开源氛围"><a href="#开源氛围" class="headerlink" title="开源氛围"></a>开源氛围</h3><p>Higress是一个活跃的开源社区，在这个社区中大家都积极的分享自己的知识和idea，乐于寻找bug。这种互帮互助，乐于分享的活跃氛围大大激发了我的开源兴趣。</p>
+<h3 id="个人体会"><a href="#个人体会" class="headerlink" title="个人体会"></a>个人体会</h3><p>这次比赛不仅提升了我的技术，还让我学会了如何沟通、如何解决问题等等。我收获很多，相信在以后我会对开源社区做更多高质量的贡献，争取在多几个PR~</p>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>十分感谢<strong>阿里云</strong>以及<strong>天池</strong>为我们广大开源爱好者搭建了一个广阔无垠的舞台，让我们有机会将梦想转化为现实，将创意付诸实践。</p>
+<p>同时也要感谢项目的相关工作人员，无论是对于技术上的指导和建议，还是比赛资料的统计以及奖品的组织发放，大家都辛苦了！</p>
+<p>未来的路还很长，但我相信，在阿里云与天池的陪伴下，我们将携手共进，共创辉煌。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top/posts/16924.html">http://blog.yiiong.top/posts/16924.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://blog.yiiong.top" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Achievements/">Achievements</a><a class="post-meta__tags" href="/tags/Blogs/">Blogs</a></div><div class="post-share"><div class="social-share" data-image="/img/ava.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/42488.html" title="Baidu实习总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Baidu实习总结</div></div><div class="info-2"><div class="info-item-1"> 时间过得真快，不知不觉中，短暂又漫长的三个多月北漂实习生活就要画上句号了。周围的一切好像都知道我要准备离开了：洗澡的肥皂刚好快用完了、洗面奶也是、路边的银杏树也都落光了叶子......说实话，真舍不得结束实习。  这段时间里，做了一些事、认识了一些人，体验了一段难忘的北漂时光，自己也成长了许多。 很幸运自己在实习期间遇到了特别好的mentor、leader和十分卓越的团队，还有我的几个“实习搭子”。真希望自己以后工作了也能遇到和他们一样好的人，也希望自己以后能像他们一样优秀。 成长篇回想起这段实习经历，感觉自己是幸运的，能来百度这样的互联网大厂我觉得并不是自己的实力有多强，更多的是运气。 第一次来到中关村软件园，这里遍布着平时耳熟能详的互联网公司，什么腾讯、快手、滴滴……简直就是中国互联网的“十字路口”。 有时候上下班，看到百度科技园上的“熊掌”大logo，心里总是会感叹：原来我也能在这里实习啊。 ​ 个人能力这三个多月，我想特别感谢我的mentor杰哥。 刚开始的一个月里，我经常会做一些偏“运营”的工作：比如跟进故障改进进度、录入资源信息等等，我总觉得自己是“干杂活”的。其实...</div></div></div></a><a class="pagination-related" href="/posts/9102.html" title="基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI/CD流</div></div><div class="info-2"><div class="info-item-1"> ## 构建部署工具及镜像作用介绍  工具Jenkins：通过Pipeline实现CI&#x2F;CD流 Sonar：进行代码检查 draft：根据项目自动生成Dockerfile与Helm Chart Buildah：打包、推送镜像 Helm：部署Chart到Kubernetes集群 镜像beatrueman/builder:1.0：整合了draft与buildah，负责镜像构建与镜像推送 beatrueman/deployer:1.0：整合了Helm，用于部署Chart到Kubernetes sonarsource/sonar-scanner-cli:latest：用于执行代码检查 jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2：它是 Jenkins Pipeline 中的一种代理机制，允许在 Jenkins 中动态创建代理节点以执行特定的构建任务。 整体流程  开发人员推送代码到Git仓库，自动触发Jenkins CI&#x2F;CD流 SonarQube进行代码检查 查找Dockerfile，如果没有则通过Draft自动生成Doc...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/9102.html" title="基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI&#x2F;CD流"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI&#x2F;CD流</div></div><div class="info-2"><div class="info-item-1"> ## 构建部署工具及镜像作用介绍  工具Jenkins：通过Pipeline实现CI&#x2F;CD流 Sonar：进行代码检查 draft：根据项目自动生成Dockerfile与Helm Chart Buildah：打包、推送镜像 Helm：部署Chart到Kubernetes集群 镜像beatrueman/builder:1.0：整合了draft与buildah，负责镜像构建与镜像推送 beatrueman/deployer:1.0：整合了Helm，用于部署Chart到Kubernetes sonarsource/sonar-scanner-cli:latest：用于执行代码检查 jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2：它是 Jenkins Pipeline 中的一种代理机制，允许在 Jenkins 中动态创建代理节点以执行特定的构建任务。 整体流程  开发人员推送代码到Git仓库，自动触发Jenkins CI&#x2F;CD流 SonarQube进行代码检查 查找Dockerfile，如果没有则通过Draft自动生成Doc...</div></div></div></a><a class="pagination-related" href="/posts/11627.html" title="核心功能模块"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">核心功能模块</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的核心功能模块介绍。</div></div></div></a><a class="pagination-related" href="/posts/31530.html" title="插件扩展指引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">插件扩展指引</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的插件扩展开发指引。</div></div></div></a><a class="pagination-related" href="/posts/28178.html" title="IPBlock-Operator-Plus"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">IPBlock-Operator-Plus</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus是一个基于 Kubernetes 的 Operator，构建了一个插件化、模块化的恶意 IP 封禁管理平台。</div></div></div></a><a class="pagination-related" href="/posts/23431.html" title="EasyCreater——一站式简历生成器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">EasyCreater——一站式简历生成器</div></div><div class="info-2"><div class="info-item-1">EasyCreater是一个简历生成器。</div></div></div></a><a class="pagination-related" href="/posts/2684.html" title="EasyBanner"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">EasyBanner</div></div><div class="info-2"><div class="info-item-1">EasyBanner是一个自动化封禁IP机器人，实现封禁操作的白屏化。</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock SRE!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E5%8A%A0%E6%AF%94%E8%B5%9B"><span class="toc-number">1.</span> <span class="toc-text">参加比赛</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%B9%89%E7%81%B5%E7%A0%81%E4%BD%93%E9%AA%8C"><span class="toc-number">2.</span> <span class="toc-text">通义灵码体验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4PR"><span class="toc-number">3.</span> <span class="toc-text">提交PR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%B5%9B%E5%BF%83%E5%BE%97"><span class="toc-number">4.</span> <span class="toc-text">参赛心得</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E6%8F%90%E5%8D%87"><span class="toc-number">4.1.</span> <span class="toc-text">技术提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E6%B0%9B%E5%9B%B4"><span class="toc-number">4.2.</span> <span class="toc-text">开源氛围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E4%BD%93%E4%BC%9A"><span class="toc-number">4.3.</span> <span class="toc-text">个人体会</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%B4%E8%B0%A2"><span class="toc-number">5.</span> <span class="toc-text">致谢</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18658.html" title="Redis主从同步实验">Redis主从同步实验</a><time datetime="2025-12-08T14:55:52.970Z" title="发表于 2025-12-08 22:55:52">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/22140.html" title="运维常用工具">运维常用工具</a><time datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/36066.html" title="算法记录">算法记录</a><time datetime="2025-12-08T14:00:22.521Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/42488.html" title="Baidu实习总结">Baidu实习总结</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1106.html" title="数据结构">数据结构</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Yiiong</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="/"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script src="/js/universe.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="/"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.2"></script></div></div></body></html>

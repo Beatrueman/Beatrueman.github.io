@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>EasyBanner | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="EasyBanner是一个自动化封禁IP机器人，实现封禁操作的白屏化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EasyBanner">
+<meta property="og:url" content="http://blog.yiiong.top/posts/2684.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="EasyBanner是一个自动化封禁IP机器人，实现封禁操作的白屏化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.yiiong.top/img/ava.jpg">
+<meta property="article:published_time" content="2025-12-08T14:00:22.436Z">
+<meta property="article:modified_time" content="2025-12-09T12:59:02.344Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="Achievements">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.yiiong.top/img/ava.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "EasyBanner",
+  "url": "http://blog.yiiong.top/posts/2684.html",
+  "image": "http://blog.yiiong.top/img/ava.jpg",
+  "datePublished": "2025-12-08T14:00:22.436Z",
+  "dateModified": "2025-12-09T12:59:02.344Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yiiong",
+      "url": "http://blog.yiiong.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.svg"><link rel="canonical" href="http://blog.yiiong.top/posts/2684.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 24
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"true`"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Yiiong","link":"链接: ","source":"来源: Yiiong's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'FancyBox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'EasyBanner',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/universe.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: transparent;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/tag.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">EasyBanner</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">EasyBanner</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-08T14:00:22.436Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-09T12:59:02.344Z" title="更新于 2025-12-09 20:59:02">2025-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Achievements/">Achievements</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+# EasyBanner
+
+<h2 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h2><p><strong>通过</strong>​ <strong>​<code>@机器人</code>​</strong>​<strong>来触发飞书机器人对特定机器远程封禁恶意IP，依赖于</strong>​**<a target="_blank" rel="noopener" href="https://github.com/evilsp/xdp_banner">GitHub - evilsp&#x2F;xdp_banner: 一个简单的 XDP 小程序，用于 BAN IP</a>**</p>
+<p>1.当机器人未连接服务器时，提示如下消息。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531602.png" alt="image-20240827174105360"></p>
+<p>2.当未发现访问次数超过250次的IP，提示如下消息。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531603.png" alt="image-20240827174159408"></p>
+<p>3.当发现访问次数超过250次的恶意IP，罗列出恶意IP以及对应的访问次数，并显示封禁BAN按钮。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531604.png" alt="image-20240827174315387"></p>
+<p>点击按钮，可以对远程机器进行封禁恶意IP，然后卡片更新，提示封禁完成。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531605.png" alt="image-20240827174403213"></p>
+<h2 id="逻辑介绍"><a href="#逻辑介绍" class="headerlink" title="逻辑介绍"></a>逻辑介绍</h2><h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><p>目标机器开放两个接口</p>
+<ul>
+<li>GET &#x2F;execute：用于查询日志里当前小时内访问量排名前十的IP以及对应的次数。</li>
+<li>POST &#x2F;ban：用于接收需要封禁的IP，然后执行xdp封禁命令。</li>
+</ul>
+<p>机器人设置两个接口</p>
+<ul>
+<li>POST &#x2F;webhook：用来处理接收消息事件。</li>
+<li>POST &#x2F;event：用来处理卡片回调</li>
+</ul>
+<h3 id="运行逻辑"><a href="#运行逻辑" class="headerlink" title="运行逻辑"></a>运行逻辑</h3><p>用户给机器人发消息，触发<code>接收消息v2.0</code>事件，飞书服务器返回消息体，通过消息体里<code>messageBody.Event.Message.Mentions</code>的<code>mention.ID.UserID</code>是否为空来判断用户发的消息是否为@机器人，不是则忽略。</p>
+<p>是则发送卡片消息。这时调用目标机器<code>/execute</code>接口来获得IP以及对应的次数，通过判断 ip 次数，发送不同的模板。</p>
+<p>没有返回数据，则发送未连接服务器模板。有返回数据但没有大于250次的IP，返回未检测到恶意IP模板。</p>
+<p>有返回数据且有大于250次的IP时，获取所有次数大于250次的IP以及对应的次数动态填充至 JSON 模板，然后发送。</p>
+<p>此时用户点击红色按钮BAN，会触发<code>卡片回传交互</code>事件，此时会回传数据。接下来对回传消息体进行一些判断：</p>
+<ol>
+<li>判断<code>event_type</code>是否为<code>card.action.trigger</code></li>
+<li>判断<code>action.Tag</code>是否为<code>button</code></li>
+<li>判断<code>action.Value</code>中键<code>action</code>对应的值是否为<code>ban_ip</code></li>
+</ol>
+<p>如果全部满足，则将需要封禁的IP制作成请求体，对目标机器<code>POST /ban</code>进行调用。</p>
+<p>API成功调用后，调用飞书<code>更新卡片</code>API，对卡片内容进行更新。</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h3 id="申请机器人"><a href="#申请机器人" class="headerlink" title="申请机器人"></a>申请机器人</h3><h4 id="app-id与app-secret获取方法"><a href="#app-id与app-secret获取方法" class="headerlink" title="app_id与app_secret获取方法"></a><em>app_id</em>与<em>app_secret</em>获取方法</h4><p>1.用企业账户，在开发者后台中，<strong>创建企业自建应用</strong></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531607.png" alt="image-20230731184331697"></p>
+<p>2.找到app_id与qpp_secret</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531608.png" alt="image-20230731184507412"></p>
+<p>3.添加应用能力，选择机器人</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531609.png" alt="image-20230731184549009"></p>
+<p>4.添加以下权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">im:message,im:message.group_at_msg,im:message.group_at_msg:readonly,im:message.group_msg,im:message.p2p_msg,im:message.p2p_msg:readonly,im:message:readonly,im:chat:readonly,im:chat,im:message:send_as_bot</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531610.png" alt="image-20230731184637236"></p>
+<p>5.订阅<strong>接收消息</strong>和<strong>卡片回传交互</strong></p>
+<p>若要使机器人有互动对话功能，需要填写请求配置地址，并添加<strong>接收消息v2.0</strong>和<strong>消息已读v2.0</strong>事件</p>
+<p>卡片交互需要订阅<strong>卡片回传交互</strong></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531611.png" alt="image-20240827203202358"></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208210531612.png" alt="image-20240827203244721"></p>
+<h3 id="裸机部署"><a href="#裸机部署" class="headerlink" title="裸机部署"></a>裸机部署</h3><p>首先需要在目标机器上执行<code>EasyBanner/pkgs/data/app_current.py</code>，保持其稳定运行。</p>
+<p>最好将其制作成Service，保证后台持久运行。</p>
+<p>这里提供<code>get_ip.service</code>文件供参考。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit] </span><br><span class="line">Description=Get IP Service </span><br><span class="line">After=network.target </span><br><span class="line">[Service] </span><br><span class="line">User=root </span><br><span class="line">WorkingDirectory=/root/yiiong/get_ip  # app_current.py所在目录</span><br><span class="line">Environment=&quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;</span><br><span class="line">ExecStart=/bin/bash -c &#x27;source /root/yiiong/get_ip/venv/bin/activate &amp;&amp; exec python3 app_current.py&#x27;  # 运行Python程序，注意文件路径</span><br><span class="line">Restart=always </span><br><span class="line">[Install] </span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>或者手动运行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python3 ../EasyBanner/pkgs/data/app_current.py</span><br></pre></td></tr></table></figure>
+
+<p>然后下载依赖后，运行<code>main.go</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">go mod tidy</span><br><span class="line">go run main.go</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker部署"><a href="#Docker部署" class="headerlink" title="Docker部署"></a>Docker部署</h3><p>目标机器的API只能裸机部署</p>
+<p>容器启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -d -p 8080:8080 \</span><br><span class="line">-e APP_ID=cli_a42011585561100d \ # 填写飞书应用 AppID</span><br><span class="line">-e APP_SECRET=AYRFbDlUH8OKxRweuXM47cLLFwRpO12X \ # 填写飞书应用 AppSecret</span><br><span class="line">-e URL=http://172.20.14.2:9521 \  # 填写检测主机地址</span><br><span class="line">-e GIN_MODE=release beatrueman/easybanner:stable</span><br></pre></td></tr></table></figure>
+
+<h3 id="Kubernetes部署"><a href="#Kubernetes部署" class="headerlink" title="Kubernetes部署"></a>Kubernetes部署</h3><p>先创建<code>Secret</code>设置环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl create secret generic easybanner-secret \</span><br><span class="line">--from-literal=App_ID=your_AddID \</span><br><span class="line">--from-literal=App_Secret=your_AppSecret \</span><br><span class="line">--from-literal=URL=your_url \</span><br><span class="line">--from-literal=GIN_MODE=release \ # 设置gin为生产模式</span><br><span class="line">--namespace=your_namespace</span><br></pre></td></tr></table></figure>
+
+<p>然后<code>apply</code>..&#x2F;deply目录下的<code>deployment.yaml</code>，<code>service.yaml</code>。</p>
+<p>所有注意修改命名空间。</p>
+<p>还有要<strong>注意部署的机器人与目标机器接口的通信问题</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl apply deployment.yaml</span><br><span class="line">kuectl apply service.yaml</span><br><span class="line"></span><br><span class="line"># 如果有域名需求，还可以添加ingressroute或者ingress，注意修改host</span><br><span class="line"># 这里使用ingressroute</span><br><span class="line">kubectl apply -f ingressroute.yaml</span><br></pre></td></tr></table></figure>
+
+<h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><ul>
+<li>机器人可能会重复发送消息。</li>
+<li>因为会对大日志文件利用bash进行查询，所以执行<code>GET /execute</code>速度会比较慢，测试大概会消耗20s左右。</li>
+<li>BAN操作比较慢，需要等待一会才能更新卡片。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top/posts/2684.html">http://blog.yiiong.top/posts/2684.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://blog.yiiong.top" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Achievements/">Achievements</a></div><div class="post-share"><div class="social-share" data-image="/img/ava.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/23431.html" title="EasyCreater——一站式简历生成器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">EasyCreater——一站式简历生成器</div></div><div class="info-2"><div class="info-item-1">EasyCreater是一个简历生成器。</div></div></div></a><a class="pagination-related" href="/posts/53842.html" title="BIND9 DNS智能解析实验"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">BIND9 DNS智能解析实验</div></div><div class="info-2"><div class="info-item-1"> **BIND（Berkeley Internet Name Domain）**  是全球使用最广泛的 **DNS 服务器软件**，最初由加州大学伯克利分校开发，目前由 **ISC（Internet Systems Consortium）**  维护。  BIND9 让一台服务器可以充当 DNS 解析器（递归）或权威服务器（发布域名解析记录） 目标基于bind9的view功能，实现DNS的智能解析。  master和两个slave之间实现主从同步 slave-1和slave-2均提供对www.a.com的解析，其中slave-1解析www至1.1.1.1；slave-2解析www至2.2.2.2  环境容器  bind-master：172.28.0.2 bind-slave-1：172.28.0.3 bind-slave-2：172.28.0.4  zone：a.com 域名：www.a.com  bind-slave-1视图：1.1.1.1 bind-slave-2视图：2.2.2.2  权威NS：ns1.a.com（172.28.0.2） NS：ns2.a.com（172....</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/16924.html" title="利用通义灵码实现我的第一次开源贡献"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">利用通义灵码实现我的第一次开源贡献</div></div><div class="info-2"><div class="info-item-1"> ## 结缘开源  最早了解开源是从学校的兴趣组织开始的。2023年10月21日，openSUSE亚洲峰会在我们学校召开，这次会议汇聚了许多来自openSUSE社区贡献者以及对开源感兴趣的爱好者们。我第一次知道有这么多志同道合的爱好者在进行开源贡献，他们以个人兴趣为驱动力共同维护护着一个社区。这次峰会激发了我对开源社区的兴趣，一颗种子也开始埋在我的心中——我也想要做一次开源贡献！  2024年6月24日，我上完课准备回宿舍，刚好在必经之路上看到“2024天池云原生编程挑战赛”的宣传海报。我一看居然是阿里云举办的，回到宿舍后就立马仔细查看了详细的比赛信息。”赛道3：用通义灵码,人人都是开源贡献者“很符合我的兴趣，我也特别想能有一个被Merged的PR。赛道3有很多个选题，结合我自己学习过云原生的一些知识，我最终选择了Higress开源项目，这是阿里云自己开发的API网关，它和Nginx、Traefik很类似，但是它增加了许多新的功能，并且更聚焦于云原生环境中的服务网格。尤其是它有丰富的插件，特别是与AI有关的插件，使得用户可以很轻易的拥有一个属于自己的AI。  参加比赛因为Higr...</div></div></div></a><a class="pagination-related" href="/posts/9102.html" title="基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI&#x2F;CD流"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">基于Jenkins+Git+SonarQube+Draft+Buildah+Helm的CI&#x2F;CD流</div></div><div class="info-2"><div class="info-item-1"> ## 构建部署工具及镜像作用介绍  工具Jenkins：通过Pipeline实现CI&#x2F;CD流 Sonar：进行代码检查 draft：根据项目自动生成Dockerfile与Helm Chart Buildah：打包、推送镜像 Helm：部署Chart到Kubernetes集群 镜像beatrueman/builder:1.0：整合了draft与buildah，负责镜像构建与镜像推送 beatrueman/deployer:1.0：整合了Helm，用于部署Chart到Kubernetes sonarsource/sonar-scanner-cli:latest：用于执行代码检查 jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2：它是 Jenkins Pipeline 中的一种代理机制，允许在 Jenkins 中动态创建代理节点以执行特定的构建任务。 整体流程  开发人员推送代码到Git仓库，自动触发Jenkins CI&#x2F;CD流 SonarQube进行代码检查 查找Dockerfile，如果没有则通过Draft自动生成Doc...</div></div></div></a><a class="pagination-related" href="/posts/11627.html" title="核心功能模块"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">核心功能模块</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的核心功能模块介绍。</div></div></div></a><a class="pagination-related" href="/posts/31530.html" title="插件扩展指引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">插件扩展指引</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的插件扩展开发指引。</div></div></div></a><a class="pagination-related" href="/posts/28178.html" title="IPBlock-Operator-Plus"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">IPBlock-Operator-Plus</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus是一个基于 Kubernetes 的 Operator，构建了一个插件化、模块化的恶意 IP 封禁管理平台。</div></div></div></a><a class="pagination-related" href="/posts/23431.html" title="EasyCreater——一站式简历生成器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">EasyCreater——一站式简历生成器</div></div><div class="info-2"><div class="info-item-1">EasyCreater是一个简历生成器。</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock SRE!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">功能介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">逻辑介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text">接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="toc-number">2.2.</span> <span class="toc-text">运行逻辑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">3.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B3%E8%AF%B7%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="toc-number">3.1.</span> <span class="toc-text">申请机器人</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#app-id%E4%B8%8Eapp-secret%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.1.</span> <span class="toc-text">app_id与app_secret获取方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%B8%E6%9C%BA%E9%83%A8%E7%BD%B2"><span class="toc-number">3.2.</span> <span class="toc-text">裸机部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E9%83%A8%E7%BD%B2"><span class="toc-number">3.3.</span> <span class="toc-text">Docker部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes%E9%83%A8%E7%BD%B2"><span class="toc-number">3.4.</span> <span class="toc-text">Kubernetes部署</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%BA%E9%99%B7"><span class="toc-number">4.</span> <span class="toc-text">缺陷</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18658.html" title="Redis主从同步实验">Redis主从同步实验</a><time datetime="2025-12-08T14:55:52.970Z" title="发表于 2025-12-08 22:55:52">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/22140.html" title="运维常用工具">运维常用工具</a><time datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/36066.html" title="算法记录">算法记录</a><time datetime="2025-12-08T14:00:22.521Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/42488.html" title="Baidu实习总结">Baidu实习总结</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1106.html" title="数据结构">数据结构</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Yiiong</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="/"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script src="/js/universe.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="/"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.2"></script></div></div></body></html>

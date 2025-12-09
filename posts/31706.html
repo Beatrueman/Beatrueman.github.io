@@ -1,0 +1,442 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>工作负载与服务发现 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在没有工作负载之前，我们都是直接手动创建一个一个的Pod。但是如果当我们需要将一个复杂的服务部署到庞大的集群上并且实现高可用，我们总不能每个节点上都部署一遍吧。况且如果你可以将所有的Pod手动都创建好，但是如果镜像发生了更新，我们也需要将一个一个的Pod手动进行更新。太麻烦了，这个时候我们就可以使用工作负载，它可以帮助我们更高的管理Pod。  工作负载 工作负载 | Kubernetes  工作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工作负载与服务发现">
+<meta property="og:url" content="http://blog.yiiong.top/posts/31706.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="在没有工作负载之前，我们都是直接手动创建一个一个的Pod。但是如果当我们需要将一个复杂的服务部署到庞大的集群上并且实现高可用，我们总不能每个节点上都部署一遍吧。况且如果你可以将所有的Pod手动都创建好，但是如果镜像发生了更新，我们也需要将一个一个的Pod手动进行更新。太麻烦了，这个时候我们就可以使用工作负载，它可以帮助我们更高的管理Pod。  工作负载 工作负载 | Kubernetes  工作">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.yiiong.top/img/ava.jpg">
+<meta property="article:published_time" content="2025-12-08T14:00:22.498Z">
+<meta property="article:modified_time" content="2025-12-09T12:58:34.440Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="Kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.yiiong.top/img/ava.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "工作负载与服务发现",
+  "url": "http://blog.yiiong.top/posts/31706.html",
+  "image": "http://blog.yiiong.top/img/ava.jpg",
+  "datePublished": "2025-12-08T14:00:22.498Z",
+  "dateModified": "2025-12-09T12:58:34.440Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yiiong",
+      "url": "http://blog.yiiong.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.svg"><link rel="canonical" href="http://blog.yiiong.top/posts/31706.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 24
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"true`"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Yiiong","link":"链接: ","source":"来源: Yiiong's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'FancyBox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '工作负载与服务发现',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/universe.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: transparent;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/tag.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">工作负载与服务发现</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">工作负载与服务发现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-08T14:00:22.498Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-09T12:58:34.440Z" title="更新于 2025-12-09 20:58:34">2025-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Kubernetes/">Kubernetes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+在没有工作负载之前，我们都是直接手动创建一个一个的Pod。但是如果当我们需要将一个复杂的服务部署到庞大的集群上并且实现高可用，我们总不能每个节点上都部署一遍吧。况且如果你可以将所有的Pod手动都创建好，但是如果镜像发生了更新，我们也需要将一个一个的Pod手动进行更新。太麻烦了，这个时候我们就可以使用工作负载，它可以帮助我们更高的管理Pod。
+
+<h2 id="工作负载"><a href="#工作负载" class="headerlink" title="工作负载"></a>工作负载</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/workloads/">工作负载 | Kubernetes</a></p>
+</blockquote>
+<p>工作负载是在 Kubernetes 上运行的应用程序。</p>
+<p>为了减轻用户的使用负担，通常不需要用户直接管理每个 Pod。 而是使用<strong>负载资源</strong>来替用户管理一组 Pod。 这些负载资源通过配置<strong>控制器</strong>来确保正确类型的、处于运行状态的 Pod 个数是正确的，与用户所指定的状态相一致。</p>
+<p>Kubernetes 提供若干种内置的工作负载资源</p>
+<ul>
+<li>Deployment和ReplicaSet</li>
+<li>StatefulSet：有状态服务，为 Pod 提供持久存储和持久标识符。</li>
+<li>DaemonSet：守护型应用部署，如日志、监控组件。</li>
+<li>Job和CronJob：定时任务部署，指定时间运行。</li>
+</ul>
+<h3 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h3><p>Deployment是Kubernetes中用于定义Pod副本集的对象，它负责管理应用的部署和更新。通过Deployment，可以实现应用的<strong>滚动更新、回滚</strong>以及<strong>自动修复</strong>。</p>
+<h4 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h4><p>Deployment并不直接管理Pod，而是管理ReplicaSet，ReplicaSet再管理Pod。在我们创建 Deployment 的时候，它会用自己的 Pod 规范创建一个 ReplicaSet。当更新一个 Deployment 并修改副本数量时，它会把更新内容传递给下游的 ReplicaSet。</p>
+<p>一个 ReplicaSet 对象就是由副本数目的定义和一个 Pod 模板组成的, 它的定义就是 Deployment 的一个子集。它主要关注的是Pod实例的数量，并在Pod出现问题时，维持所需副本数量。</p>
+<p>Deployment则是建立在ReplicaSet之上的更高级别的抽象，用于管理Pod副本集和应用程序的部署。然后它多了滚动更新、回滚以及自动修复这些功能。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714561.png" alt="img"></p>
+<h4 id="主要组成部分"><a href="#主要组成部分" class="headerlink" title="主要组成部分"></a>主要组成部分</h4><ol>
+<li><strong>模板（Template）</strong> ：定义了要创建的Pod的规范，包括镜像、环境变量、卷等。当副本数不足时会根据模板新建Pod。</li>
+<li><strong>副本数（Replica Count）</strong> ：指定了希望运行的Pod副本数量。</li>
+<li><strong>升级策略（Update Strategy）</strong> ：定义了应用更新的策略，包括滚动更新、Recreate等。</li>
+<li><strong>标签选择器（Label Selector）</strong> ：用于选择要进行管理的Pod副本集。</li>
+<li><strong>滚动升级（Rolling Update）</strong> ：一种升级策略，通过逐步替换旧的Pod实例来实现平滑的升级。</li>
+</ol>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ol>
+<li><strong>滚动更新</strong>：保证更新过程不中断服务。</li>
+<li><strong>副本管理</strong>：保证始终有指定数量的实例在运行。</li>
+<li><strong>自动修复</strong>：当Pod发生故障时会自动替换为新的Pod。</li>
+<li><strong>版本回滚</strong>：允许用户回滚到先前的版本，以应对更新带来的问题</li>
+</ol>
+<h4 id="示例：使用Deployment部署Nginx"><a href="#示例：使用Deployment部署Nginx" class="headerlink" title="示例：使用Deployment部署Nginx"></a>示例：使用Deployment部署Nginx</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: apps/v1 # API版本</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata: # 元数据部分</span><br><span class="line">  name: nginx-deployment # 资源名称</span><br><span class="line">  namespace: </span><br><span class="line">  labels: # 给deployment打的标签</span><br><span class="line">    app: nginx # 名为app值为nginx的标签</span><br><span class="line">spec: # 定义部署对象的规范</span><br><span class="line">  replicas: 3 # 副本数量</span><br><span class="line">  selector: # 选择器部分，用于指定哪些Pod副本属于此部署</span><br><span class="line">    matchLabels: # 匹配标签部分。Service通过这里来匹配Pod</span><br><span class="line">      app: nginx # 指定要匹配的标签为app=nginx，用于选取具有这个标签的Pod副本</span><br><span class="line">  template: # 模板部分</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx # 需要与selector设置的标签一致</span><br><span class="line">    spec:</span><br><span class="line">      containers: # 用于定义Pod中的容器</span><br><span class="line">      - name: nginx # 容器名称</span><br><span class="line">        image: reg.redrock.team/library/nginx:latest</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80 # 暴露容器的80端口供外部访问</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deploy.yaml</span><br></pre></td></tr></table></figure>
+
+<p>可以看到RS的NAME是在Deployment之后加了一段字符串，而Pod是在RS后又加了一段字符串，说明Pod其实是由RS直接管理的。</p>
+<h5 id="副本伸缩"><a href="#副本伸缩" class="headerlink" title="副本伸缩"></a>副本伸缩</h5><p>方式一：命令行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl scale deploy NAME --replicas=pod数量 -n NAMESPACE</span><br></pre></td></tr></table></figure>
+
+<p>方式二：编辑yaml文件</p>
+<p>修改<code>replicas</code>值即可。</p>
+<p><em>Pod为什么要有副本数？</em></p>
+<ul>
+<li>使用多个副本来运行同一个服务，可以提高应用的可用性。如果一个Pod因为故障而被杀死，其他Pod会立即来替代它，从而保证了服务的稳定性。</li>
+<li>多个副本可以将流量分散到不同的Pod，从而实现负载均衡，避免所有流量集中在一个Pod上导致负载过高。流量高时，我们可以增加副本数，少时可以减少副本数，从而节省资源。</li>
+<li>多个Pod可以实现平滑的滚动更新。</li>
+</ul>
+<h5 id="镜像更新"><a href="#镜像更新" class="headerlink" title="镜像更新"></a>镜像更新</h5><p>Deployment支持两种镜像更新策略：<strong>重建更新（Recreate）<strong>​<strong><strong>和</strong></strong>​</strong>滚动更新（默认）（RollingUpdate）</strong> ，可以通过<code>strategy</code>选项进行配置。</p>
+<p><strong>重建更新（Recreate）</strong></p>
+<p>在<code>spec</code>下增加如下字段</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spec:</span><br><span class="line">  strategy:  # 策略</span><br><span class="line">    type: Recreate  # 重建更新策略</span><br></pre></td></tr></table></figure>
+
+<p><strong>滚动更新（RollingUpdate）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">strategy:</span><br><span class="line">  type: RollingUpdate # 滚动更新策略，可以不加，因为默认就是滚动更新</span><br><span class="line">  rollingUpdate:</span><br><span class="line">    maxUnavailable: 25%</span><br><span class="line">    maxSurge: 25%</span><br></pre></td></tr></table></figure>
+
+<p><code>MaxSurge</code>和<code>MaxUnavailable</code>，这两个参数决定了更新过程的速度。这两个参数可以是 Pod 数量，也可以是 Deployment 的实例数量百分比。</p>
+<p><em>为什么要有这两个参数？为什么要设置更新过程的速度？</em></p>
+<ul>
+<li>我们的服务很重要，对服务的变更需要非常谨慎。因此决定在关闭旧版本Pod之前，需要首先启动新Pod。只有新 Pod 启动、运行并就绪之后，才能杀死旧 Pod。</li>
+<li>假如我们的集群已经满载，无法负担多余的Pod消耗，我们自然需要先关掉旧Pod，然后才启动新Pod。</li>
+</ul>
+<p>当<code>MaxUnavailable</code>设置为 0 意味着：“在新 Pod 启动并就绪之前，不要关闭任何旧 Pod”。</p>
+<p>当<code>MaxSurge</code>设置为 100% 的意思是：“立即启动所有新 Pod”，也就是说我们有足够的资源，我们希望尽快完成更新。</p>
+<p>这两个默认值是25%，假如我们有3个副本，意味着更新时允许 25%（0.75个取整为1） 的Pod处于不可用状态，允许最多增加1个新Pod。</p>
+<h5 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h5><p>Deployment支持版本升级过程中的暂停，继续功能以及版本回退等诸多功能。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl rollout option NAME -n NAMESPACE</span><br><span class="line">kubectl rollout：版本升级相关功能，支持下面的选项：</span><br><span class="line"></span><br><span class="line">status：显示当前升级状态</span><br><span class="line">history：显示升级历史记录</span><br><span class="line">pause：暂停版本升级过程</span><br><span class="line">resume：继续已经暂停的版本升级过程</span><br><span class="line">restart：重启版本升级过程</span><br><span class="line">undo：回滚到上一级版本（可以使用--to-revision回滚到指定版本）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="金丝雀发布"><a href="#金丝雀发布" class="headerlink" title="金丝雀发布"></a>金丝雀发布</h5><p>Deployment支持更新过程中的控制，如”暂停（pause）”或”继续（resume）”更新操作。</p>
+<p>有时我们不想让测试版本影响所有用户，即使是短时间也不行。所以我们可以部分推出新版本。例如我们部署新旧两组实例，1% 的流量发送给新版本，先筛选一小部分的用户请求路由到新的pod应用，继续观察能否稳定地按期望的方式运行。确定没问题之后再继续完成余下的pod资源滚动更新，否则立即回滚更新操作。</p>
+<p>现在的镜像版本是<code>latest</code>，切换版本到<code>1.19.2</code>，变更途中使用<code>pause</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl set image deploy nginx-deployment nginx=reg.redrock.team/library/nginx:1.19.2 -n lesson-demo&amp;&amp; kubectl rollout pause deploy nginx-deployment -n lesson-demo</span><br></pre></td></tr></table></figure>
+
+<p>发现<code>1.19.2</code>版本只增加了一个RS，而<code>latest</code>版本没有减少</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714562.png" alt="image-20240413215726365"></p>
+<p>查看更新状态，发现deployment正在等待更新，并且一个已经更新完成。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714563.png" alt="image-20240413215935892"></p>
+<p>然后继续更新</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl rollout resume deploy nginx-deployment -n lesson-demo</span><br></pre></td></tr></table></figure>
+
+<p>全部更新完成</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714564.png"></p>
+<h2 id="服务发现与负载均衡"><a href="#服务发现与负载均衡" class="headerlink" title="服务发现与负载均衡"></a>服务发现与负载均衡</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/">服务（Service） | Kubernetes</a></p>
+</blockquote>
+<h3 id="为什么需要服务发现？"><a href="#为什么需要服务发现？" class="headerlink" title="为什么需要服务发现？"></a>为什么需要服务发现？</h3><p>传统的部署应用服务方式都是直接部署在给定的机器上，访问服务时，我们只需要访问该机器的IP即可。但K8s集群中的应用都是通过Pod去部署的，而 pod 生命周期是短暂的。在 Pod 的生命周期过程中，比如它创建或销毁，它的 IP 地址都会发生变化，这样就不能使用传统的部署方式，不能指定 IP 去访问指定的应用。</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>前面我们通过Deployment创建了一组Pod，这些Pod组需要提供一个统一的访问入口，以及怎么去控制流量负载均衡到这个组里面。其实我们可以在部署时就提供一个模板以及访问方式，使应用服务暴露在外部。这时就需要服务发现，也就是K8s中的Service。</p>
+<h4 id="示例：通过Service暴露Nginx服务"><a href="#示例：通过Service暴露Nginx服务" class="headerlink" title="示例：通过Service暴露Nginx服务"></a>示例：通过Service暴露Nginx服务</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx # 匹配具有该标签的Pod</span><br><span class="line">  ports:</span><br><span class="line">    - protocol: TCP </span><br><span class="line">      # 服务监听的端口号，当其他服务或外部客户端与该服务通信时，它们将使用这个端口号进行通信，该端口号是服务对外部暴露的入口。即通过clusterIP: port可以访问到某个service</span><br><span class="line">      port: 9376</span><br><span class="line">      # targetPort可以直接指定Pod的端口，也可以指定Pod端口所对应的名称。</span><br><span class="line">      # targetPort一定要与containerPort暴露出的端口对应</span><br><span class="line">      targetPort: 80</span><br></pre></td></tr></table></figure>
+
+<h4 id="Service的类型"><a href="#Service的类型" class="headerlink" title="Service的类型"></a>Service的类型</h4><p><strong>ClusterIP</strong></p>
+<ul>
+<li>只在集群内部生效的IP，集群内所有节点都能访问到它。</li>
+<li>ClusterIP类型也是我们不指定类型时的默认Service类型。</li>
+</ul>
+<p><code>apply</code>之后，我们就可以通过访问<code>ClusterIP:PORT</code>的形式来访问到我们的服务。</p>
+<p>访问方式：<code>ClusterIP:PORT</code></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714565.png" alt="image-20240414172201653"></p>
+<p>这个 IP 地址就是 Service 的 IP 地址，这个 IP 地址在集群里面可以被其它 pod 所访问，相当于通过这个 IP 地址提供了统一的一个 pod 的访问入口，以及服务发现。而Endpoints是每个Pod的后端IP。</p>
+<p><strong>NodePort</strong></p>
+<p>当需要从集群外部访问Service时，就可以使用NodePort。</p>
+<p>NodePort会在每个NodeIP上启用一个相同的端口来暴露服务。NodeIP就是我们在创建集群时指定的节点IP，端口限定范围为30000-32767。</p>
+<p>当我们访问<code>NodeIP:PORT</code>时，流量会由 kube-proxy 网络组件进一步到给对应的 Pod。</p>
+<p>访问方式：<code>NodeIP:PORT</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx </span><br><span class="line">  ports:</span><br><span class="line">    - port: 80</span><br><span class="line">      targetPort: 80</span><br><span class="line">      nodePort: 30007</span><br></pre></td></tr></table></figure>
+
+<p><strong>LoadBalancer</strong></p>
+<p>NodePort会在每台Node上监听端口接收用户流量，但在实际情况下，对用户暴露的只会有一个IP和端口，那这么多台Node该使用哪台让用户来访问呢？而且如果只访问一个NodeIP，那么这个节点压力会很大。</p>
+<p>这时就需要前面加一个公网负载均衡器为项目提供统一访问入口了。</p>
+<p>LoadBalancer 通常是云服务厂商提供的负载均衡器，我们通过外部的负载均衡器将流量路由到创建的服务商。</p>
+<p>将Service的类型设置为LoadBalancer后，我们有两个选择，一个是设置负载均衡器的IP，另一种负载均衡器会自动为我们分配一个ExternalIP作为出口。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714566.png" alt="image"></p>
+<p>访问方式：<code>EXTERNALIP:PORT</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  type: LoadBalancer</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx </span><br><span class="line">  ports:</span><br><span class="line">    - port: 80</span><br><span class="line">      targetPort: 80</span><br></pre></td></tr></table></figure>
+
+<p><strong>externalIPs</strong></p>
+<p>一般我们的服务只暴露了ClusterIP，而NodePort的端口又有30000-32767的范围限制。这时我们就可以配置上externalIP，表示来自externalIP的流量能进入我们的服务，</p>
+<p>externalIP一般填负载均衡器的IP。</p>
+<p>注意：externalIPs一定不能填NodeIP，不然会导致该节点直接崩溃（calico、kubelet、kube-proxy等组件无法与apiserver进行通信），出现<code>The connection to the server apiserver.cluster.local:6443 was refused - did you specify the right host or port?</code></p>
+<p>原因分析可以看<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41586875/article/details/124330823">k8s IPVS模式下externalIP导致节点故障浅析_external-ip-CSDN博客</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  externalIPs:</span><br><span class="line">  - 1.2.3.4 </span><br><span class="line">  selector:</span><br><span class="line">    app: nginx </span><br><span class="line">  ports:</span><br><span class="line">    - port: 80</span><br><span class="line">      targetPort: 80</span><br></pre></td></tr></table></figure>
+
+<h4 id="Service四种类型的对比"><a href="#Service四种类型的对比" class="headerlink" title="Service四种类型的对比"></a>Service四种类型的对比</h4><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>用途介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ClusterIP</code></td>
+<td>默认类型，自动分配一个仅<code>clusterIp</code>内部可以访问的虚拟ip地址</td>
+</tr>
+<tr>
+<td><code>NodePort</code></td>
+<td>在<code>ClusterIP</code>基础上为<code>Service</code>机器上绑定一个端口，这样就可以通过<code>NodePort</code>来访问服务</td>
+</tr>
+<tr>
+<td><code>LoadBalancer</code></td>
+<td>在<code>NodePort</code>基础上借助云服务商创建一个外部负载均衡器，并将请求转发到<code>NodePort</code>来访问服务</td>
+</tr>
+<tr>
+<td><code>externalIPs</code></td>
+<td>把集群外部的服务引入到集群内部来，在集群内部直接使用</td>
+</tr>
+</tbody></table>
+<h4 id="Ingress和IngressRoute"><a href="#Ingress和IngressRoute" class="headerlink" title="Ingress和IngressRoute"></a>Ingress和IngressRoute</h4><p>没有Ingress之前，我们使用NodePort对外暴露服务，但当服务多了以后，会存在一些弊端，比如暴露太多的的端口，无法实现域名转发等等。</p>
+<p><strong>Ingress其实就是从Kubernetes集群外部访问的一个入口，它可以帮助我们通过不同域名来将流量匹配到对应的服务，类似于Nginx。</strong></p>
+<p>Ingress在Service上面一层，可以定义集群外部到集群内Service的HTTP和HTTPS的路由。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714567.webp" alt="img"></p>
+<p><strong>使用方法</strong>：先自行部署IngressController → 再部署Ingress资源。</p>
+<p>IngressController的功能：</p>
+<ul>
+<li>接受外部流量，并将请求负载均衡到内部Pod</li>
+<li>部署Ingress路由转发规则</li>
+<li>监控Pod，并在添加或删除Pod后自动更新负载均衡规则。</li>
+</ul>
+<p>可以把Ingress controller理解为一个监听器，它可以不断地与 kube-apiserver 打交道，实时的感知后端 service、pod 的变化，当得到这些变化信息后，Ingress controller 再结合 Ingress 的配置，更新反向代理负载均衡器，达到服务发现的作用。</p>
+<p>Ingress Controller的实现有多种，比如Ingress-Nginx、Traefik等，由于Ingress-Nginx的配置比较麻烦，所以我们一般使用它的替代品Traefik。</p>
+<h4 id="Traefik-Ingress-Controller"><a href="#Traefik-Ingress-Controller" class="headerlink" title="Traefik Ingress Controller"></a>Traefik Ingress Controller</h4><p>优势：</p>
+<ol>
+<li>部署过程简单</li>
+<li>使用Go语言开发，完美贴合K8s</li>
+<li>Traefik衍生的IngressRoute配置更加简洁，我们一般使用IngressRoute</li>
+<li>拥有多种中间件，可以用于将请求路由到目的地之前或之后来调整请求。</li>
+</ol>
+<h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><p>使用Helm安装（Helm是K8s中的一个包管理器）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># helm安装</span><br><span class="line">$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3</span><br><span class="line">$ chmod 700 get_helm.sh</span><br><span class="line">$ ./get_helm.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">helm repo add traefik https://traefik.github.io/charts</span><br><span class="line">helm repo list</span><br><span class="line">helm repo update</span><br><span class="line">helm pull traefik/traefik</span><br><span class="line">kubectl create namespace traefik</span><br><span class="line">helm install traefik traefik/traefik -n traefik</span><br></pre></td></tr></table></figure>
+
+<p>部署完成后，我们就可以把某个域名解析到我们的集群（下面把k8s.yiiong.top解析到172.20.14.20），然后我们可以配置IngressRoute规则，Traefik就可以根据IngressRoute规则来将流量路由到对应的服务，并为每个服务提供独立的域名。</p>
+<h5 id="路由实现"><a href="#路由实现" class="headerlink" title="路由实现"></a>路由实现</h5><p>Traefik有两个服务入口（entryPoint）</p>
+<ul>
+<li>80，对应entryPoint:web</li>
+<li>443，对应entryPoint:websecure</li>
+</ul>
+<p>Traefik默认以NodePort形式暴露，对于如下的Traefik来说，它的外部入口就是<code>30350</code>和<code>31971</code>，从<code>30350</code>进入<code>80</code>入口，从<code>31971</code>进入<code>443</code>入口，具体规则可以在<code>values.yaml</code>中修改。</p>
+<p>如果我们不想通过<code>域名:端口</code>（k8s.yiiong.top:30350）,我们可以通过配置Nginx的反向代理，实现直接访问域名到我们对应的服务。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NAME              TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)                      AGE</span><br><span class="line">service/traefik   NodePort   10.96.1.38   &lt;none&gt;        80:30350/TCP,443:31971/TCP   174d</span><br></pre></td></tr></table></figure>
+
+<p>路由实现</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714568.png" alt="image-20240418223033153"></p>
+<h5 id="IngressRoute"><a href="#IngressRoute" class="headerlink" title="IngressRoute"></a>IngressRoute</h5><p>Ingress是官方的东西，而IngressRoute则是Traefik Ingress Controller封装好的一种特殊Ingress资源。</p>
+<p><strong>配置一个HTTP的IngressRoute</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: IngressRoute</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-http</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  entryPoints: # 入口点，入口点是在我们Ingress控制器中定义的入口端口，表示进入该端口的服务才遵循该IngressRoute的路由</span><br><span class="line">  - web</span><br><span class="line">  routes:</span><br><span class="line">  - match: Host(`k8s.yiiong.top`) # 匹配这个域名</span><br><span class="line">    kind: Rule # 路由类型的规则</span><br><span class="line">    services:</span><br><span class="line">    - name: nginx-service # 匹配名为nginx-service的svc</span><br><span class="line">      port: 9376 # 这个svc暴露在9376，二者要相同</span><br></pre></td></tr></table></figure>
+
+<p>接下来访问<code>http://k8s.yiiong.top:30350</code>即可访问到我们对应的服务。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714569.png" alt="image-20240420212251143"></p>
+<p><strong>配置HTTPS的IngressRoute</strong></p>
+<p>我们这里先使用openssl来生成一个自签证书。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl genrsa -out ca.key 4096</span><br><span class="line"> </span><br><span class="line">openssl req -x509 -new -nodes -sha512 -days 36500 \</span><br><span class="line">  -subj &quot;/C=CN/ST=Chongqing/L=Chongqing/O=Redrock/OU=Personal/CN=k8s.yiiong.top&quot; \</span><br><span class="line">  -key ca.key \</span><br><span class="line">  -out ca.crt</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">openssl genrsa -out tls.key 4096</span><br><span class="line"> </span><br><span class="line">openssl req -sha512 -new \</span><br><span class="line"> -subj &quot;/C=CN/ST=Chongqing/L=Chongqing/O=Redrock/OU=Personal/CN=k8s.yiiong.top&quot; \</span><br><span class="line"> -key tls.key \</span><br><span class="line"> -out tls.csr</span><br><span class="line"> </span><br><span class="line">openssl x509 -req -sha512 -days 3650 \</span><br><span class="line">    -CA ca.crt -CAkey ca.key -CAcreateserial \</span><br><span class="line">    -in tls.csr \</span><br><span class="line">    -out tls.crt</span><br></pre></td></tr></table></figure>
+
+<p>创建证书的<code>Secret</code>（K8s中一种存储和管理敏感数据的资源类型）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl create secret -n lesson-demo generic traefik-tls --from-file=tls.crt --from-file=tls.key</span><br></pre></td></tr></table></figure>
+
+<p>配置Yaml</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: IngressRoute</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-https</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  # 这里指定https只能走443端口</span><br><span class="line">  entryPoints:</span><br><span class="line">  # 使用websecure作入口</span><br><span class="line">    - websecure</span><br><span class="line">  routes:</span><br><span class="line">    - kind: Rule</span><br><span class="line">      match: Host(`k8s.yiiong.top`)</span><br><span class="line">      services:</span><br><span class="line">        - name: nginx-service</span><br><span class="line">          port: 9376</span><br><span class="line">  # tls相关配置</span><br><span class="line">  tls:</span><br><span class="line">  # 指定证书，是我们前面创建的证书</span><br><span class="line">    secretName: traefik-tls</span><br></pre></td></tr></table></figure>
+
+<p>接下来访问<code>https://k8s.yiiong.top:31971</code></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714570.png" alt="image-20240420220702430"></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714572.png" alt="image-20240420220839470"></p>
+<p><strong>不在集群里使用HTTPS</strong></p>
+<ul>
+<li>在集群中使用HTTPS太麻烦了，要配这么多东西，有没有什么更好的办法可以把它绕开，然后我们也能使用HTTPS请求呢？</li>
+<li>答案是在集群中配置一个网关机，让这个网关机来控制流量的进入，我们只需要关注流量进入网关后，把tls给卸载掉，最后用http的流量进入我们的集群，这种方案即安全，还方便，不过缺点是只适合在多节点的集群中使用</li>
+</ul>
+<h5 id="中间件middleware"><a href="#中间件middleware" class="headerlink" title="中间件middleware"></a>中间件middleware</h5><p>主要用来对HTTP请求做一些修改</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714573.webp" alt="img"></p>
+<p><em><strong>HTTP强制跳转HTTPS</strong></em></p>
+<p>实现效果：访问<code>http://k8s.yiiong.top:30350</code>自动跳转至<code>https://k8s.yiiong.top:31971</code></p>
+<p>先<code>apply</code>刚才的HTTPS的IngressRoute。</p>
+<p>然后配置一个中间件</p>
+<p>这里会用到<code>RedirectScheme</code>的内置中间件，配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: Middleware</span><br><span class="line">metadata:</span><br><span class="line">  name: redirect-https-middleware</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  redirectScheme:</span><br><span class="line">    scheme: https</span><br><span class="line">    port: &quot;31971&quot; # 由于我的HTTPS在31971端口，指定一下端口，让其重定向到31971</span><br></pre></td></tr></table></figure>
+
+<p>然后在HTTP的Yaml文件里最后添加刚刚创建的中间件。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">middlewares:</span><br><span class="line">  - name: redirect-https-middleware</span><br></pre></td></tr></table></figure>
+
+<p>可见HTTP被成功重定向到HTTPS</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714574.png" alt="image-20240420223215246"></p>
+<p><em><strong>去除请求前缀</strong></em></p>
+<p>有时候我们只有一个域名，但我们想通过这一个域名访问不同的应用。</p>
+<p>在Nginx中，我们可以配置<code>Location</code>来匹配流量，Traefik也可以这么做。</p>
+<p>但是定制不同的前缀后，由于应用本身并没有这些前缀，导致请求返回<code>404</code>，这时候我们就需要对请求的<code>path</code>进行处理。</p>
+<p>先创建一个带前缀的IngressRoute</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: IngressRoute</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-http</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  entryPoints:</span><br><span class="line">  - web</span><br><span class="line">  routes:</span><br><span class="line">  - match: Host(`k8s.yiiong.top`) &amp;&amp; PathPrefix(`/nginx`)</span><br><span class="line">    kind: Rule</span><br><span class="line">    services:</span><br><span class="line">    - name: nginx-service</span><br><span class="line">      port: 9376</span><br></pre></td></tr></table></figure>
+
+<p>直接访问会返回<code>404</code></p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714575.png" alt="image-20240420225042831"></p>
+<p>配置中间件<code>stripPrefix</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: Middleware</span><br><span class="line">metadata:</span><br><span class="line">  name: prefix-url-middleware</span><br><span class="line">  namespace: lesson-demo</span><br><span class="line">spec:</span><br><span class="line">  stripPrefix:</span><br><span class="line">    prefixes:</span><br><span class="line">      - /nginx</span><br></pre></td></tr></table></figure>
+
+<p>修改IngressRoute，使用中间件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">middlewares:</span><br><span class="line">   - name: prefix-url-middleware</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211714576.png" alt="image-20240420235338285"></p>
+<p><em><strong>灰度发布</strong></em></p>
+<p>灰度发布我们有时候也会称为金丝雀发布（Canary），主要就是让一部分测试的服务也参与到线上去，经过测试观察看是否符合上线要求。</p>
+<p>假设一个应用现在运行着<code>V1</code>版本，新的<code>V2</code>版本需要上线，这时候我们需要在集群中部署好<code>V2</code>版本，然后通过<code>Traefik</code>提供的<code>带权重的轮询(WRR)</code>来实现该功能。</p>
+<p>这和我们之前讲Nginx带权重的负载均衡很类似。</p>
+<p>需要两个及以上的Service，然后再加一个TraefikService</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: TraefikService</span><br><span class="line">metadata:</span><br><span class="line">  name: app</span><br><span class="line">spec:</span><br><span class="line">  weighted:</span><br><span class="line">    services:</span><br><span class="line">      - name: appv1 # 服务1</span><br><span class="line">        weight: 3</span><br><span class="line">        port: 80</span><br><span class="line">        kind: Service</span><br><span class="line">      - name: appv2 # 服务2</span><br><span class="line">        weight: 1</span><br><span class="line">        port: 80</span><br><span class="line">        kind: Service</span><br></pre></td></tr></table></figure>
+
+<p>我们给v1版本配置权重3，给要上线的v2版本配置权重1.也就是说我们3次访问<code>domain.com</code>都会是v1版本，第4次就是v2版本。和我们当时Nginx举的8881和8882的那个例子一模一样。</p>
+<p>创建TraefikService类型后，我们在IngressRoute类型中将service写为traefikService即可</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: IngressRoute</span><br><span class="line">metadata:</span><br><span class="line">  name: app-ingressroute-canary </span><br><span class="line">spec:</span><br><span class="line">  entryPoints:</span><br><span class="line">    - web</span><br><span class="line">  routes:</span><br><span class="line">  - match: Host(`domain.com`)</span><br><span class="line">    kind: Rule</span><br><span class="line">    services:</span><br><span class="line">    - name: app</span><br><span class="line">      kind: TraefikService</span><br></pre></td></tr></table></figure>
+
+<p>待v2版本测试没问题后，就可以将流量全切到v2了。</p>
+<p>Traefik的中间件还有很多，比如Basic Auth（用户身份认证）、ipWhiteList（定义IP白名单）、mirroring（流量复制）等等</p>
+<p>大家可以通过<a target="_blank" rel="noopener" href="https://doc.traefik.io/traefik/middlewares/overview/">Traefik Proxy Middleware Overview - Traefik</a>进行学习更多的中间件，甚至可以自行开发自定义中间件。</p>
+<h3 id="总结：服务暴露模式"><a href="#总结：服务暴露模式" class="headerlink" title="总结：服务暴露模式"></a>总结：服务暴露模式</h3><table>
+<thead>
+<tr>
+<th>暴露模式</th>
+<th>访问方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Service (NodePort) + Deployment</td>
+<td>NodeIP:NodePort</td>
+</tr>
+<tr>
+<td>IngressRoute + Service（CluserIP） + Deployment</td>
+<td>域名</td>
+</tr>
+<tr>
+<td>LoadBalancer + Service + Deployment</td>
+<td>负载均衡器IP:PORT</td>
+</tr>
+</tbody></table>
+<p>第二种方式是最常用的，之所以Service被设置成ClusterIP，是因为流量进入集群后直接就由Ingress Controller管理，不再通过kube-proxy管理。我们常常将域名解析到集群主机，然后IngressRoute设置相同的主机名，就能实现流量匹配</p>
+<p>作业：</p>
+<p>1.将第三节课课后作业使用FastAPI开发的Web项目部署在K8s上，并通过<strong>IngressRoute + Service（CluserIP） + Deployment + Middleware（去前缀）</strong> 的方式暴露服务。</p>
+<p>2.部署2个以上的服务在K8s上，利用IngressRoute用域名区分访问。</p>
+<p>最终将服务地址（要求能访问到）和整个部署流程记录文档提交到<strong><a href="mailto:&#x79;&#x69;&#105;&#x6f;&#110;&#x67;&#64;&#114;&#101;&#100;&#114;&#111;&#99;&#107;&#x2e;&#116;&#101;&#x61;&#x6d;">yiiong@redrock.team</a></strong></p>
+<p>截止时间<strong>5月5日</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top/posts/31706.html">http://blog.yiiong.top/posts/31706.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://blog.yiiong.top" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Kubernetes/">Kubernetes</a></div><div class="post-share"><div class="social-share" data-image="/img/ava.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/23988.html" title="关于GZCTF反向代理配置不当导致平台在高并发下崩溃"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">关于GZCTF反向代理配置不当导致平台在高并发下崩溃</div></div><div class="info-2"><div class="info-item-1"> ## 环境  GZCTF单实例部署在172.20.14.20、172.20.14.110、172.20.14.111三台机器的K8s集群上，使用LoadBalancer对外暴露服务，LoadBalancer IP由MetalLB分得：172.20.14.118 问题描述2024年11月16日，2024 Redrock CTF开赛，这次比赛使用了新的比赛平台GZ::CTF - GZ::CTF Docs。 由于反向代理配置不当，导致平台在刚开赛时就因为高并发而立即崩溃，报错显示错误代码429，并且平台响应很慢，无法正常刷新。   排查过程在遇到429问题后，首先是检查了配置文件中和访问限制有关的参数配置，都适当的调大，发现并没有什么改善，没有解决问题。  GZCTF是单实例部署的，为了让流量分流，我将Pod扩容，但是单实例部署与多实例部署存在差别，并且据官方介绍单实例已经能满足大部分的一般比赛（满足2000人200题），并且是官方最为推荐的部署方式。多实例部署需要配置对象存储，否则会导致数据不一致的问题。  最后在咨询开发者以及在检查日志的过程中发现了问题： 配置文件中的Forwa...</div></div></div></a><a class="pagination-related" href="/posts/55660.html" title="调度与Helm"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">调度与Helm</div></div><div class="info-2"><div class="info-item-1"> ## 调度  Kubernetes允许你去影响pod被调度到哪个节点。起初，只能通过在pod规范⾥指定节点选择器来实现，后⾯通过其他机制的逐渐加⼊来扩容这项功能。 固定节点（NodeName）指定Pod调度到某个节点上并且固定 apiVersion: apps/v1kind: Deploymentmetadata:  name: node-name-test  labels:    app: node-name-testspec:  replicas: 5  selector:    matchLabels:      app: node-name-test  template:    metadata:      labels:        app: node-name-test    spec:      nodeName: master # 指定节点名即可      containers:      - image: nginx        name: nginx  标签选择器根据标签选择可以调度的节点 给节点打标签 kubect label nodes master...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/11627.html" title="核心功能模块"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">核心功能模块</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的核心功能模块介绍。</div></div></div></a><a class="pagination-related" href="/posts/55660.html" title="调度与Helm"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">调度与Helm</div></div><div class="info-2"><div class="info-item-1"> ## 调度  Kubernetes允许你去影响pod被调度到哪个节点。起初，只能通过在pod规范⾥指定节点选择器来实现，后⾯通过其他机制的逐渐加⼊来扩容这项功能。 固定节点（NodeName）指定Pod调度到某个节点上并且固定 apiVersion: apps/v1kind: Deploymentmetadata:  name: node-name-test  labels:    app: node-name-testspec:  replicas: 5  selector:    matchLabels:      app: node-name-test  template:    metadata:      labels:        app: node-name-test    spec:      nodeName: master # 指定节点名即可      containers:      - image: nginx        name: nginx  标签选择器根据标签选择可以调度的节点 给节点打标签 kubect label nodes master...</div></div></div></a><a class="pagination-related" href="/posts/58647.html" title="Operator介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">Operator介绍</div></div><div class="info-2"><div class="info-item-1"> # Operator  为什么要用？当K8s中的原生资源无法满足业务要求时，这时候就需要Operator来创建自己的CRD以及对应Controller。利用Controller实现CRD所需要的业务逻辑。 比如，我们想在Kubernetes中部署一个Nginx并让外界可以访问到，这时我们首先需要创建一个Deployment用来部署Nginx，然后创建一个Service用来将Deployment的Pod的容器端口映射到主机端口。我们觉得太麻烦了，想要创建一次资源就可以同时包含Deployment和Service。 是什么？Operator是一种通过自定义控制器（Customer Controller）扩展K8s API的模式。它的核心思想是将运维知识代码化。允许开发者将应用的管理逻辑（如部署、升级、备份、恢复）封装成代码，使K8s能够像管理原生资源一样管理复杂的有状态应用（如数据库、消息队列） 解决了什么？ 管理有状态应用的复杂性：例如pg集群的自动故障转移、redis的数据持久化 自动化运维：通过代码替代人工操作 统一生命周期管理：标准化应用的安装、配置、扩缩容流程等  什么时...</div></div></div></a><a class="pagination-related" href="/posts/37331.html" title="存储与配置"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">存储与配置</div></div><div class="info-2"><div class="info-item-1"> ## 存储  持久化Pod是由多个容器组成的，在了解Pod的文件系统结构时，我们可以先看看一个Docker容器是如何被制作的。 容器根据镜像启动。我们在Dockerfile中的每一条RUN命令，会生成一层一层的镜像层，这些镜像层从下向上以栈的形式组成了一个镜像。而容器和镜像都是由多个层组成的，他们之间最大的区别就是容器的最上面的一层是读写层，叫做容器层。但镜像的所有层都是只读层，叫做镜像层。 容器启动后，Docker会在容器使用的镜像上添加一个容器层。容器运行时，所有和数据变化相关的操作都是在这个读写层中完成的，如新建文件，修改文件等。删除容器时，Docker同时会删除这个容器层。 每个容器运行时，都有自己的容器层，并在容器层中保存容器运行相关的数据。容器层之下的所有镜像层都是只读的，因此多个容器可以共享同一个镜像。  Pod中有若干个容器，每个容器的文件系统都是独立且一次性的。当容器因为某些原因重启时（崩溃、调度等情况），容器层就会被销毁并重新创建。 假如我们运行了一个MySQL的Pod，如果你没有对它做持久化存储，一旦这个Pod因为某些原因被销毁，那么这个Pod里的数据就会...</div></div></div></a><a class="pagination-related" href="/posts/31530.html" title="插件扩展指引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">插件扩展指引</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的插件扩展开发指引。</div></div></div></a><a class="pagination-related" href="/posts/2351.html" title="K8s实践记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">K8s实践记录</div></div><div class="info-2"><div class="info-item-1"> # K8s实践记录  Level 01.在节点上创建一个持久化目录mkdir -p /data/nginx/logs #创建多级目录chmod 777 /data/nginx/logs #为系统上的每个人提供读、写和执行权限   2.创建一个nginx pod，并在其中配置一个存储卷来将持久化目录挂载到Pod的/var/log/nginx目录中。apiVersion: v1kind: Podmetadata:  name: nginxspec:  volumes:  - name: nginx-logs    hostPath:      path: /data/nginx/logs  containers:  - name: nginx    image: nginx    volumeMounts:    - name: nginx-logs      mountPath: /var/log/nginx    3.配置nginx日志保存到指定的目录在nginx配置文件nginx.conf中添加以下配置,将nginx访问日志保存到/var/log/nginx/access.l...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock SRE!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">工作负载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Deployment"><span class="toc-number">1.1.</span> <span class="toc-text">Deployment</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.1.</span> <span class="toc-text">工作模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">1.1.2.</span> <span class="toc-text">主要组成部分</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.3.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BD%BF%E7%94%A8Deployment%E9%83%A8%E7%BD%B2Nginx"><span class="toc-number">1.1.4.</span> <span class="toc-text">示例：使用Deployment部署Nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%89%AF%E6%9C%AC%E4%BC%B8%E7%BC%A9"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">副本伸缩</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">镜像更新</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%9B%9E%E9%80%80"><span class="toc-number">1.1.4.3.</span> <span class="toc-text">版本回退</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83"><span class="toc-number">1.1.4.4.</span> <span class="toc-text">金丝雀发布</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">2.</span> <span class="toc-text">服务发现与负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%EF%BC%9F"><span class="toc-number">2.1.</span> <span class="toc-text">为什么需要服务发现？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service"><span class="toc-number">2.2.</span> <span class="toc-text">Service</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E9%80%9A%E8%BF%87Service%E6%9A%B4%E9%9C%B2Nginx%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.2.1.</span> <span class="toc-text">示例：通过Service暴露Nginx服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.2.</span> <span class="toc-text">Service的类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service%E5%9B%9B%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">2.2.3.</span> <span class="toc-text">Service四种类型的对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ingress%E5%92%8CIngressRoute"><span class="toc-number">2.2.4.</span> <span class="toc-text">Ingress和IngressRoute</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Traefik-Ingress-Controller"><span class="toc-number">2.2.5.</span> <span class="toc-text">Traefik Ingress Controller</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">路由实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#IngressRoute"><span class="toc-number">2.2.5.3.</span> <span class="toc-text">IngressRoute</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6middleware"><span class="toc-number">2.2.5.4.</span> <span class="toc-text">中间件middleware</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E6%9C%8D%E5%8A%A1%E6%9A%B4%E9%9C%B2%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.3.</span> <span class="toc-text">总结：服务暴露模式</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18658.html" title="Redis主从同步实验">Redis主从同步实验</a><time datetime="2025-12-08T14:55:52.970Z" title="发表于 2025-12-08 22:55:52">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/22140.html" title="运维常用工具">运维常用工具</a><time datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/36066.html" title="算法记录">算法记录</a><time datetime="2025-12-08T14:00:22.521Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/42488.html" title="Baidu实习总结">Baidu实习总结</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1106.html" title="数据结构">数据结构</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Yiiong</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="/"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script src="/js/universe.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="/"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.2"></script></div></div></body></html>

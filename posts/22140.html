@@ -1,0 +1,376 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>运维常用工具 | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="## Harbor   Harbor (goharbor.io)  尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。 整体架构 如上图所示是 Harbor 2.0 的架构图，从上到下可分为代理层、功能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="运维常用工具">
+<meta property="og:url" content="http://blog.yiiong.top/posts/22140.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="## Harbor   Harbor (goharbor.io)  尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。 整体架构 如上图所示是 Harbor 2.0 的架构图，从上到下可分为代理层、功能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.yiiong.top/img/ava.jpg">
+<meta property="article:published_time" content="2025-12-08T14:00:22.525Z">
+<meta property="article:modified_time" content="2025-12-09T12:58:55.507Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="服务器运维">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.yiiong.top/img/ava.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "运维常用工具",
+  "url": "http://blog.yiiong.top/posts/22140.html",
+  "image": "http://blog.yiiong.top/img/ava.jpg",
+  "datePublished": "2025-12-08T14:00:22.525Z",
+  "dateModified": "2025-12-09T12:58:55.507Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yiiong",
+      "url": "http://blog.yiiong.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.svg"><link rel="canonical" href="http://blog.yiiong.top/posts/22140.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 24
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"true`"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Yiiong","link":"链接: ","source":"来源: Yiiong's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'FancyBox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '运维常用工具',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/universe.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: transparent;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/tag.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">运维常用工具</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">运维常用工具</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-09T12:58:55.507Z" title="更新于 2025-12-09 20:58:55">2025-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/">服务器运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+## Harbor
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://goharbor.io/">Harbor (goharbor.io)</a></p>
+</blockquote>
+<p>尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。</p>
+<h3 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h3><p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520917.png" alt="img"></p>
+<p>如上图所示是 Harbor 2.0 的架构图，从上到下可分为代理层、功能层和数据层。</p>
+<ul>
+<li><strong>代理层</strong>：代理层实质上是一个 Nginx 反向代理，负责接收不同类型的客户端请求，包括浏览器、用户脚本、Docker 等，并根据请求类型和 URI 转发给不同的后端服务进行处理。</li>
+<li><strong>功能层</strong>：<ul>
+<li><strong>Portal</strong>：是一个基于 Argular 的前端应用，提供 Harbor 用户访问的界面。</li>
+<li><strong>Core</strong>：是 Harbor 中的核心组件，封装了 Harbor 绝大部分的业务逻辑。</li>
+<li><strong>JobService</strong>：异步任务组件，负责 Harbor 中很多比较耗时的功能，比如 Artifact 复制、扫描、垃圾回收等。</li>
+<li><strong>Docker Distribution</strong>：Harbor 通过 Distribution 实现 Artifact 的读写和存取等功能。</li>
+<li><strong>RegistryCtl</strong>：Docker Distribution 的控制组件。</li>
+<li><strong>Notary（可选）</strong> ：基于 TUF 提供镜像签名管理的功能。</li>
+<li><strong>扫描工具（可选）</strong> ：镜像的漏洞<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/tools?from_column=20065&from=20065">检测工具</a>。</li>
+<li><strong>ChartMuseum（可选）</strong> ：提供 API 管理非 OCI 规范的 Helm Chart，随着兼容 OCI 规范的 Helm Chart 在社区上被更广泛地接受，Helm Chart 能以 Artifact 的形式在 Harbor 中存储和管理，不再依赖 ChartMuseum，因此 Harbor 可能会在后续版本中移除对 ChartMuseum 的支持。</li>
+</ul>
+</li>
+<li><strong>数据层</strong>：<ul>
+<li><strong>Redis</strong>：主要作为缓存服务存储一些生命周期较短的数据，同时对于 JobService 还提供了类似队列的功能。</li>
+<li><strong>PostgreSQL</strong>：存储 Harbor 的应用数据，比如项目信息、用户与项目的关系、管理策略、配置信息、Artifact 的元数据等等。</li>
+<li><strong>Artifact 存储</strong>：存储 Artifact 本身的内容，Artiact就是每次推送镜像、Helm Chart 时，数据最终存储的地方。默认情况下，Harbor 会把 Artifact 写入本地文件系统中。用户也可以修改配置，将 Artifact 存储在外部存储中，例如阿里云的对象存储 OSS 等等。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Harbor的安装"><a href="#Harbor的安装" class="headerlink" title="Harbor的安装"></a>Harbor的安装</h3><p><a href="C:\Users\李逸雄\Desktop\Redrock\运维知识\部署示范.md">Harbor安装示范</a></p>
+<h3 id="Harbor的使用"><a href="#Harbor的使用" class="headerlink" title="Harbor的使用"></a>Harbor的使用</h3><h4 id="基本推送与拉取"><a href="#基本推送与拉取" class="headerlink" title="基本推送与拉取"></a>基本推送与拉取</h4><p>先登录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker login https://harbor.yiiong.top:8443</span><br></pre></td></tr></table></figure>
+
+<p>镜像推送（先打标签，再推送）</p>
+<p>harbor地址&#x2F;项目名&#x2F;镜像名:版本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker tag mysql harbor.yiiong.top:8443/library/mysql:latest</span><br></pre></td></tr></table></figure>
+
+<p>镜像拉取</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull harbor.yiiong.top:8443/library/mysql:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="机器人账户"><a href="#机器人账户" class="headerlink" title="机器人账户"></a>机器人账户</h4><p>在一些情况下，为了提高 Harbor 仓库的安全性考虑，不建议直接在流水线任务（CI&#x2F;CD）中直接使用个人账户。因为这种方式会导致权限管理和维护变得复杂，尤其是当项目是公开的时候。</p>
+<p>为解决这个问题，可以考虑使用 Harbor 自带的机器人账户（Robot Account）。机器人账户是一种特殊类型的账户，允许非个人实体访问 Harbor 仓库并执行特定的操作，而无需提供实际的用户名和密码。通过机器人账户，可以实现自动化 CI&#x2F;CD 流程中的推送和拉取镜像操作，确保安全同时减少人为处理。</p>
+<h2 id="内网穿透工具"><a href="#内网穿透工具" class="headerlink" title="内网穿透工具"></a>内网穿透工具</h2><h3 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/fatedier/frp">Github</a></p>
+<p><a target="_blank" rel="noopener" href="https://gofrp.org/zh-cn/docs/">文档 | frp (gofrp.org)</a></p>
+</blockquote>
+<p>frp 是一款高性能的反向代理应用，专注于内网穿透。它支持多种协议，包括 TCP、UDP、HTTP、HTTPS 等，并且具备 P2P 通信功能。使用 frp，我们可以使用frp安全、便捷地将内网服务暴露到公网，通过拥有公网 IP 的节点进行中转。</p>
+<p>在0.52.0版本开始支持toml格式的配置文件了，并将在后继某个版本开始取消对ini配置格式的支持。</p>
+<h4 id="通过SSH访问内网机器"><a href="#通过SSH访问内网机器" class="headerlink" title="通过SSH访问内网机器"></a>通过SSH访问内网机器</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_74046217/article/details/135798340?spm=1001.2014.3001.5501">利用frp将处于内网香橙派中的服务穿透至公网_proxy.go:204-CSDN博客</a></p>
+<h4 id="通过自定义域名访问内网的-Web-服务"><a href="#通过自定义域名访问内网的-Web-服务" class="headerlink" title="通过自定义域名访问内网的 Web 服务"></a>通过自定义域名访问内网的 Web 服务</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_74046217/article/details/135798340?spm=1001.2014.3001.5501">利用frp将处于内网香橙派中的服务穿透至公网_proxy.go:204-CSDN博客</a></p>
+<h4 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h4><p>一切都没有问题后，我们把它们制作成service，保证它们可以在后台稳定运行</p>
+<p><strong>服务端</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /usr/lib/systemd/system/frps.service</span><br></pre></td></tr></table></figure>
+
+<p>frps.service配置如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=frps Server Service</span><br><span class="line">After=network.target</span><br><span class="line">Wants=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/root/frp-all/frp-os-server/frps -c /root/frp-all/frp-os-server/frps.toml # 你的frps文件的绝对路径</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start frps</span><br></pre></td></tr></table></figure>
+
+<p>开机自启</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl enable frps</span><br></pre></td></tr></table></figure>
+
+<p>查看日志</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status frps</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端</strong></p>
+<p>与服务端同理，frpc.service的配置中ExecStart修改为frpc文件的绝对路径，下面操作相同</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520918.png" alt="image-20240324202815687"></p>
+<p>frpc并不监听哪个端口，只是它在局域网主机中启动时会通过一个随机端口来与外网服务器的7010端口建立一个隧道连接，隧道建立后7010端口和那个frpc所用过的随机端口并不直接参与数据包的传输。frps会将发往外网服务器6010端口的数据直接插入隧道中传至frpc中，这是隧道技术的一个关键特性，允许数据在网络上高效、安全地传输。</p>
+<h3 id="ngrok"><a href="#ngrok" class="headerlink" title="ngrok"></a>ngrok</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://ngrok.com/download">Download (ngrok.com)</a></p>
+</blockquote>
+<p>ngrok 通过在公共端点和本地运行的 Web 服务器之间建立一个免费且安全的通道，实现内网主机的服务可以暴露给外网。</p>
+<p>你可以使用ngrok将你处于内网的服务暂时暴露在公网，方便测试服务。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">先添加Authtoken</span><br><span class="line">ngrok config add-authtoken &lt;token&gt;</span><br><span class="line"></span><br><span class="line">开启隧道</span><br><span class="line">ngrok http &lt;port&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Nginx是一款轻量级的Web 服务器&#x2F;反向代理服务器及 电子邮件（IMAP&#x2F;POP3）代理服务器。其特点是占有内存少，并发能力强，事实上nginx的并发能力在同类型的网页服务器中表现较好，中国大陆使用nginx网站用户有：百度、京东、新浪、网易、腾讯、淘宝等。</p>
+<h3 id="正向代理与反向代理"><a href="#正向代理与反向代理" class="headerlink" title="正向代理与反向代理"></a>正向代理与反向代理</h3><h4 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a><strong>正向代理</strong></h4><p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520919.png" alt="在这里插入图片描述"></p>
+<p>正向代理，指的是通过<code>代理服务器</code> 代理<code>浏览器/客户端</code>去重定向请求访问到<code>目标服务器</code> 的一种代理服务。<br>正向代理服务的特点是<code>代理服务器</code> 代理的对象是<code>浏览器/客户端</code>，也就是对于<code>目标服务器</code> 来说<code>浏览器/客户端</code>是隐藏的。</p>
+<p><strong>正向代理有什么用途？</strong></p>
+<p>举个例子：我是一个用户，我访问不了某网站，但是能访问一个代理服务器，这个代理服务器能访问那个我不能访问的网站，于是我先连上代理服务器，告诉他我需要那个无法访问网站的内容，代理服务器去把数据包取回来，然后返回给我。</p>
+<ol>
+<li>访问原来无法访问的资源，如google （通过正向代理实现科学上网）</li>
+<li>可以做缓存，加速访问资源</li>
+<li>对客户端访问授权，上网进行认证</li>
+<li>代理可以记录用户访问记录（上网行为管理）</li>
+<li>对外隐藏用户信息，保护隐私</li>
+</ol>
+<h4 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h4><p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520920.png" alt="在这里插入图片描述"></p>
+<p>反向代理，指的是<code>浏览器/客户端</code>并不知道自己要访问具体哪台<code>目标服务器</code>，只知道去访问<code>代理服务器</code> ，<code>代理服务器</code>再通过<code>反向代理 +负载均衡</code>实现请求分发到<code>应用服务器</code>的一种代理服务。<br>反向代理服务的特点是<code>代理服务器</code> 代理的对象是<code>应用服务器</code>，也就是对于<code>浏览器/客户端</code> 来说<code>应用服务器</code>是隐藏的。</p>
+<p>大型网站，通常将反向代理作为公网访问地址，而Web应用服务器作为内网。</p>
+<p>有了反向代理，用户永远不会与使用它的Web服务器进行直接通信。可以将它们看作web服务 器或服务器集群的某种包装器。通过负载平衡和缓存，它们可以保护web服务器免遭攻击，并提供更好 的web性能。</p>
+<p><strong>反向代理的用途：</strong></p>
+<ol>
+<li>反向代理服务器像一个大门一样保证内网的安全，我们可以使用反向代理提供WAF（Web Application Firewall）功能，阻止web攻击 。</li>
+<li>负载均衡，通过反向代理服务器来优化网站的负载。</li>
+</ol>
+<h3 id="配置文件介绍"><a href="#配置文件介绍" class="headerlink" title="配置文件介绍"></a>配置文件介绍</h3><p><code>nginx.conf</code>为最主要的配置文件</p>
+<p><strong>nginx 文件结构</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/nginx-setup-intro.html">Nginx 配置详解 | 菜鸟教程 (runoob.com)</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">...              #全局块</span><br><span class="line"></span><br><span class="line">events &#123;         #events块</span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http      #http块</span><br><span class="line">&#123;</span><br><span class="line">    ...   #http全局块</span><br><span class="line">    server        #server块</span><br><span class="line">    &#123; </span><br><span class="line">        ...       #server全局块</span><br><span class="line">        location [PATTERN]   #location块</span><br><span class="line">        &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">        location [PATTERN] </span><br><span class="line">        &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server</span><br><span class="line">    &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...     #http全局块</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>全局块</strong>：配置影响nginx全局的指令。一般有运行nginx服务器的用户组，nginx进程pid存放路径，日志存放路径，配置文件引入，允许生成worker process数等。</li>
+<li><strong>events块</strong>：配置影响nginx服务器或与用户的网络连接。有每个进程的最大连接数，选取哪种事件驱动模型处理连接请求，是否允许同时接受多个网路连接，开启多个网络连接序列化等。</li>
+<li><strong>http块</strong>：可以嵌套多个server，配置代理，缓存，日志定义等绝大多数功能和第三方模块的配置。如文件引入，             4定义，日志自定义，是否使用sendfile传输文件，连接超时时间，单连接请求数等。</li>
+<li><strong>server块</strong>：配置虚拟主机的相关参数，一个http中可以有多个server。</li>
+<li><strong>location块</strong>：配置请求的路由，以及各种页面的处理情况。</li>
+</ul>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><h4 id="反向代理-负载均衡"><a href="#反向代理-负载均衡" class="headerlink" title="反向代理+负载均衡"></a>反向代理+负载均衡</h4><p>实现效果：访问<code>nginx.yiiong.top:8000</code>时，将请求平均分配到8881和8882端口。</p>
+<p><code>nginx.yiiong.top</code>解析到<code>172.20.14.31</code></p>
+<p>docker启动两个nginx容器，分别映射到宿主机8881、8882端口</p>
+<p>为了区分，我修改了主页内容（<code>/usr/share/nginx/html/index.html</code>）</p>
+<p><strong>反向代理</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">		server &#123;</span><br><span class="line">                listen 8000;</span><br><span class="line">                server_name 172.20.14.31;</span><br><span class="line">                location / &#123;</span><br><span class="line">                        proxy_pass 172.20.14.31:8881; # 反向代理到8881</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>反向代理+负载均衡</strong></p>
+<p>upstream可以提供负载均衡和高可用性。</p>
+<p>weight：weight代表每个服务器的权重值，默认为1，权重越高，被分配的用户数就越多。这种分配方式主要用于后端服务器性能不均的情况。</p>
+<p>此时，访问8882端口的次数会是8881端口的两倍。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">        upstream web&#123;</span><br><span class="line">                server 172.20.14.31:8881 weight=5;</span><br><span class="line">                server 172.20.14.31:8882 weight=10;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        server &#123;</span><br><span class="line">                listen 8000;</span><br><span class="line">                server_name 172.20.14.31;</span><br><span class="line">                location / &#123;</span><br><span class="line">                        proxy_pass http://web; # 反向代理到8881或8882</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="文件服务器"><a href="#文件服务器" class="headerlink" title="文件服务器"></a>文件服务器</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">                listen 8888;</span><br><span class="line">                server_name localhost;</span><br><span class="line">                charset utf-8;</span><br><span class="line">                root /home; # 显示该目录下的文件</span><br><span class="line"></span><br><span class="line">                location / &#123;</span><br><span class="line">                        autoindex on; # 自动生成目录索引页面</span><br><span class="line">                        autoindex_exact_size on; # 显示文件大小</span><br><span class="line">                        autoindex_localtime on; # 显示文件的最后修改时间</span><br><span class="line">                        &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>有些类型的文件链接在浏览器里点击后并不会直接下载而是只预览，这是我们只需要在<code>mime.types</code>中添加<code>application/octet-stream  &lt;文件类型&gt;</code>即可。</p>
+<p><code>application/octet-stream</code> 是一种 MIME 类型，用于指示未知类型的文件。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520921.png" alt="image-20240328164218152"></p>
+<h2 id="ddns"><a href="#ddns" class="headerlink" title="ddns"></a>ddns</h2><p>由于DHCP分配给用户设备的IP地址并不固定，为了将设备当前的IP及时映射到域名上，使用户在任何时候都可以通过固定的地址访问到设备，产生了动态域名解析DDNS技术。</p>
+<p><strong>ddns-go</strong> 是一个轻量级的动态域名解析服务更新器，由Go语言编写，其主要功能是监测你的公共IP地址变化，并自动将新IP同步到支持自定义脚本的DDNS服务商。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/jeessy2/ddns-go">jeessy2&#x2F;ddns-go: Simple and easy to use DDNS. Support Aliyun, Tencent Cloud, Dnspod, Cloudflare, Callback, Huawei Cloud, Baidu Cloud, Porkbun, GoDaddy, Namecheap, NameSilo… (github.com)</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.yiiong.top:88/?p=192">内网穿透方法总结</a></p>
+</blockquote>
+<h2 id="Softether-VPN"><a href="#Softether-VPN" class="headerlink" title="Softether VPN"></a>Softether VPN</h2><p>VPN（Virtual Private Network，虚拟私人网络）</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.softether.org/4-docs/1-manual/7._Installing_SoftEther_VPN_Server/7.3_Install_on_Linux_and_Initial_Configurations">7.3 在 Linux 上安装和初始配置 - SoftEther VPN 项目</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.softether-download.com/cn.aspx?product=softether">下载</a></p>
+</blockquote>
+<h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><p>Softether VPN是一个能够虚拟网卡和集线器（HUB）的工具，只要可以访问互联网，都可以使用它来组建远程局域网。</p>
+<h3 id="VPN用途"><a href="#VPN用途" class="headerlink" title="VPN用途"></a>VPN用途</h3><ol>
+<li><strong>安全远程访问</strong>：VPN允许远程用户通过公共网络安全地连接到公司内部网络。</li>
+<li><strong>绕过地理限制</strong>：通过连接到位于其他地区的VPN服务器，用户可以访问被地理限制的网站、内容和服务。这是因为连接到VPN后，我们的IP地址会被伪装为VPN服务器所在地的IP地址，使得我们看起来好像是从该地区访问网站。</li>
+</ol>
+<h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>想要科学上网，我们就得有一台公网海外服务器。</p>
+<p>将 VPN Server 安装到 Linux 操作系统需要以下软件和库。检查系统是否已安装并启用以下软件和库。(make和gcc一定要有)</p>
+<ul>
+<li><strong>make</strong></li>
+<li><strong>GCC软件</strong></li>
+<li><strong>Binutils 软件</strong></li>
+<li><strong>tar、gzip 或其他用于提取软件包文件的软件</strong></li>
+<li><strong>chkconfig 系统实用程序</strong></li>
+<li><strong>cat、cp 或其他基本文件操作实用程序</strong></li>
+<li><strong>EUC-JP、UTF-8 或其他代码页表，用于日语环境</strong></li>
+<li><strong>libc （glibc） 库</strong></li>
+<li><strong>zlib 库</strong></li>
+<li><strong>OpenSSL 库</strong></li>
+<li><strong>Readline 库</strong></li>
+<li><strong>ncurses 库</strong></li>
+<li><strong>pthread 库</strong></li>
+</ul>
+<p>将压缩包解压，并将其移动至<code>/usr/local/vpnserver</code>，然后执行<code>make</code>进行编译，出现如下即成功。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520922.png" alt="image-20240325191200775"></p>
+<p>启动服务</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@RainYun-SJkdAk4z:/usr/local/vpnserver# ./vpnserver start</span><br><span class="line">The SoftEther VPN Server service has been started.</span><br><span class="line"></span><br><span class="line">Let&#x27;s get started by accessing to the following URL from your PC:</span><br><span class="line"></span><br><span class="line">https://172.16.120.106:5555/</span><br><span class="line">  or</span><br><span class="line">https://172.16.120.106/</span><br><span class="line"></span><br><span class="line">Note: IP address may vary. Specify your server&#x27;s IP address.</span><br><span class="line">A TLS certificate warning will appear because the server uses self signed certificate by default. That is natural. Continue with ignoring the TLS warning.</span><br></pre></td></tr></table></figure>
+
+<p>可以访问到我们的后台。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520923.png" alt="image-20240325191354087"></p>
+<h3 id="检查服务运行状态"><a href="#检查服务运行状态" class="headerlink" title="检查服务运行状态"></a>检查服务运行状态</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@RainYun-SJkdAk4z:/usr/local/vpnserver# ./vpncmd</span><br><span class="line">vpncmd command - SoftEther VPN Command Line Management Utility</span><br><span class="line">SoftEther VPN Command Line Management Utility (vpncmd command)</span><br><span class="line">Version 4.43 Build 9799   (English)</span><br><span class="line">Compiled 2023/08/31 10:50:49 by buildsan at crosswin with OpenSSL 3.0.9</span><br><span class="line">Copyright (c) 2012-2023 SoftEther VPN Project. All Rights Reserved.</span><br><span class="line"></span><br><span class="line">By using vpncmd program, the following can be achieved. </span><br><span class="line"></span><br><span class="line">1. Management of VPN Server or VPN Bridge </span><br><span class="line">2. Management of VPN Client</span><br><span class="line">3. Use of VPN Tools (certificate creation and Network Traffic Speed Test Tool)</span><br><span class="line"></span><br><span class="line">Select 1, 2 or 3: 3</span><br><span class="line"></span><br><span class="line">VPN Tools has been launched. By inputting HELP, you can view a list of the commands that can be used.</span><br><span class="line"></span><br><span class="line">VPN Tools&gt;check</span><br><span class="line">Check command - Check whether SoftEther VPN Operation is Possible</span><br><span class="line">---------------------------------------------------</span><br><span class="line">SoftEther VPN Operation Environment Check Tool</span><br><span class="line"></span><br><span class="line">Copyright (c) SoftEther VPN Project.</span><br><span class="line">All Rights Reserved.</span><br><span class="line"></span><br><span class="line">If this operation environment check tool is run on a system and that system passes, it is most likely that SoftEther VPN software can operate on that system. This check may take a while. Please wait...</span><br><span class="line"></span><br><span class="line">Checking &#x27;Kernel System&#x27;... </span><br><span class="line">              Pass</span><br><span class="line">Checking &#x27;Memory Operation System&#x27;... </span><br><span class="line">              Pass</span><br><span class="line">Checking &#x27;ANSI / Unicode string processing system&#x27;... </span><br><span class="line">              Pass</span><br><span class="line">Checking &#x27;File system&#x27;... </span><br><span class="line">              Pass</span><br><span class="line">Checking &#x27;Thread processing system&#x27;... </span><br><span class="line">              Pass</span><br><span class="line">Checking &#x27;Network system&#x27;... </span><br><span class="line">              Pass</span><br><span class="line"></span><br><span class="line">All checks passed. It is most likely that SoftEther VPN Server / Bridge can operate normally on this system.</span><br><span class="line"></span><br><span class="line">The command completed successfully.</span><br></pre></td></tr></table></figure>
+
+<p>出现successfully后就可以开始搭建我们的vpnserver了。</p>
+<h3 id="安装vpnserver"><a href="#安装vpnserver" class="headerlink" title="安装vpnserver"></a>安装vpnserver</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@RainYun-SJkdAk4z:/usr/local/vpnserver# ./vpncmd</span><br><span class="line">vpncmd command - SoftEther VPN Command Line Management Utility</span><br><span class="line">SoftEther VPN Command Line Management Utility (vpncmd command)</span><br><span class="line">Version 4.43 Build 9799   (English)</span><br><span class="line">Compiled 2023/08/31 10:50:49 by buildsan at crosswin with OpenSSL 3.0.9</span><br><span class="line">Copyright (c) 2012-2023 SoftEther VPN Project. All Rights Reserved.</span><br><span class="line"></span><br><span class="line">By using vpncmd program, the following can be achieved. </span><br><span class="line"></span><br><span class="line">1. Management of VPN Server or VPN Bridge </span><br><span class="line">2. Management of VPN Client</span><br><span class="line">3. Use of VPN Tools (certificate creation and Network Traffic Speed Test Tool)</span><br><span class="line"></span><br><span class="line">Select 1, 2 or 3: 1 // 选1，安装vpnserver</span><br><span class="line"></span><br><span class="line">Specify the host name or IP address of the computer that the destination VPN Server or VPN Bridge is operating on. </span><br><span class="line">By specifying according to the format &#x27;host name:port number&#x27;, you can also specify the port number. </span><br><span class="line">(When the port number is unspecified, 443 is used.)</span><br><span class="line">If nothing is input and the Enter key is pressed, the connection will be made to the port number 8888 of localhost (this computer).</span><br><span class="line">Hostname of IP Address of Destination: 154.3.0.248 // 填写你的公网IP</span><br><span class="line"></span><br><span class="line">If connecting to the server by Virtual Hub Admin Mode, please input the Virtual Hub name. </span><br><span class="line">If connecting by server admin mode, please press Enter without inputting anything.</span><br><span class="line">Specify Virtual Hub Name: // 不填，直接回车</span><br><span class="line">Connection has been established with VPN Server &quot;154.3.0.248&quot; (port 443).</span><br><span class="line"></span><br><span class="line">You have administrator privileges for the entire VPN Server.</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载Softether-VPN-Server-Manager"><a href="#下载Softether-VPN-Server-Manager" class="headerlink" title="下载Softether VPN Server Manager"></a>下载Softether VPN Server Manager</h3><h3 id="SecureNAT的作用"><a href="#SecureNAT的作用" class="headerlink" title="SecureNAT的作用"></a>SecureNAT的作用</h3><p>提供虚拟NAT和虚拟DHCP服务。</p>
+<p>具体流程类似wifi路由器上网过程。</p>
+<p>wifi路由器上网过程：客户端通过路由器DHCP到一个内网IP，然后通过路由器的NAT功能，将内网IP映射到路由器的公网IP，通过路由器的公网IP进行上网。</p>
+<p>VPN：客户端连接到VPN Server，通过虚拟DHCP获得一个虚拟IP，通过SecureNAT，将这个虚拟IP映射到VPN Server的IP，通过VPN Server的IP上网。</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211520924.png" alt="image-20240325223944006"></p>
+<h3 id="通过Client使用VPN"><a href="#通过Client使用VPN" class="headerlink" title="通过Client使用VPN"></a>通过Client使用VPN</h3><p>PC端通过SoftEther VPN Client使用</p>
+<p>移动端(需要支持L2TP-一种VPN协议)使用自带VPN直接连接即可</p>
+<h2 id="Proxmox-VE"><a href="#Proxmox-VE" class="headerlink" title="Proxmox VE"></a>Proxmox VE</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://pve.proxmox.com/wiki/Main_Page">Proxmox VE</a></p>
+</blockquote>
+<p>Proxmox虚拟环境（简称PVE）是用于操作来宾操作系统的基于Debian Linux和KVM的虚拟化平台。</p>
+<p>你可以把它类比为VMware，只不过使用PVE的前提是你得有一个小迷你主机或闲置的电脑，因为PVE安装时是一个系统镜像。</p>
+<p><strong>区别</strong>：</p>
+<ul>
+<li>VMware基于自家开发的 ESXi 虚拟化技术，是一种完全虚拟化，敏感指令在操作系统和硬件之间被捕捉处理，客户操作系统无需修改，且所有软件都能在虚拟机中运行。</li>
+<li>PVE主要基于 KVM，是一种基于内核的虚拟机，可将Linux内核转化成虚拟机监视器。同时它还有裸机安装器、网页版远程管理界面、HA集群堆栈、统一存储、柔性网络及可选的商业支持。</li>
+</ul>
+<p><strong>局限性：</strong></p>
+<p>Proxmox群集的虚拟化和存储主机的最大数量为32台物理服务器。</p>
+<blockquote>
+<p>下载：<a target="_blank" rel="noopener" href="https://www.proxmox.com/de/downloads/proxmox-virtual-environment/iso">ISO Installer - Proxmox Virtual Environment</a></p>
+</blockquote>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>CPU类别：</p>
+<ul>
+<li>host：性能最佳但兼容性不好，如果想将虚拟机从一台宿主机迁移到另一台 CPU 型号或架构不同的宿主机时，可能会出现兼容性问题。</li>
+<li>kvm64：兼容性好但性能不是最佳，它可以让我们在不同的宿主机之间迁移虚拟机。</li>
+</ul>
+<p>LVM（Logical Volume Manager）是一种在 Linux 操作系统上使用的逻辑卷管理器，它允许用户对存储设备进行灵活的管理。</p>
+<ol>
+<li>动态调整逻辑卷的大小，而无需重新分区磁盘。</li>
+<li>实现数据的快速备份和还原。</li>
+<li>支持数据的快速迁移和快速扩展存储容量。</li>
+<li>提高数据安全性和可靠性，包括数据冗余和快速恢复能力。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top/posts/22140.html">http://blog.yiiong.top/posts/22140.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://blog.yiiong.top" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E7%BB%B4/">服务器运维</a></div><div class="post-share"><div class="social-share" data-image="/img/ava.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/18658.html" title="Redis主从同步实验"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Redis主从同步实验</div></div><div class="info-2"><div class="info-item-1"> # 需求   A：master，不加密（普通端口 6379） B：slave，从 A 同步，不加密（端口 16379），同时监听 TLS 加密端口 16380 C：slave，从 B 同步，通过 TLS（端口 16380）  部署生成自签名TLS证书 使用openssl生成自签名证书mkdir -p certs &amp;&amp; cd certs# 创建 CAopenssl genrsa -out ca.key 4096openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -out ca.crt -subj &quot;/CN=Redis-CA&quot;# 创建 server key 和证书签名请求（CSR）openssl genrsa -out redis.key 2048openssl req -new -key redis.key -out redis.csr -subj &quot;/CN=redis-server&quot;# 使用 CA 签发 server 证书openssl x509 -re...</div></div></div></a><a class="pagination-related" href="/posts/36066.html" title="算法记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">算法记录</div></div><div class="info-2"><div class="info-item-1"> 项目的组件放在`internal/`​下   controller（控制器）：负责核心业务逻辑的调度和协调，监听 Kubernetes 中 IPBlock 自定义资源的变化，维护和管理其生命周期。  engine（封禁后端）：负责封禁命令的实际执行。  notify（通知机制）：负责将封禁、解封等事件以多种方式通知给运维人员或其他系统。  trigger（触发器）：事件触发中心，负责监听外部告警系统或业务事件（如 Grafana Alert等），并根据 Alert 策略触发相关封禁操作，自动创建 IPBlock CR，且支持自动解封。  policy（封禁策略）：定义 IP 封禁的判定规则和执行策略。   ### 介绍封禁后端均被抽象为API，IPBlock-Operator-Plus通过调用API来实现实际的封禁行为。目前通过`engine/control.py`​来实现API，接口列表如下：| 接口     | 方法 | 说明                                          || -------- | ---- | ------------...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/18658.html" title="Redis主从同步实验"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">Redis主从同步实验</div></div><div class="info-2"><div class="info-item-1"> # 需求   A：master，不加密（普通端口 6379） B：slave，从 A 同步，不加密（端口 16379），同时监听 TLS 加密端口 16380 C：slave，从 B 同步，通过 TLS（端口 16380）  部署生成自签名TLS证书 使用openssl生成自签名证书mkdir -p certs &amp;&amp; cd certs# 创建 CAopenssl genrsa -out ca.key 4096openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -out ca.crt -subj &quot;/CN=Redis-CA&quot;# 创建 server key 和证书签名请求（CSR）openssl genrsa -out redis.key 2048openssl req -new -key redis.key -out redis.csr -subj &quot;/CN=redis-server&quot;# 使用 CA 签发 server 证书openssl x509 -re...</div></div></div></a><a class="pagination-related" href="/posts/27345.html" title="iManager-您的私人镜像管家"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">iManager-您的私人镜像管家</div></div><div class="info-2"><div class="info-item-1"> # iManager-您的私人镜像管家  尽管Docker官方提供了公共的镜像仓库DockerHub，但从安全性和稳定性等方面考虑，部署私有镜像仓库是非常有必要的。Harbor是一个由VMware公司开源的企业级的Docker Registry管理项目，是我们搭建私有镜像仓库的不二之选。 而自动化一直是运维工作中的重中之重。 Yiiong希望你能够将Harbor与飞书机器人联系起来，方便管理员统一管理镜像，使管理员随时都可以知晓仓库镜像的变动信息，管理员动动手指就可以对仓库里的镜像进行操作等。 前置准备 建议使用服务器搭建Harbor仓库，并且配置好https 申请一个飞书企业账号 可能需要一个域名？  任务友善的用户交互用户肯定需要知道你的机器人都可以干些什么事情吧 用户向机器人发送帮助，机器人返回可以实现的功能列表 当用户发送了一些乱七八糟的信息时，机器人需要做出一定的回复，比如我听不懂捏 Level 0 通知当镜像状态发生改变时，机器人向管理员发起通知 通知内容包括：  镜像状态（Push or Pull or Delete） 镜像名称以及标签 镜像状态改变的日期 镜像状...</div></div></div></a><a class="pagination-related" href="/posts/63036.html" title="Gitlab CICD学习记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">Gitlab CICD学习记录</div></div><div class="info-2"><div class="info-item-1"> # Gitlab CICD学习记录  用Flask在K8s集群编写后端项目编写app.py编写一个最简单的后端项目，命名为app.py，返回hello world! from flask import Flaskapp = Flask(__name__)@app.route(&#x27;/&#x27;)def hello():    return &quot;hello world!&quot;if __name__ == &#x27;__main__&#x27;:    app.run(host=&#x27;0.0.0.0&#x27;, port=8080)  用pipreqs导出依赖文件pip3 install pipreqs  pipreqs . --encoding=utf8 --force   构建Docker镜像编写dockerfile FROM python:3.9WORKDIR /appCOPY requirements.txt .RUN pip install --no-cache-dir -r requirements.txtCOPY . .CMD [&qu...</div></div></div></a><a class="pagination-related" href="/posts/53842.html" title="BIND9 DNS智能解析实验"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">BIND9 DNS智能解析实验</div></div><div class="info-2"><div class="info-item-1"> **BIND（Berkeley Internet Name Domain）**  是全球使用最广泛的 **DNS 服务器软件**，最初由加州大学伯克利分校开发，目前由 **ISC（Internet Systems Consortium）**  维护。  BIND9 让一台服务器可以充当 DNS 解析器（递归）或权威服务器（发布域名解析记录） 目标基于bind9的view功能，实现DNS的智能解析。  master和两个slave之间实现主从同步 slave-1和slave-2均提供对www.a.com的解析，其中slave-1解析www至1.1.1.1；slave-2解析www至2.2.2.2  环境容器  bind-master：172.28.0.2 bind-slave-1：172.28.0.3 bind-slave-2：172.28.0.4  zone：a.com 域名：www.a.com  bind-slave-1视图：1.1.1.1 bind-slave-2视图：2.2.2.2  权威NS：ns1.a.com（172.28.0.2） NS：ns2.a.com（172....</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock SRE!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">整体架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Harbor%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">Harbor的安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Harbor%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">Harbor的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%8E%A8%E9%80%81%E4%B8%8E%E6%8B%89%E5%8F%96"><span class="toc-number">3.1.</span> <span class="toc-text">基本推送与拉取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%B4%A6%E6%88%B7"><span class="toc-number">3.2.</span> <span class="toc-text">机器人账户</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">内网穿透工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#frp"><span class="toc-number">4.1.</span> <span class="toc-text">frp</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87SSH%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91%E6%9C%BA%E5%99%A8"><span class="toc-number">4.1.1.</span> <span class="toc-text">通过SSH访问内网机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91%E7%9A%84-Web-%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.1.2.</span> <span class="toc-text">通过自定义域名访问内网的 Web 服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C"><span class="toc-number">4.1.3.</span> <span class="toc-text">后台运行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">4.1.4.</span> <span class="toc-text">原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ngrok"><span class="toc-number">4.2.</span> <span class="toc-text">ngrok</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx"><span class="toc-number">5.</span> <span class="toc-text">Nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">5.1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">正向代理与反向代理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">5.2.1.</span> <span class="toc-text">正向代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">5.2.2.</span> <span class="toc-text">反向代理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="toc-number">5.3.</span> <span class="toc-text">配置文件介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8"><span class="toc-number">5.4.</span> <span class="toc-text">应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">5.4.1.</span> <span class="toc-text">反向代理+负载均衡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">5.4.2.</span> <span class="toc-text">文件服务器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ddns"><span class="toc-number">6.</span> <span class="toc-text">ddns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Softether-VPN"><span class="toc-number">7.</span> <span class="toc-text">Softether VPN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="toc-number">7.1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VPN%E7%94%A8%E9%80%94"><span class="toc-number">7.2.</span> <span class="toc-text">VPN用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">7.3.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%9C%8D%E5%8A%A1%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="toc-number">7.4.</span> <span class="toc-text">检查服务运行状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85vpnserver"><span class="toc-number">7.5.</span> <span class="toc-text">安装vpnserver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BDSoftether-VPN-Server-Manager"><span class="toc-number">7.6.</span> <span class="toc-text">下载Softether VPN Server Manager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SecureNAT%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">7.7.</span> <span class="toc-text">SecureNAT的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87Client%E4%BD%BF%E7%94%A8VPN"><span class="toc-number">7.8.</span> <span class="toc-text">通过Client使用VPN</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proxmox-VE"><span class="toc-number">8.</span> <span class="toc-text">Proxmox VE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">8.1.</span> <span class="toc-text">安装</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18658.html" title="Redis主从同步实验">Redis主从同步实验</a><time datetime="2025-12-08T14:55:52.970Z" title="发表于 2025-12-08 22:55:52">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/22140.html" title="运维常用工具">运维常用工具</a><time datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/36066.html" title="算法记录">算法记录</a><time datetime="2025-12-08T14:00:22.521Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/42488.html" title="Baidu实习总结">Baidu实习总结</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1106.html" title="数据结构">数据结构</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Yiiong</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="/"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script src="/js/universe.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="/"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.2"></script></div></div></body></html>

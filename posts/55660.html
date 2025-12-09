@@ -1,0 +1,431 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>调度与Helm | Yiiong's Blog</title><meta name="author" content="Yiiong"><meta name="copyright" content="Yiiong"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="## 调度  Kubernetes允许你去影响pod被调度到哪个节点。起初，只能通过在pod规范⾥指定节点选择器来实现，后⾯通过其他机制的逐渐加⼊来扩容这项功能。 固定节点（NodeName）指定Pod调度到某个节点上并且固定 apiVersion: apps&#x2F;v1kind: Deploymentmetadata:  name: node-name-test  labels:    app: n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调度与Helm">
+<meta property="og:url" content="http://blog.yiiong.top/posts/55660.html">
+<meta property="og:site_name" content="Yiiong&#39;s Blog">
+<meta property="og:description" content="## 调度  Kubernetes允许你去影响pod被调度到哪个节点。起初，只能通过在pod规范⾥指定节点选择器来实现，后⾯通过其他机制的逐渐加⼊来扩容这项功能。 固定节点（NodeName）指定Pod调度到某个节点上并且固定 apiVersion: apps&#x2F;v1kind: Deploymentmetadata:  name: node-name-test  labels:    app: n">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.yiiong.top/img/ava.jpg">
+<meta property="article:published_time" content="2025-12-08T14:00:22.495Z">
+<meta property="article:modified_time" content="2025-12-09T12:58:30.819Z">
+<meta property="article:author" content="Yiiong">
+<meta property="article:tag" content="Kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.yiiong.top/img/ava.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "调度与Helm",
+  "url": "http://blog.yiiong.top/posts/55660.html",
+  "image": "http://blog.yiiong.top/img/ava.jpg",
+  "datePublished": "2025-12-08T14:00:22.495Z",
+  "dateModified": "2025-12-09T12:58:30.819Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yiiong",
+      "url": "http://blog.yiiong.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.svg"><link rel="canonical" href="http://blog.yiiong.top/posts/55660.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.2"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const hour = new Date().getHours()
+          const isNight = hour <= 6 || hour >= 24
+          if (theme === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else theme === 'light' ? activateLightMode() : activateDarkMode()
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":"true`"},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: Yiiong","link":"链接: ","source":"来源: Yiiong's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'FancyBox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '调度与Helm',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/universe.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: transparent;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/tag.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Yiiong's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">调度与Helm</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">调度与Helm</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-12-08T14:00:22.495Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-12-09T12:58:30.819Z" title="更新于 2025-12-09 20:58:30">2025-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Kubernetes/">Kubernetes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><meta name="referrer" content="no-referrer"/>
+## 调度
+
+<p>Kubernetes允许你去影响pod被调度到哪个节点。起初，只能通过在pod规范⾥指定节点选择器来实现，后⾯通过其他机制的逐渐加⼊来扩容这项功能。</p>
+<h3 id="固定节点（NodeName）"><a href="#固定节点（NodeName）" class="headerlink" title="固定节点（NodeName）"></a>固定节点（NodeName）</h3><p>指定Pod调度到某个节点上并且固定</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: node-name-test</span><br><span class="line">  labels:</span><br><span class="line">    app: node-name-test</span><br><span class="line">spec:</span><br><span class="line">  replicas: 5</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: node-name-test</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: node-name-test</span><br><span class="line">    spec:</span><br><span class="line">      nodeName: master # 指定节点名即可</span><br><span class="line">      containers:</span><br><span class="line">      - image: nginx</span><br><span class="line">        name: nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="标签选择器"><a href="#标签选择器" class="headerlink" title="标签选择器"></a>标签选择器</h3><p>根据标签选择可以调度的节点</p>
+<p>给节点打标签</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubect label nodes master disk-type=ssd # 给名为master的节点打上名为disk-type，值为ssd的标签</span><br></pre></td></tr></table></figure>
+
+<p>去除标签</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl label nodes master disk-type- # 最后一个杠表示取消节点上的特定标签</span><br></pre></td></tr></table></figure>
+
+<p>只有具备这个标签的节点才会被 Deployment 选择来部署 Pod。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: node-name-test</span><br><span class="line">  labels:</span><br><span class="line">    app: node-name-test</span><br><span class="line">spec:</span><br><span class="line">  replicas: 5</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: node-name-test</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: node-name-test</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - image: nginx</span><br><span class="line">        name: nginx</span><br><span class="line">      nodeSelector:</span><br><span class="line">        disk-type: ssd</span><br></pre></td></tr></table></figure>
+
+<h3 id="污点（Taints）和容忍度（Tolerations）"><a href="#污点（Taints）和容忍度（Tolerations）" class="headerlink" title="污点（Taints）和容忍度（Tolerations）"></a>污点（Taints）和容忍度（Tolerations）</h3><p>节点污点以及pod对于污点的容忍度⽤于限制哪些pod可以被调度到某⼀个节点。只有当⼀个pod容忍某个节点的污点，这个pod才能被调度到该节点。</p>
+<p>容忍度是通过明确的<strong>在pod中</strong>添加的信息，来决定⼀个pod可以或者不可以被调度到哪些节点上。</p>
+<p>污点则是在不修改已有pod信息的前提下，通过在<strong>节点上</strong>添加污点信息，来拒绝pod在某些节点上的部署。</p>
+<p>使用<code>kubectl describe node &lt;node-name&gt;</code>来查看污点<code>Taints</code></p>
+<p>污点的表现形式为<code>&lt;key&gt;=&lt;value&gt;:&lt;effect&gt;</code></p>
+<h4 id="在节点上打上污点"><a href="#在节点上打上污点" class="headerlink" title="在节点上打上污点"></a>在节点上打上污点</h4><p>如果我想给节点打上一个污点</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kubectl taint node master node-role.kubernetes.io/master=:NoSchedule # node-role.kubernetes.io/master是社区推荐的标签命名约定</span><br><span class="line"></span><br><span class="line">kubectl taint node master node-role.kubernetes.io/master- # 在键名后加-可以去除污点</span><br></pre></td></tr></table></figure>
+
+<p>这会给master节点打上污点，阻止一般Pod被调度到该节点上。一般可以容忍这个污点的Pod都是系统级别的Pod（比如某些系统组件以Pod形式运行）</p>
+<p>而effect有三种</p>
+<ul>
+<li>NoSchedule表⽰如果pod没有容忍这些污点，pod则不能被调度到包含这些污点的节点上。</li>
+<li>PreferNoSchedule是NoSchedule的⼀个宽松的版本，表⽰尽量阻⽌pod被调度到这个节点上，但是如果没有其他节点可以调度，pod依然会被调度到这个节点上。</li>
+<li>NoExecute不同于NoSchedule以及PreferNoSchedule，后两者只在调度期间起作⽤，⽽NoExecute也会影响正在节点上运⾏着的pod。如果在⼀个节点上添加了NoExecute污点，那些在该节点上运⾏着的pod，如果没有容忍这个NoExecute污点，将会从这个节点去除。</li>
+</ul>
+<p><em><strong>污点有什么用？</strong></em></p>
+<p>比如有⼀个单独的Kubernetes集群，上⾯同时有⽣产环境和⾮⽣产环境的流量。其中最重要的⼀点是，⾮⽣产环境的pod不能运⾏在⽣产环境的节点上。我们就可以通过在⽣产环境的节点上添加污点来满⾜这个要求。</p>
+<h4 id="在Pod上添加污点容忍度"><a href="#在Pod上添加污点容忍度" class="headerlink" title="在Pod上添加污点容忍度"></a>在Pod上添加污点容忍度</h4><p>为了将⽣产环境的Pod部署到生产环境节点上，Pod需要能容忍那些你添加在节点上的污点。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: taint-test</span><br><span class="line">  labels:</span><br><span class="line">    app: taint-test</span><br><span class="line">spec:</span><br><span class="line">  replicas: 5</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: taint-test</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: taint-test</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - image: nginx</span><br><span class="line">        name: nginx</span><br><span class="line">      tolerations: # 添加容忍度</span><br><span class="line">      - key: node-type</span><br><span class="line">        operator: Equal</span><br><span class="line">        value: production</span><br><span class="line">        effect: NoSchedule</span><br></pre></td></tr></table></figure>
+
+<p>Equal操作符要求污点的键和值必须与容忍度规则中指定的键和值完全匹配。也就是说只有当节点上设置了 key 为 node-type，并且这个 key 对应的值为 production时，才会使得 Pod 具有容忍度，并且可以被调度到带有对应污点的节点上。其他任何不符合该要求的污点都将不会影响 Pod 的调度。</p>
+<h3 id="节点亲和性"><a href="#节点亲和性" class="headerlink" title="节点亲和性"></a>节点亲和性</h3><p>污点可以⽤来让pod远离特定的节点。而节点亲和性（node affinity）这种机制允许你通知Kubernetes将pod只调度到某个⼏点⼦集上⾯。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">使用首选的节点亲和性调度 Pod</span><br><span class="line">本清单描述了一个 Pod，它有一个节点亲和性设置 preferredDuringSchedulingIgnoredDuringExecution，disktype: ssd。 这意味着 Pod 将首选具有 disktype=ssd 标签的节点。</span><br><span class="line"></span><br><span class="line">pods/pod-nginx-preferred-affinity.yaml 复制 pods/pod-nginx-preferred-affinity.yaml 到剪贴板</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">spec:</span><br><span class="line">  affinity:</span><br><span class="line">    nodeAffinity:</span><br><span class="line">      preferredDuringSchedulingIgnoredDuringExecution:</span><br><span class="line">      - weight: 1</span><br><span class="line">        preference:</span><br><span class="line">          matchExpressions:</span><br><span class="line">          - key: disktype</span><br><span class="line">            operator: In</span><br><span class="line">            values:</span><br><span class="line">            - ssd          </span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx</span><br><span class="line">    image: nginx</span><br><span class="line">    imagePullPolicy: IfNotPresent</span><br></pre></td></tr></table></figure>
+
+<h2 id="探针"><a href="#探针" class="headerlink" title="探针"></a>探针</h2><p>Kubernetes 为检查应用状态定义了三种探针，它们分别对应容器不同的状态：</p>
+<ul>
+<li><strong>Startup</strong>，启动探针，用来检查应用是否已经启动成功，适合那些有大量初始化工作要做，启动很慢的应用。</li>
+<li><strong>Liveness</strong>，存活探针，用来检查应用是否正常运行，是否存在死锁、死循环。</li>
+<li><strong>Readiness</strong>，就绪探针，用来检查应用是否可以接收流量，是否能够对外提供服务。</li>
+</ul>
+<p>如果一个 Pod 里的容器配置了探针，<strong>Kubernetes 在启动容器后就会不断地调用探针来检查容器的状态</strong>：</p>
+<ul>
+<li>如果 Startup 探针失败，Kubernetes 会认为容器没有正常启动，就会尝试反复重启，当然其后面的 Liveness 探针和 Readiness 探针也不会启动。</li>
+<li>如果 Liveness 探针失败，Kubernetes 就会认为容器发生了异常，也会重启容器。</li>
+<li>如果 Readiness 探针失败，Kubernetes 会认为容器虽然在运行，但内部有错误，不能正常提供服务，就会把容器从 Service 对象的负载均衡集合中排除，不会给它分配流量。</li>
+</ul>
+<p>复制</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># kubectl explain pod.spec.containers.startupProbe</span><br><span class="line"># kubectl explain pod.spec.containers.livenessProbe</span><br><span class="line"># kubectl explain pod.spec.containers.readinessProbe</span><br><span class="line">#</span><br><span class="line"># kubectl logs ngx-pod-probe -f</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"># this cm will be mounted to /etc/nginx/conf.d</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ConfigMap</span><br><span class="line">metadata:</span><br><span class="line">  name: ngx-conf</span><br><span class="line"></span><br><span class="line">data:</span><br><span class="line">  default.conf: |</span><br><span class="line">    server &#123;</span><br><span class="line">      listen 80;</span><br><span class="line">      location = /ready &#123;</span><br><span class="line">        return 200 &#x27;I am ready&#x27;;</span><br><span class="line">        #return 500 &#x27;I am not ready&#x27;;</span><br><span class="line">      &#125;</span><br><span class="line">      location / &#123;</span><br><span class="line">        default_type text/plain;</span><br><span class="line">        return 200 &quot;Nginx OK&quot;;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: ngx-pod-probe</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  volumes:</span><br><span class="line">  - name: ngx-conf-vol</span><br><span class="line">    configMap:</span><br><span class="line">      name: ngx-conf</span><br><span class="line"></span><br><span class="line">  containers:</span><br><span class="line">  - image: nginx:alpine</span><br><span class="line">    name: ngx</span><br><span class="line">    ports:</span><br><span class="line">    - containerPort: 80</span><br><span class="line"></span><br><span class="line">    volumeMounts:</span><br><span class="line">    - mountPath: /etc/nginx/conf.d</span><br><span class="line">      name: ngx-conf-vol</span><br><span class="line"></span><br><span class="line">    # probes are here</span><br><span class="line"></span><br><span class="line">    startupProbe:</span><br><span class="line">      periodSeconds: 1</span><br><span class="line">      timeoutSeconds: 1</span><br><span class="line">      exec:</span><br><span class="line">        command: [&quot;cat&quot;, &quot;/var/run/nginx.pid&quot;]</span><br><span class="line">        #command: [&quot;cat&quot;, &quot;nginx.pid&quot;]  # wrong pid file</span><br><span class="line"></span><br><span class="line">    livenessProbe:</span><br><span class="line">      periodSeconds: 10</span><br><span class="line">      timeoutSeconds: 1</span><br><span class="line">      #failureThreshold: 1</span><br><span class="line">      tcpSocket:</span><br><span class="line">        #port: 80</span><br><span class="line">        port: 8080</span><br><span class="line"></span><br><span class="line">    readinessProbe:</span><br><span class="line">      periodSeconds: 5</span><br><span class="line">      timeoutSeconds: 1</span><br><span class="line">      httpGet:</span><br><span class="line">        path: /ready</span><br><span class="line">        port: 80</span><br><span class="line"></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<h2 id="资源配额"><a href="#资源配额" class="headerlink" title="资源配额"></a>资源配额</h2><p>有了名字空间，我们就可以像管理容器一样，给名字空间设定配额，把整个集群的计算资源分割成不同的大小，按需分配给团队或项目使用。</p>
+<p><strong>名字空间的资源配额需要使用一个专门的 API 对象，叫做</strong> <code>ResourceQuota</code>​，因为资源配额对象必须依附在某个名字空间上，所以在它的 <code>metadata</code>​ 字段里必须明确写出 <code>namespace</code>​（否则就会应用到 default 名字空间）。</p>
+<p>复制</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># kubectl create ns dev-ns $out</span><br><span class="line"># kubectl create quota dev-qt $out</span><br><span class="line">#</span><br><span class="line"># kubectl explain quota.spec</span><br><span class="line"># kubectl describe -n dev-ns quota dev-qt</span><br><span class="line">#</span><br><span class="line"># kubectl explain limits.spec.limits</span><br><span class="line">#</span><br><span class="line"># kubectl run ngx --image=nginx:alpine -n dev-ns</span><br><span class="line"># kubectl describe pod ngx -n dev-ns</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Namespace</span><br><span class="line">metadata:</span><br><span class="line">  name: dev-ns</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ResourceQuota</span><br><span class="line">metadata:</span><br><span class="line">  name: dev-qt</span><br><span class="line">  namespace: dev-ns</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  hard:</span><br><span class="line">    requests.cpu: 10</span><br><span class="line">    requests.memory: 10Gi</span><br><span class="line">    limits.cpu: 10</span><br><span class="line">    limits.memory: 20Gi</span><br><span class="line"></span><br><span class="line">    requests.storage: 100Gi</span><br><span class="line">    persistentvolumeclaims: 100</span><br><span class="line"></span><br><span class="line">    pods: 100</span><br><span class="line">    configmaps: 100</span><br><span class="line">    secrets: 100</span><br><span class="line">    services: 10</span><br><span class="line">    services.nodeports: 5</span><br><span class="line"></span><br><span class="line">    count/jobs.batch: 1</span><br><span class="line">    count/cronjobs.batch: 1</span><br><span class="line">    count/deployments.apps: 1</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: LimitRange</span><br><span class="line">metadata:</span><br><span class="line">  name: dev-limits</span><br><span class="line">  namespace: dev-ns</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  limits:</span><br><span class="line">  - type: Container</span><br><span class="line">    defaultRequest:</span><br><span class="line">      cpu: 200m</span><br><span class="line">      memory: 50Mi</span><br><span class="line">    default:</span><br><span class="line">      cpu: 500m</span><br><span class="line">      memory: 100Mi</span><br><span class="line">  - type: Pod</span><br><span class="line">    max:</span><br><span class="line">      cpu: 800m</span><br><span class="line">      memory: 200Mi</span><br><span class="line"></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>它需要在 <code>spec</code>​ 里使用 <code>hard</code>​ 字段，意思就是“<strong>硬性全局限制</strong>”。</p>
+<ul>
+<li>CPU 和内存配额，使用 <code>request.*</code>​、<code>limits.*</code>​，这是和容器资源限制是一样的。</li>
+<li>存储容量配额，使 <code>requests.storage</code>​ 限制的是 PVC 的存储总量，也可以用 <code>persistentvolumeclaims</code>​ 限制 PVC 的个数。</li>
+<li>核心对象配额，使用对象的名字（英语复数形式），比如 <code>pods</code>​、<code>configmaps</code>​、<code>secrets</code>​、<code>services</code>​。</li>
+<li>其他 API 对象配额，使用 <code>count/name.group</code>​ 的形式，比如 <code>count/jobs.batch</code>​、<code>count/deployments.apps</code>​。</li>
+</ul>
+<p>在名字空间加上了资源配额限制之后，它会有一个合理但比较“烦人”的约束：要求所有在里面运行的 Pod 都必须用字段 <code>resources</code>​ 声明资源需求，否则就无法创建。这个时候就要用到一个<strong>很小但很有用的辅助对象了——</strong>  <code>LimitRange</code>​ <strong>，简称是</strong> <code>limits</code>​ <strong>，它能为 API 对象添加默认的资源配额限制</strong>。</p>
+<ul>
+<li><code>spec.limits</code>​ 是它的核心属性，描述了默认的资源限制。</li>
+<li><code>type</code>​ 是要限制的对象类型，可以是 <code>Container</code>​、<code>Pod</code>​、<code>PersistentVolumeClaim</code>​。</li>
+<li><code>default</code>​ 是默认的资源上限，对应容器里的 <code>resources.limits</code>​，只适用于 <code>Container</code>​。</li>
+<li><code>defaultRequest</code>​ 默认申请的资源，对应容器里的 <code>resources.requests</code>​，同样也只适用于 <code>Container</code>​。</li>
+<li><code>max</code>​、<code>min</code>​ 是对象能使用的资源的最大最小值。</li>
+</ul>
+<h2 id="Helm"><a href="#Helm" class="headerlink" title="Helm"></a>Helm</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://helm.sh/zh/docs/">Helm | Docs</a></p>
+</blockquote>
+<p>Helm是一款开源的K8s包管理器，类似于apt，yum或者Python中的 pip 一样，能快速查找、下载和安装软件包。Helm能够将一组K8S资源打包统一管理, 是查找、共享和使用为Kubernetes构建的软件的最佳方式。</p>
+<p><em><strong>为什么要使用Helm？</strong></em></p>
+<p>假如现在需要部署一个复杂且庞大的服务，我需要很多个yaml文件一个一个配好每一种资源对象，这样做很麻烦。Helm很好地解决了这个问题，它能够把这些零零散散的应用资源文件放在一起进行统一配置，从而方便其他人地部署与使用，就和<code>apt install</code>一样，仅仅一句<code>helm install</code>就可以部署好一个现成的服务了。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用脚本安装，它可以让你知道在执行之前脚本做了什么</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3</span><br><span class="line"></span><br><span class="line">chmod 700 get_helm.sh</span><br><span class="line"></span><br><span class="line">./get_helm.sh</span><br></pre></td></tr></table></figure>
+
+<p>或者直接执行安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p><em>Chart</em> 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。</p>
+<p><em>Repository（仓库）</em>  是用来存放和共享 charts 的地方。官方仓库是<a href="https://link.zhihu.com/?target=https://hub.helm.sh">hub.helm.sh</a>，你也可以用Harbor来存放charts。</p>
+<p><em>Release</em> 是运行在 Kubernetes 集群中的 chart 的实例。一个 chart 通常可以在同一个集群中安装多次，每一个release指定不同的名称即可。每一次安装都会创建一个新的 <em>release</em>。</p>
+<p>Helm的工作流程：Helm 安装 <em>charts</em> 到 Kubernetes 集群中，每次安装都会创建一个新的 <em>release</em>。你可以在 Helm 的 chart <em>repositories</em> 中寻找新的 chart。</p>
+<h3 id="基本命令使用"><a href="#基本命令使用" class="headerlink" title="基本命令使用"></a>基本命令使用</h3><h4 id="helm-search"><a href="#helm-search" class="headerlink" title="helm search"></a>helm search</h4><p>用来查找Charts</p>
+<p><code>helm search hub wordpress</code>查找Artifact Hub中搜索到所有的wordpress charts</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211802573.png" alt="image-20240512214450115"></p>
+<p><code>helm search repo</code>从你添加的仓库中查找chart</p>
+<p><img src="https://gitee.com/beatrueman/images/raw/master/20251208211802574.png" alt="image-20240512214521155"></p>
+<h4 id="helm-install"><a href="#helm-install" class="headerlink" title="helm install"></a>helm install</h4><p>用来安装helm包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">helm search repo wordpress</span><br><span class="line">helm install wordpress bitnami/wordpress # 从bitnami这个仓库中安装wordpress的chart，把这个release命名为wordpress，它被安装在default下</span><br></pre></td></tr></table></figure>
+
+<p><code>helm status</code>可以用来追踪release的状态</p>
+<p>使用<code>helm uninstall -n &lt;namespace&gt;</code> 来卸载release</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">helm uninstall wordpress # 指定release名称</span><br><span class="line">helm list # 查看当前命名空间部署的所有release</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义安装配置"><a href="#自定义安装配置" class="headerlink" title="自定义安装配置"></a>自定义安装配置</h4><p>很多时候我们需要自定义chart来指定我们想要的配置。</p>
+<p>使用 <code>helm show values</code> 可以查看 chart 中的可配置选项</p>
+<p>你可以<code>helm pull  &lt;chart.tgz&gt;</code>手动拉取chart包，解压后手动修改其中的<code>values.yaml</code>中的任意配置项，然后在安装时指定我们自定义的配置</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">helm install -f values.yaml bitnami/wordpress</span><br></pre></td></tr></table></figure>
+
+<p>如果配置不多，可以直接使用命令行<code>-- set</code>来对指定项进行覆盖</p>
+<p><code>--set</code>有一些格式限制：</p>
+<p>最简单用法（键值对形式）：–set name&#x3D;value，等价于如下yaml格式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: value</span><br></pre></td></tr></table></figure>
+
+<p>多个值用逗号分隔：–set outer.inner&#x3D;value，他被转化为</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">outer:</span><br><span class="line">  inner: value</span><br></pre></td></tr></table></figure>
+
+<p>列表使用花括号：–set name&#x3D;{a, b, c}，等价于</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name:</span><br><span class="line">  - a</span><br><span class="line">  - b</span><br><span class="line">  - c</span><br></pre></td></tr></table></figure>
+
+<p>某些键值可以设置为null或空：–set name&#x3D;[],a&#x3D;null</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: []</span><br><span class="line">a: null</span><br></pre></td></tr></table></figure>
+
+<p>从2.5.0版本开始，还可以使用数组下标的方式访问列表中的元素。例如：–set servers[0].port&#x3D;80</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">servers:</span><br><span class="line">  - port: 80</span><br></pre></td></tr></table></figure>
+
+<p>多个值（逗号分隔）：–set servers[0].port&#x3D;80,servers[0].host&#x3D;example</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">servers:</span><br><span class="line">  - port: 80</span><br><span class="line">    host: example</span><br></pre></td></tr></table></figure>
+
+<p>如果要使用特殊字符，使用反斜线来转义：–set name&#x3D;value1,value2</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: &quot;value1,value2&quot;</span><br></pre></td></tr></table></figure>
+
+<p>更复杂的话就不要使用–set了，直接修改values.yaml</p>
+<h4 id="helm-upgrade和helm-rollback"><a href="#helm-upgrade和helm-rollback" class="headerlink" title="helm upgrade和helm rollback"></a>helm upgrade和helm rollback</h4><p>用来升级release和失败时恢复</p>
+<p>一次升级操作会使用已有的 release 并根据你提供的信息对其进行升级。由于 Kubernetes 的 chart 可能会很大而且很复杂，Helm 会尝试执行最小侵入式升级。即它只会更新自上次发布以来发生了更改的内容。</p>
+<figure class="highlight console"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">helm upgrade -f panda.yaml happy-panda bitnami/wordpress</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中，<code>happy-panda</code> 这个 release 使用相同的 chart 进行升级，但是使用了一个新的 YAML 文件：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">mariadb.auth.username:</span> <span class="string">user1</span></span><br></pre></td></tr></table></figure>
+
+<p>这样配置中会更新这一项配置</p>
+<p>如果发布过程中出现不符合预期的事情，helm可以像deployment一样进行回滚到之前的版本</p>
+<h4 id="helm-repo"><a href="#helm-repo" class="headerlink" title="helm repo"></a>helm repo</h4><p>可以查看仓库</p>
+<p><code>helm repo list</code>列出当前已经添加的仓库</p>
+<p><code>helm repo add</code>添加新的仓库</p>
+<p><code>helm repo update</code>更新仓库</p>
+<h3 id="创建自己的charts"><a href="#创建自己的charts" class="headerlink" title="创建自己的charts"></a>创建自己的charts</h3><h4 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h4><p>你可以通过<code>helm create</code>来快速生成一个chart模板</p>
+<p>在编辑chart时，可以通过<code>helm lint</code>验证格式是否正确</p>
+<p>编辑完成后，使用<code>helm package</code>来打包chart，然后这个chart就可以install安装，还可以上传到chart仓库中。</p>
+<p>当你想测试模板渲染的内容但又不想安装任何实际应用时，可以使用<code>helm install --debug --dry-run goodly-guppy ./mynginx</code>。这样不会安装应用(chart)到你的kubenetes集群中，只会渲染模板内容到控制台（用于测试）。</p>
+<h4 id="编写相关文件"><a href="#编写相关文件" class="headerlink" title="编写相关文件"></a>编写相关文件</h4><p>Helm chart的结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mychart/</span><br><span class="line">  Chart.yaml</span><br><span class="line">  values.yaml</span><br><span class="line">  charts/</span><br><span class="line">  templates/</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p><code>templates/</code> 目录包括了模板文件。也就是Deployment、Service、ConfigMap等的yaml文件，helm会将这些发送给Kubernetes，Kubernetes根据这些创建资源。和一般的创建资源方式不同的是，这些yaml文件中的一些参数和变量会在安装时由 Helm 进行替换或填充，然后在values.yaml集中设置。</p>
+<p><code>values.yaml</code> 文件也导入到了模板。这个文件包含了chart的 <em>默认值</em> 。</p>
+<p><code>Chart.yaml</code> 文件包含了该chart的描述。</p>
+<p><em><strong>创建一个自己的nginx chart</strong></em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">helm create mynginx</span><br></pre></td></tr></table></figure>
+
+<p>可以看到<code>mynginx/templates/</code> 目录下一些文件已经存在了：</p>
+<ul>
+<li><code>NOTES.txt</code>: chart的”帮助文本”。这会在你的用户执行<code>helm install</code>时展示给他们。</li>
+<li><code>deployment.yaml</code>: 创建Kubernetes <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/deployments/">工作负载</a>的基本清单</li>
+<li><code>service.yaml</code>: 为你的工作负载创建一个 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/user-guide/services/">service终端</a>基本清单。</li>
+<li><code>_helpers.tpl</code>: 放置可以通过chart复用的模板辅助对象</li>
+</ul>
+<p>我们先把它们都删掉，然后自己创作相关文件。</p>
+<p>我们的<code>templates/</code>下主要需要<code>deployment.yaml</code>和<code>service.yaml</code></p>
+<p>模板文件可以像平时手动编写资源清单yaml文件的格式一样，但是将某些值硬编码到一个键中不是一个很好的方式。helm提倡使用插入的方式来生成某些字段，这样可以提高配置的灵活性和可维护性。</p>
+<p>helm中以<code>&#123;&#123; xxx &#125;&#125;</code>的形式来进行插入。</p>
+<p>我们以这两个正常的资源文件作为基础，然后按照插入的方式来对某些字段进行修改，使它们变得有helm的风格。</p>
+<p><strong>内置对象</strong></p>
+<p>对象可以通过模板引擎传递到模板中。以下是一些内置的对象。</p>
+<ul>
+<li><code>Release</code>：<code>Release</code>对象描述了版本发布本身。比如常用的Release.Name，代表了release的名称。</li>
+<li><code>Values</code>：<code>Values</code>对象是从<code>values.yaml</code>文件和用户提供的文件传进模板的。默认为空。</li>
+<li><code>Chart</code>：<code>Chart.yaml</code>文件内容。 <code>Chart.yaml</code>里的所有数据在这里都可以可访问的。比如 <code>&#123;&#123; .Chart.Name &#125;&#125;-&#123;&#123; .Chart.Version &#125;&#125;</code> 会打印出 <code>mychart-0.1.0</code></li>
+</ul>
+<p><strong>Values文件</strong></p>
+<p>它的内容可以来自多个位置</p>
+<ul>
+<li>chart中的<code>values.yaml</code>文件</li>
+<li>使用<code>-f</code>参数(<code>helm install -f myvals.yaml ./mychart</code>)传递到 <code>helm install</code> 或 <code>helm upgrade</code>的values文件</li>
+<li>使用<code>--set</code> (比如<code>helm install --set foo=bar ./mychart</code>)传递的单个参数</li>
+</ul>
+<p>以上列表有明确顺序：默认使用<code>values.yaml</code>，优先级为<code>values.yaml</code>最低，<code>--set</code>参数最高。</p>
+<p><strong>模板函数</strong></p>
+<p>到目前为止，我们已经知道了如何将信息传到模板中。 但是传入的信息并不能被修改。 有时我们希望以一种更有用的方式来转换所提供的数据。</p>
+<p>helm中通常倒置命令，借用管道符来使用函数，这种感觉就像使用管道符把参数“发送”给函数。</p>
+<p>比如<code>quote</code>函数把<code>.Values</code>对象中的字符串属性用引号引起来，然后放到模板中</p>
+<p>本来应该这样写</p>
+<p>首先在<code>values.yaml</code>中定义</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">favourite: rice</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123; quote .Values.favorite.food &#125;&#125;  # 转换为&quot;rice&quot;，就是加了个引号</span><br></pre></td></tr></table></figure>
+
+<p>但helm提倡这样写</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123; .Values.favorite.food | quote &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>模板中频繁使用的一个函数是<code>default</code>，这个函数允许你在模板中指定一个默认值，以防这个值被忽略。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">namespace: &#123;&#123; .Values.namespace | default &quot;default&quot; &#125;&#125;</span><br><span class="line"># 指定命名空间，如果values.yaml里没有指定（没有namespace这个键），就默认指定default</span><br></pre></td></tr></table></figure>
+
+<p><strong>流控制</strong></p>
+<p>有时我们在<code>values.yaml</code>中会利用<code>enable: true/false</code>来开启或关闭某些功能<br>这是可以利用控制结构<code>if/else</code>块来实现。<br><code>values.yaml</code>中开启NodePort</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NodePort:</span><br><span class="line">  enable: true # or flase 使用布尔值</span><br><span class="line">  type: NodePort</span><br><span class="line">  nodePort: 30001</span><br><span class="line">  port: 9376</span><br></pre></td></tr></table></figure>
+
+<p><code>templates/NodePort.yaml</code>首尾加上<code>&#123;&#123; if .Values.NodePort.enable &#125;&#125;</code>和<code>&#123;&#123; end &#125;&#125;</code>即可</p>
+<p>还有其他的控制结构</p>
+<ul>
+<li>with：用来指定变量范围</li>
+<li>range：用做循环</li>
+</ul>
+<p><strong>命名模板</strong></p>
+<p>在编写模板细节之前，文件的命名惯例需要注意：</p>
+<ul>
+<li><code>templates/</code>中的大多数文件被视为包含Kubernetes清单</li>
+<li><code>NOTES.txt</code>是个例外</li>
+<li>命名以下划线(<code>_</code>)开始的文件则假定 <em>没有</em> 包含清单内容。这些文件不会渲染为Kubernetes对象定义，但在其他chart模板中都可用。</li>
+</ul>
+<p>当我们第一次创建<code>mynginx</code>时，会看到一个名为<code>_helpers.tpl</code>的文件，这个文件是模板局部的默认位置。</p>
+<p><strong>define和template</strong></p>
+<p>我们可以使用<code>define</code>和<code>template</code>来声明和使用模板</p>
+<p>比如我在<code>_helpers.tpl</code>中创建一个模板。按照惯例<code>define</code>方法会有个简单的文档块(<code>&#123;&#123;/* ... */&#125;&#125;</code>)来描述要做的事。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;- define &quot;MY.NAME&quot; &#125;&#125;</span><br><span class="line">  # body of template here</span><br><span class="line">&#123;&#123;- end &#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123;/* Generate basic labels */&#125;&#125;</span><br><span class="line">&#123;&#123;- define &quot;mynginx.labels&quot; &#125;&#125;</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line">&#123;&#123;- end &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用<code>template</code>来使用模板</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: &#123;&#123; .Release.Name &#125;&#125;-deployment </span><br><span class="line">  namespace: &#123;&#123; .Values.namespace | default &quot;default&quot; &#125;&#125;</span><br><span class="line">  &#123;&#123;- template &quot;mynginx.labels&quot; &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>include方法</strong></p>
+<p>假设我们刚才的模板是这样的</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;- define &quot;mynginx.labels&quot; &#125;&#125;</span><br><span class="line">app: nginx # 顶格没有空格</span><br><span class="line">&#123;&#123;- end &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时插入模板文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: &#123;&#123; .Release.Name &#125;&#125;-deployment </span><br><span class="line">  namespace: &#123;&#123; .Values.namespace | default &quot;default&quot; &#125;&#125;</span><br><span class="line">  labels:</span><br><span class="line">  	&#123;&#123;- template &quot;mynginx.labels&quot; &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时它的输出如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: &#123;&#123; .Release.Name &#125;&#125;-deployment </span><br><span class="line">  namespace: &#123;&#123; .Values.namespace | default &quot;default&quot; &#125;&#125;</span><br><span class="line">  labels:</span><br><span class="line">app: nginx  	</span><br></pre></td></tr></table></figure>
+
+<p>注意到<code>app: nginx</code>的缩进不对。因为被替换的模板中文本是左对齐的。由于<code>template</code>是一个行为，不是方法，无法将 <code>template</code>调用的输出传给其他方法，数据只是简单地按行插入。</p>
+<p>为了处理这个问题，Helm提供了一个<code>template</code>的可选项，可以将模板内容导入当前管道，然后传递给管道中的其他方法。</p>
+<p>使用<code>indent</code>正确地缩进</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name: &#123;&#123; .Release.Name &#125;&#125;-deployment </span><br><span class="line">  namespace: &#123;&#123; .Values.namespace | default &quot;default&quot; &#125;&#125;</span><br><span class="line">  labels:</span><br><span class="line">&#123;&#123;include &quot;mynginx.labels&quot; | indent 4 &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>NOTES.txt文件</strong></p>
+<p>在<code>helm install</code> 或 <code>helm upgrade</code>命令的最后，Helm会打印出对用户有用的信息。这些信息保存在<code>NOTE.txt</code>文件中</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Thank you for installing &#123;&#123; .Chart.Name &#125;&#125;.</span><br><span class="line"></span><br><span class="line">Your release is named &#123;&#123; .Release.Name &#125;&#125;.</span><br><span class="line"></span><br><span class="line">To learn more about the release, try:</span><br><span class="line"></span><br><span class="line">  $ helm status &#123;&#123; .Release.Name &#125;&#125;</span><br><span class="line">  $ helm get all &#123;&#123; .Release.Name &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Thank you for installing mynginx.</span><br><span class="line"></span><br><span class="line">Your release is named nginx1.</span><br><span class="line"></span><br><span class="line">To learn more about the release, try:</span><br><span class="line"></span><br><span class="line">  $ helm status nginx1</span><br><span class="line">  $ helm get all nginx1</span><br></pre></td></tr></table></figure>
+
+<p><strong>Chart.yaml</strong></p>
+<p>这个文件声明了当前 Chart 的名称、版本等基本信息，这些信息会在该 Chart 被放入仓库后，供用户浏览检索。</p>
+<p>在 Chart.yaml 里有两个跟版本相关的字段，其中 version 指明的是 Chart 的版本，也就是我们应用包的版本，而 appVersion 指明的是内部实际使用的应用版本。这两个字段互不相关，此字段仅供参考，对chart版本计算没有影响。我们可以不关心它。</p>
+<p>比如 <code>nginx</code> chart的版本字段<code>version: 1.2.3</code>按照名称被设置为：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">nginx-1.2.3.tgz</span><br></pre></td></tr></table></figure>
+
+<h3 id="打包chart并上传到Harbor"><a href="#打包chart并上传到Harbor" class="headerlink" title="打包chart并上传到Harbor"></a>打包chart并上传到Harbor</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 打包chart</span><br><span class="line">helm package CHART_PATH</span><br><span class="line"></span><br><span class="line"># 登录harbor</span><br><span class="line">helm registry login reg.redrock.team -u admin -p xxx</span><br><span class="line"></span><br><span class="line"># 推送chart</span><br><span class="line">helm push CHART_PACKAGE oci://reg.redrock.team/library</span><br></pre></td></tr></table></figure>
+
+<p>也可以把打包好的chart上传到Github上，然后通过<code>helm pull</code>解压安装</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="Kubeconfig"><a href="#Kubeconfig" class="headerlink" title="Kubeconfig"></a>Kubeconfig</h3><p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/concepts/configuration/organize-cluster-access-kubeconfig/">使用 kubeconfig 文件组织集群访问 | Kubernetes</a></p>
+<p><code>kubectl</code> 命令行工具使用 kubeconfig 文件来查找选择集群所需的信息（指定要操作的集群），并与集群的 API 服务器进行通信。Helm同样使用kubeconfig来指定操作的集群。</p>
+<p>用于配置集群访问的文件称为 <strong>kubeconfig 文件</strong>。 这是引用到配置文件的通用方法，并不意味着有一个名为 <code>kubeconfig</code> 的文件。</p>
+<p>默认情况下，<code>kubectl</code> 在 <code>$HOME/.kube</code> 目录下查找名为 <code>config</code> 的文件。 你可以通过设置 <code>KUBECONFIG</code> 环境变量或者设置 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl/"><code>--kubeconfig</code></a>参数来指定其他 kubeconfig 文件。</p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">配置对多集群的访问 | Kubernetes</a></p>
+<p>查看<code>config</code>签发日期</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">openssl x509 -in /etc/kubernetes/pkki/apiserver.crt -noout -text | grep Not</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top">Yiiong</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://blog.yiiong.top/posts/55660.html">http://blog.yiiong.top/posts/55660.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://blog.yiiong.top" target="_blank">Yiiong's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Kubernetes/">Kubernetes</a></div><div class="post-share"><div class="social-share" data-image="/img/ava.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/31706.html" title="工作负载与服务发现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">工作负载与服务发现</div></div><div class="info-2"><div class="info-item-1"> 在没有工作负载之前，我们都是直接手动创建一个一个的Pod。但是如果当我们需要将一个复杂的服务部署到庞大的集群上并且实现高可用，我们总不能每个节点上都部署一遍吧。况且如果你可以将所有的Pod手动都创建好，但是如果镜像发生了更新，我们也需要将一个一个的Pod手动进行更新。太麻烦了，这个时候我们就可以使用工作负载，它可以帮助我们更高的管理Pod。  工作负载 工作负载 | Kubernetes  工作负载是在 Kubernetes 上运行的应用程序。 为了减轻用户的使用负担，通常不需要用户直接管理每个 Pod。 而是使用负载资源来替用户管理一组 Pod。 这些负载资源通过配置控制器来确保正确类型的、处于运行状态的 Pod 个数是正确的，与用户所指定的状态相一致。 Kubernetes 提供若干种内置的工作负载资源  Deployment和ReplicaSet StatefulSet：有状态服务，为 Pod 提供持久存储和持久标识符。 DaemonSet：守护型应用部署，如日志、监控组件。 Job和CronJob：定时任务部署，指定时间运行。  DeploymentDeployment...</div></div></div></a><a class="pagination-related" href="/posts/31530.html" title="插件扩展指引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">插件扩展指引</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的插件扩展开发指引。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/11627.html" title="核心功能模块"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">核心功能模块</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的核心功能模块介绍。</div></div></div></a><a class="pagination-related" href="/posts/31706.html" title="工作负载与服务发现"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">工作负载与服务发现</div></div><div class="info-2"><div class="info-item-1"> 在没有工作负载之前，我们都是直接手动创建一个一个的Pod。但是如果当我们需要将一个复杂的服务部署到庞大的集群上并且实现高可用，我们总不能每个节点上都部署一遍吧。况且如果你可以将所有的Pod手动都创建好，但是如果镜像发生了更新，我们也需要将一个一个的Pod手动进行更新。太麻烦了，这个时候我们就可以使用工作负载，它可以帮助我们更高的管理Pod。  工作负载 工作负载 | Kubernetes  工作负载是在 Kubernetes 上运行的应用程序。 为了减轻用户的使用负担，通常不需要用户直接管理每个 Pod。 而是使用负载资源来替用户管理一组 Pod。 这些负载资源通过配置控制器来确保正确类型的、处于运行状态的 Pod 个数是正确的，与用户所指定的状态相一致。 Kubernetes 提供若干种内置的工作负载资源  Deployment和ReplicaSet StatefulSet：有状态服务，为 Pod 提供持久存储和持久标识符。 DaemonSet：守护型应用部署，如日志、监控组件。 Job和CronJob：定时任务部署，指定时间运行。  DeploymentDeployment...</div></div></div></a><a class="pagination-related" href="/posts/58647.html" title="Operator介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">Operator介绍</div></div><div class="info-2"><div class="info-item-1"> # Operator  为什么要用？当K8s中的原生资源无法满足业务要求时，这时候就需要Operator来创建自己的CRD以及对应Controller。利用Controller实现CRD所需要的业务逻辑。 比如，我们想在Kubernetes中部署一个Nginx并让外界可以访问到，这时我们首先需要创建一个Deployment用来部署Nginx，然后创建一个Service用来将Deployment的Pod的容器端口映射到主机端口。我们觉得太麻烦了，想要创建一次资源就可以同时包含Deployment和Service。 是什么？Operator是一种通过自定义控制器（Customer Controller）扩展K8s API的模式。它的核心思想是将运维知识代码化。允许开发者将应用的管理逻辑（如部署、升级、备份、恢复）封装成代码，使K8s能够像管理原生资源一样管理复杂的有状态应用（如数据库、消息队列） 解决了什么？ 管理有状态应用的复杂性：例如pg集群的自动故障转移、redis的数据持久化 自动化运维：通过代码替代人工操作 统一生命周期管理：标准化应用的安装、配置、扩缩容流程等  什么时...</div></div></div></a><a class="pagination-related" href="/posts/37331.html" title="存储与配置"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">存储与配置</div></div><div class="info-2"><div class="info-item-1"> ## 存储  持久化Pod是由多个容器组成的，在了解Pod的文件系统结构时，我们可以先看看一个Docker容器是如何被制作的。 容器根据镜像启动。我们在Dockerfile中的每一条RUN命令，会生成一层一层的镜像层，这些镜像层从下向上以栈的形式组成了一个镜像。而容器和镜像都是由多个层组成的，他们之间最大的区别就是容器的最上面的一层是读写层，叫做容器层。但镜像的所有层都是只读层，叫做镜像层。 容器启动后，Docker会在容器使用的镜像上添加一个容器层。容器运行时，所有和数据变化相关的操作都是在这个读写层中完成的，如新建文件，修改文件等。删除容器时，Docker同时会删除这个容器层。 每个容器运行时，都有自己的容器层，并在容器层中保存容器运行相关的数据。容器层之下的所有镜像层都是只读的，因此多个容器可以共享同一个镜像。  Pod中有若干个容器，每个容器的文件系统都是独立且一次性的。当容器因为某些原因重启时（崩溃、调度等情况），容器层就会被销毁并重新创建。 假如我们运行了一个MySQL的Pod，如果你没有对它做持久化存储，一旦这个Pod因为某些原因被销毁，那么这个Pod里的数据就会...</div></div></div></a><a class="pagination-related" href="/posts/31530.html" title="插件扩展指引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">插件扩展指引</div></div><div class="info-2"><div class="info-item-1">IPBlock-Operator-Plus的插件扩展开发指引。</div></div></div></a><a class="pagination-related" href="/posts/2351.html" title="K8s实践记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-12-08</div><div class="info-item-2">K8s实践记录</div></div><div class="info-2"><div class="info-item-1"> # K8s实践记录  Level 01.在节点上创建一个持久化目录mkdir -p /data/nginx/logs #创建多级目录chmod 777 /data/nginx/logs #为系统上的每个人提供读、写和执行权限   2.创建一个nginx pod，并在其中配置一个存储卷来将持久化目录挂载到Pod的/var/log/nginx目录中。apiVersion: v1kind: Podmetadata:  name: nginxspec:  volumes:  - name: nginx-logs    hostPath:      path: /data/nginx/logs  containers:  - name: nginx    image: nginx    volumeMounts:    - name: nginx-logs      mountPath: /var/log/nginx    3.配置nginx日志保存到指定的目录在nginx配置文件nginx.conf中添加以下配置,将nginx访问日志保存到/var/log/nginx/access.l...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/ava.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yiiong</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Beatrueman"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:yiiong@redrock.team" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">Study in Redrock SRE!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E8%8A%82%E7%82%B9%EF%BC%88NodeName%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">固定节点（NodeName）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E7%AD%BE%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">标签选择器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B1%A1%E7%82%B9%EF%BC%88Taints%EF%BC%89%E5%92%8C%E5%AE%B9%E5%BF%8D%E5%BA%A6%EF%BC%88Tolerations%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">污点（Taints）和容忍度（Tolerations）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E8%8A%82%E7%82%B9%E4%B8%8A%E6%89%93%E4%B8%8A%E6%B1%A1%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">在节点上打上污点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8Pod%E4%B8%8A%E6%B7%BB%E5%8A%A0%E6%B1%A1%E7%82%B9%E5%AE%B9%E5%BF%8D%E5%BA%A6"><span class="toc-number">3.2.</span> <span class="toc-text">在Pod上添加污点容忍度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E4%BA%B2%E5%92%8C%E6%80%A7"><span class="toc-number">4.</span> <span class="toc-text">节点亲和性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E9%92%88"><span class="toc-number">5.</span> <span class="toc-text">探针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E9%85%8D%E9%A2%9D"><span class="toc-number">6.</span> <span class="toc-text">资源配额</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Helm"><span class="toc-number">7.</span> <span class="toc-text">Helm</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">7.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">7.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8"><span class="toc-number">7.3.</span> <span class="toc-text">基本命令使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#helm-search"><span class="toc-number">7.3.1.</span> <span class="toc-text">helm search</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#helm-install"><span class="toc-number">7.3.2.</span> <span class="toc-text">helm install</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="toc-number">7.3.3.</span> <span class="toc-text">自定义安装配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#helm-upgrade%E5%92%8Chelm-rollback"><span class="toc-number">7.3.4.</span> <span class="toc-text">helm upgrade和helm rollback</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#helm-repo"><span class="toc-number">7.3.5.</span> <span class="toc-text">helm repo</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84charts"><span class="toc-number">7.4.</span> <span class="toc-text">创建自己的charts</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="toc-number">7.4.1.</span> <span class="toc-text">快速开始</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6"><span class="toc-number">7.4.2.</span> <span class="toc-text">编写相关文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%8C%85chart%E5%B9%B6%E4%B8%8A%E4%BC%A0%E5%88%B0Harbor"><span class="toc-number">7.5.</span> <span class="toc-text">打包chart并上传到Harbor</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">8.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubeconfig"><span class="toc-number">8.1.</span> <span class="toc-text">Kubeconfig</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18658.html" title="Redis主从同步实验">Redis主从同步实验</a><time datetime="2025-12-08T14:55:52.970Z" title="发表于 2025-12-08 22:55:52">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/22140.html" title="运维常用工具">运维常用工具</a><time datetime="2025-12-08T14:00:22.525Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/36066.html" title="算法记录">算法记录</a><time datetime="2025-12-08T14:00:22.521Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/42488.html" title="Baidu实习总结">Baidu实习总结</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1106.html" title="数据结构">数据结构</a><time datetime="2025-12-08T14:00:22.515Z" title="发表于 2025-12-08 22:00:22">2025-12-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Yiiong</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.2</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.2"></script><script src="/js/main.js?v=5.5.2"></script><script src="/"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script src="/js/universe.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="/"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.2"></script></div></div></body></html>
