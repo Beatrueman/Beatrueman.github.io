@@ -31,7 +31,7 @@ type: 'about'
 
 **实习经历**
 
-- <img src="https://gitee.com/beatrueman/images/raw/master/20251209210808049.svg" alt="img" style="width: 50px; height: 50px; display: inline-block; vertical-align: middle;" />【202507-202511】百度实习SRE
+- <img src="https://gitee.com/beatrueman/images/raw/master/20251209210808049.svg" alt="img" style="width: 50px; height: 50px; display: inline-block; vertical-align: middle;" />【202507-202511】百度TPG安全平台实习SRE
 
 ## 🔧技术栈
 
