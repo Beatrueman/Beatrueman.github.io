@@ -46,7 +46,7 @@ root@Redrock-ButterBeer:/var/lib/mysql#
 
 # 故障原因分析
 
-## **直接原因：**不当的运维操作导致 Galera 集群状态完全丢失
+## 直接原因：不当的运维操作导致 Galera 集群状态完全丢失
 
 在修改数据库配置时，直接编辑了下游的 `ConfigMap`，并试图通过 **将 StatefulSet 缩容至 0 再扩容** 的方式强制使配置生效。
 
@@ -67,20 +67,22 @@ root@Redrock-ButterBeer:/var/lib/mysql#
 ## **深层原因**
 
 
-1. **绕过了Operator的声明式管理逻辑：**没有意识到由Operator管理的资源，应该通过修改上层CR的Spec来触发Operator的Reconcile逻辑，而不是直接修改干预下层资源（ConfigMap、StatefulSet），导致 Operator 无法自动识别集群的故障状态并触发内置的故障恢复逻辑。
-2. **缺乏测试验证：**进行高风险破环性更新（即同时停止所有数据库实例）前应该先测试，违反了运维操作规范。不过幸好有备份。
-3. **容灾建设不完善：**没有集群恢复的标准SOP，对于故障发生后也只能依赖临时排障+文档查阅，恢复成本高，时间周期长。
+1. 绕过了Operator的声明式管理逻辑：没有意识到由Operator管理的资源，应该通过修改上层CR的Spec来触发Operator的Reconcile逻辑，而不是直接修改干预下层资源（ConfigMap、StatefulSet），导致 Operator 无法自动识别集群的故障状态并触发内置的故障恢复逻辑。
+2. 缺乏测试验证：进行高风险破环性更新（即同时停止所有数据库实例）前应该先测试，违反了运维操作规范。不过幸好有备份。
+3. 容灾建设不完善：没有集群恢复的标准SOP，对于故障发生后也只能依赖临时排障+文档查阅，恢复成本高，时间周期长。
 
 # 故障发生时间线
 
 * 2025/12/21 21:40
 
-  由于 **SRE_center** 数据库的 **change_info** 表在插入中文数据后显示为拉丁字符，排查发现 `character-set-server` 为 `latin`，因此决定调整为 `utf8mb4`。\n通过以下命令修改 MariaDB Galera 的配置 ConfigMap：
+  由于 **SRE_center** 数据库的 **change_info** 表在插入中文数据后显示为拉丁字符，排查发现 `character-set-server` 为 `latin`，因此决定调整为 `utf8mb4`。
+
+  通过以下命令修改 MariaDB Galera 的配置 ConfigMap：
 
   `kubectl edit cm -n sre-tools-database mariadb-galera-config `
 
   新增配置内容：
-
+  
   ```bash
   [mariadb]
   character-set-server=utf8mb4 
@@ -92,19 +94,25 @@ root@Redrock-ButterBeer:/var/lib/mysql#
 
 * 2025/12/21 21:50
 
-  修改配置后，对 `mariadb-galera` StatefulSet 进行操作，**直接缩容至 0，再扩容至 3**。\n新启动的 Pod 无法正常进入 `Running` 状态，Pod 日志中报错（详见故障描述）。\n3 个 Pod 无法完成选主，集群进入死锁状态。
+  修改配置后，对 `mariadb-galera` StatefulSet 进行操作，**直接缩容至 0，再扩容至 3**。
+  
+  新启动的 Pod 无法正常进入 `Running` 状态，Pod 日志中报错（详见故障描述）。
+  
+  3 个 Pod 无法完成选主，集群进入死锁状态。
 
 
 ---
 
 * 2025/12/21 22:00
 
-  查阅官方文档及相关资料后确认：\n当 Galera 集群被整体终止后，需要人工介入重新引导集群。
+  查阅官方文档及相关资料后确认：
 
+  当 Galera 集群被整体终止后，需要人工介入重新引导集群。
+  
   恢复思路为：
   * 先启动一个节点作为 **Most Advanced Node**
   * 再由其他节点加入该集群
-
+  
   因此将 StatefulSet 缩容至 1，尝试启动 Pod 0。
 
 
@@ -134,8 +142,10 @@ root@Redrock-ButterBeer:/var/lib/mysql#
 
 * 2025/12/21 23:50
 
-  对 Pod 1、Pod 2 也采用了相同方式进行启动。\n但该操作会导致每个 Pod 都被视为独立集群，形成集群脑裂，不符合主从架构。
+  对 Pod 1、Pod 2 也采用了相同方式进行启动。
 
+  但该操作会导致每个 Pod 都被视为独立集群，形成集群脑裂，不符合主从架构。
+  
   ```bash
   MariaDB [(none)]> SHOW STATUS LIKE 'wsrep_cluster_size';
   +--------------------+-------+
@@ -152,7 +162,7 @@ root@Redrock-ButterBeer:/var/lib/mysql#
 
 * 2025/12/22 00:01
 
-  删除 Pod 1、Pod 2 对应 PV 中的 `grastate.dat` 文件，\n并移除 StatefulSet 中的 `--wsrep_new_cluster` 启动参数，随后重新启动这两个 Pod。
+  删除 Pod 1、Pod 2 对应 PV 中的 `grastate.dat` 文件，并移除 StatefulSet 中的 `--wsrep_new_cluster` 启动参数，随后重新启动这两个 Pod。
 
   Pod 正常 `Running` 后，检查集群状态：
 
@@ -194,4 +204,3 @@ root@Redrock-ButterBeer:/var/lib/mysql#
 > * MariaDB grastate.dat
 > * MariaDB集群引导：<https://mariadb.com/docs/galera-cluster/high-availability/resetting-the-quorum-cluster-bootstrap#find-the-most-advanced-node>
 > * MariaDB恢复：<https://mariadb.com/docs/galera-cluster/high-availability/understanding-quorum-monitoring-and-recovery#recovering-from-a-full-cluster-shutdown>
-> 

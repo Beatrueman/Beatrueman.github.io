@@ -11,8 +11,6 @@ abbrlink: 52500
 
 <meta name="referrer" content="no-referrer"/>
 
-
-
 > * MariaDB集群引导：<https://mariadb.com/docs/galera-cluster/high-availability/resetting-the-quorum-cluster-bootstrap#find-the-most-advanced-node>
 > * MariaDB恢复：<https://mariadb.com/docs/galera-cluster/high-availability/understanding-quorum-monitoring-and-recovery#recovering-from-a-full-cluster-shutdown>
 
@@ -37,7 +35,7 @@ kubectl patch mariadb mariadb-galera -n sre-tools-database \
 
 ### 将StatefulSet的Replica指定1
 
-将 StatefulSet 的 replicas 缩容至 1，仅保留一个候选节点。\n由于该 Pod 使用的是崩溃前的 PVC（safe_to_bootstrap此时为0），其 Galera 状态无法形成 Primary View，通常无法正常启动，需要人工引导。
+将 StatefulSet 的 replicas 缩容至 1，仅保留一个候选节点。由于该 Pod 使用的是崩溃前的 PVC（safe_to_bootstrap此时为0），其 Galera 状态无法形成 Primary View，通常无法正常启动，需要人工引导。
 
 ```bash
 kubectl scale sts mariadb-galera -n sre-tools-database --replicas=1
