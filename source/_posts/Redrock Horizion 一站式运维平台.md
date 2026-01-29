@@ -49,9 +49,9 @@ abbrlink: 16924
 
 通过该方式，实现资源信息的集中管理与结构化沉淀。
 
- ![](https://gitee.com/beatrueman/images/raw/master/20251225223807246.png " =1524x876")
+![a6eec8c7-f825-4280-9cf7-806ab3c1f4b4](https://gitee.com/beatrueman/images/raw/master/20260130005310053.png)
 
- ![](https://gitee.com/beatrueman/images/raw/master/20251225223809462.png " =1547x911")
+![f8737908-7bd1-4d88-afdf-3fa5a1c6ded2](https://gitee.com/beatrueman/images/raw/master/20260130005332640.png)
 
 ## 变更管理
 
@@ -69,7 +69,7 @@ abbrlink: 16924
 
  ![](https://gitee.com/beatrueman/images/raw/master/20251225223816980.png " =1500x816")
 
- ![](https://gitee.com/beatrueman/images/raw/master/20251225223816981.png " =1551x909")
+![image-20260130005352851](https://gitee.com/beatrueman/images/raw/master/20260130005352952.png)
 
 ## 系统监控
 
